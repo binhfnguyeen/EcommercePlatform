@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'ecommerces.apps.EcommercesConfig',
 ]
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,11 +78,15 @@ WSGI_APPLICATION = 'ecomhub.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ecommercedb',
+        'USER': 'root',
+        'PASSWORD': 'nguyennguyen123',
+        'HOST': ''  # mặc định localhost
     }
 }
 
+AUTH_USER_MODEL = 'ecommerces.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -121,3 +128,28 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+# Configuration
+cloudinary.config(
+    cloud_name = "dwivkhh8t",
+    api_key = "925656835271691",
+    api_secret = "xggQhqIzVzwLbOJx05apmM4Od7U", # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
+
+# Upload an image
+upload_result = cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg",
+                                           public_id="shoes")
+print(upload_result["secure_url"])
+
+# Optimize delivery by resizing and applying auto-format and auto-quality
+optimize_url, _ = cloudinary_url("shoes", fetch_format="auto", quality="auto")
+print(optimize_url)
+
+# Transform the image: auto-crop to square aspect_ratio
+auto_crop_url, _ = cloudinary_url("shoes", width=500, height=500, crop="auto", gravity="auto")
+print(auto_crop_url)
