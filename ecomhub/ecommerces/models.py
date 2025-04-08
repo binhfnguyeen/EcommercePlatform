@@ -21,6 +21,9 @@ class BaseModel(models.Model):
 class Category(BaseModel):
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 
 class Inventory(BaseModel):
     quantity = models.IntegerField(default=1)
@@ -34,6 +37,9 @@ class Discount(BaseModel):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
     order = models.ForeignKey('Order', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
 
+    def __str__(self):
+        return self.name
+
 
 class ProductImage(BaseModel):
     image = CloudinaryField()
@@ -44,11 +50,17 @@ class Shop(BaseModel):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Product(BaseModel):
     name = models.CharField(max_length=100)
     price = models.IntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name="products")
+
+    def __str__(self):
+        return self.name
 
 
 class Cart(BaseModel):
@@ -57,8 +69,8 @@ class Cart(BaseModel):
 
 
 class CartDetail(BaseModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="products")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="details")
     quantity = models.IntegerField()
 
 
