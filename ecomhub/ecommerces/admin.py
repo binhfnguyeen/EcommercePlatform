@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ecommerces.models import Product, Shop, Product, ProductImage, Category, Discount
+from .models import Product, ProductImage, Shop, Inventory, Cart, CartDetail, Order, OrderDetail, Payment, Category, Comment
 
 
 # Register your models here.
@@ -25,10 +25,52 @@ class ProductImageInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'price', 'shop']
-    search_fields = ['name']
+    search_fields = ['name', 'price']
     list_filter = ['price']
     inlines = [ProductImageInline, ]
 
 
+class InventoryAdmin(admin.ModelAdmin):
+    list_display = ['quantity', 'product']
+    list_filter = ['quantity']
+
+
+class CartDetailInline(admin.TabularInline):
+    model = CartDetail
+
+
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['total', 'user']
+    inlines = [CartDetailInline, ]
+
+
+class OrderDetailInline(admin.TabularInline):
+    model = OrderDetail
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['user', 'total', 'shipping_address', 'payment']
+    inlines = [OrderDetailInline, ]
+
+
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'total', 'status']
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['product', 'user', 'star', 'content', 'image', 'comment_parent']
+
+
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Inventory, InventoryAdmin)
+admin.site.register(Cart, CartAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Payment, PaymentAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Comment, CommentAdmin)
+admin.site.site_header = "EcomSale Admin"

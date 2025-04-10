@@ -82,6 +82,9 @@ class Comment(BaseModel):
     image = CloudinaryField()
     comment_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
 
+    def __str__(self):
+        return self.content
+
 
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -97,5 +100,9 @@ class OrderDetail(BaseModel):
 
 
 class Payment(BaseModel):
+    name = models.CharField(max_length=150, null=True)
     total = models.IntegerField(default=0)
     status = models.BooleanField()
+
+    def __str__(self):
+        return self.name
