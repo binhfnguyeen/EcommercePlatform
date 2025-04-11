@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ecommerces.apps.EcommercesConfig',
+    'rest_framework',
+    'oauth2_provider',
 ]
 
 import pymysql
@@ -80,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'nguyennguyen123',
+        'PASSWORD': 'Khanhnhat2902',
         'HOST': ''  # mặc định localhost
     }
 }

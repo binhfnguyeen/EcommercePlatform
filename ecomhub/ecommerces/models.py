@@ -58,6 +58,7 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     price = models.IntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name="products")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
