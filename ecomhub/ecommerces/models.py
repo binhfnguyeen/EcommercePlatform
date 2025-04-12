@@ -58,7 +58,7 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     price = models.IntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name="products")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="products")
 
     def __str__(self):
         return self.name
@@ -91,7 +91,6 @@ class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.IntegerField(default=0)
     shipping_address = models.CharField(max_length=150, null=True)
-    payment = models.OneToOneField('Payment', on_delete=models.CASCADE, null=True)
 
 
 class OrderDetail(BaseModel):
@@ -100,10 +99,16 @@ class OrderDetail(BaseModel):
     quantity = models.IntegerField()
 
 
+PAYMENT_METHODS = [
+    ('MOMO', 'Momo'),
+    ('CREDIT', 'Thẻ tín dụng'),
+    ('COD', 'Thanh toán khi nhận hàng'),
+    ('BANK', 'Chuyển khoản ngân hàng'),
+]
+
+
 class Payment(BaseModel):
-    name = models.CharField(max_length=150, null=True)
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHODS, default='COD')
     total = models.IntegerField(default=0)
     status = models.BooleanField()
-
-    def __str__(self):
-        return self.name
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment', null=True)

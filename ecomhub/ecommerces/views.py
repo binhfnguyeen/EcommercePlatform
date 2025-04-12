@@ -1,3 +1,5 @@
+from _ast import Or
+
 from django.shortcuts import render
 from django.utils.timezone import activate
 from rest_framework.response import Response
@@ -5,29 +7,34 @@ from urllib3 import request
 from . import paginators
 from . import perms
 
-from .models import Category,Product,Inventory,ProductImage,Shop,Cart,CartDetail,Comment,Discount,Order,OrderDetail,Payment,User
-from rest_framework import viewsets, permissions, generics,parsers,status
+from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
+    OrderDetail, Payment, User
+from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
-    ProductImageSerializer
+    ProductImageSerializer, OrderSerializer
 
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Category.objects.filter(active=True)
     serializer_class = CategorySerializer
 
+
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
-    parser_classes = [parsers.MultiPartParser,]
+    parser_classes = [parsers.MultiPartParser, ]
 
-class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView,generics.RetrieveAPIView):
+
+class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Shop.objects.filter(active=True)
     serializer_class = ShopSerializer
 
-class ProductViewSet(viewsets.ViewSet,generics.ListAPIView,generics.RetrieveAPIView):
+
+class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Product.objects.filter(active=True).prefetch_related('images')
     serializer_class = ProductSerializer
+
     def get_permissions(self):
         if self.action.__eq__('get_comments'):
             if self.request.method.__eq__('POST'):
@@ -59,17 +66,24 @@ class ProductViewSet(viewsets.ViewSet,generics.ListAPIView,generics.RetrieveAPIV
             else:
                 return Response(CommentSerializer(comments, many=True).data)
 
+
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
     permission_classes = [perms.CommentOwner]
 
 
-
-class CommentViewSet(viewsets.ViewSet,generics.ListCreateAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
 
-class ProductImageViewSet(viewsets.ViewSet,generics.ListAPIView):
+
+class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Product.objects.filter(active=True)
     serializer_class = ProductImageSerializer
+
+
+class OrderViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Order.objects.filter(active=True)
+    serializer_class = OrderSerializer
+    pagination_class = paginators.OrderPaginator
