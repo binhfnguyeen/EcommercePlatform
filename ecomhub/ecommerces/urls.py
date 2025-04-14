@@ -5,12 +5,13 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 router = routers.DefaultRouter()
-router.register('category', views.CategoryViewSet)
-router.register('user', views.UserViewSet)
-router.register('shop', views.ShopViewSet)
-router.register('product', views.ProductViewSet)
-router.register('comment', views.CommentViewSet)
-router.register('order', views.OrderViewSet)
+router.register('categorys', views.CategoryViewSet)
+router.register('users', views.UserViewSet)
+router.register('shops', views.ShopViewSet)
+router.register('products', views.ProductViewSet)
+router.register('comments', views.CommentViewSet)
+router.register('orders', views.OrderViewSet)
+router.register('payments', views.PaymentViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -34,5 +35,6 @@ urlpatterns = [
             name='schema-swagger-ui'),
     re_path(r'^redoc/$',
             schema_view.with_ui('redoc', cache_timeout=0),
-            name='schema-redoc')
+            name='schema-redoc'),
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

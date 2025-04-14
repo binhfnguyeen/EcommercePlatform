@@ -42,6 +42,12 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+}
+
+OAUTH2_PROVIDER = {'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'}
+
 import pymysql
 
 pymysql.install_as_MySQLdb()

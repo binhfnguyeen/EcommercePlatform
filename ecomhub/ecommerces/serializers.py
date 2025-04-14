@@ -15,7 +15,7 @@ class CategorySerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'is_shop_owner', 'avatar']
+        fields = ['username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar']
 
     def create(self, validated_data):
         data = validated_data.copy()
@@ -24,6 +24,17 @@ class UserSerializer(ModelSerializer):
         u.save()
 
         return u
+
+    def update(self, instance, validated_data):
+        avatar = validated_data.get('avatar')
+
+        if isinstance(avatar, str):
+            instance.avatar = avatar
+        elif avatar:
+            instance.avatar = avatar
+
+        instance.save()
+        return instance
 
 
 class ShopSerializer(ModelSerializer):
@@ -94,8 +105,22 @@ class PaymentSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    payment = PaymentSerializer()
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'total', 'shipping_address', 'payment']
+        fields = ['id', 'user', 'total', 'shipping_address']
+
+
+class OrderDetailWithProductSerializer(ModelSerializer):
+    product = ProductSerializer()
+    class Meta:
+        model = OrderDetail
+        fields = ['id', 'product', 'quantity']
+
+
+class OrderDetailWithOrderSerializer(ModelSerializer):
+    order = OrderSerializer()
+
+    class Meta:
+        model = OrderDetail
+        fields = ['id', 'order', 'quantity']

@@ -9,3 +9,8 @@ class OwnerPerms(permissions.IsAuthenticated):
 class CommentOwner(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         return super().has_object_permission(request, view, obj) and request.user == obj.user
+
+
+class OrderOwner(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and obj.user == request.user
