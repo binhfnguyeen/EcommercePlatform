@@ -12,7 +12,8 @@ from .models import Category, Product, Inventory, ProductImage, Shop, Cart, Cart
 from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
-    ProductImageSerializer, OrderSerializer, OrderDetailWithOrderSerializer, OrderDetailWithProductSerializer, PaymentSerializer
+    ProductImageSerializer, OrderSerializer, OrderDetailWithOrderSerializer, OrderDetailWithProductSerializer, \
+    PaymentSerializer
 
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -126,6 +127,34 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
 
     def get_object(self):
         return generics.get_object_or_404(self.queryset, pk=self.kwargs.get('pk'))
+
+    @action(methods=['delete'], detail=True, url_path='order_cancel', permission_classes=[permissions.IsAuthenticated])
+    def cancel_order(self, request, pk):
+        order = self.get_object()
+
+        if order.user != request.user:
+            return Response({'error': 'Bạn không có quyền truy cập đơn hàng này'}, status=status.HTTP_400_BAD_REQUEST)
+
+        order.active = False
+        order.save()
+
+        return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
+
+    @action(methods=['patch'], detail=True, url_path='update_address', permission_classes=[permissions.IsAuthenticated])
+    def update_address(self, request, pk):
+        order = self.get_object()
+        if order.user != request.user:
+            return Response({'error': 'Bạn không có quyền truy cập địa chỉ đơn hàng này!'}, status=status.HTTP_403_FORBIDDEN)
+
+        new_address = request.data.get('shipping_address')
+
+        if not new_address:
+            return Response({'error': 'Missing shipping_address'}, status=status.HTTP_400_BAD_REQUEST)
+
+        order.shipping_address = new_address
+        order.save()
+
+        return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=True, url_path='order_details')
     def get_order_details(self, request, pk):
