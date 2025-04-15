@@ -42,7 +42,7 @@ class Discount(BaseModel):
 
 
 class ProductImage(BaseModel):
-    image = CloudinaryField()
+    image = CloudinaryField(null=True, blank=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name="images")
 
 
@@ -58,19 +58,19 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     price = models.IntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, related_name="products")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name="products")
 
     def __str__(self):
         return self.name
 
 
 class Cart(BaseModel):
-    total = models.IntegerField(default=0)
+    total = models.IntegerField(default=0) # Tổng giá trị giỏ hàng hiện tại (chưa áp dụng giảm giá, phí ship)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
 
 
 class CartDetail(BaseModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_details")
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="details")
     quantity = models.IntegerField()
 
@@ -80,7 +80,7 @@ class Comment(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     star = models.IntegerField(null=True, blank=True)
     content = models.TextField(null=True, blank=True)
-    image = CloudinaryField()
+    image = CloudinaryField(null=True, blank=True)
     comment_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
 
     def __str__(self):
@@ -89,21 +89,29 @@ class Comment(BaseModel):
 
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total = models.IntegerField(default=0)
+    total = models.IntegerField(default=0)  # Tổng giá trị đơn hàng cuối cùng (đã tính giảm giá, phí ship)
     shipping_address = models.CharField(max_length=150, null=True)
-    payment = models.OneToOneField('Payment', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"Order's {self.user.username}"
 
 
 class OrderDetail(BaseModel):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderdetails")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="orderdetails")
+    quantity = models.IntegerField(default=0)
+
+
+PAYMENT_METHODS = [
+    ('MOMO', 'Momo'),
+    ('CREDIT', 'Thẻ tín dụng'),
+    ('COD', 'Thanh toán khi nhận hàng'),
+    ('BANK', 'Chuyển khoản ngân hàng'),
+]
 
 
 class Payment(BaseModel):
-    name = models.CharField(max_length=150, null=True)
-    total = models.IntegerField(default=0)
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHODS, default='COD')
+    total = models.IntegerField(default=0) # Số tiền người dùng đã thực sự trả (thường nên bằng Order.total)
     status = models.BooleanField()
-
-    def __str__(self):
-        return self.name
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment', null=True)

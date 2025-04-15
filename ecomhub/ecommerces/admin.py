@@ -48,13 +48,18 @@ class OrderDetailInline(admin.TabularInline):
     model = OrderDetail
 
 
+class PaymentInline(admin.TabularInline):
+    model = Payment
+    extra = 0
+
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'total', 'shipping_address', 'payment']
-    inlines = [OrderDetailInline, ]
+    list_display = ['user', 'total', 'shipping_address']
+    inlines = [OrderDetailInline, PaymentInline]
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'total', 'status']
+    list_display = ['payment_method', 'total', 'status']
 
 
 class CategoryAdmin(admin.ModelAdmin):

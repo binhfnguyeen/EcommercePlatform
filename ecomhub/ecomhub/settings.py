@@ -39,7 +39,14 @@ INSTALLED_APPS = [
     'ecommerces.apps.EcommercesConfig',
     'rest_framework',
     'oauth2_provider',
+    'drf_yasg',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+}
+
+OAUTH2_PROVIDER = {'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'}
 
 import pymysql
 
@@ -82,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'Khanhnhat2902',
+        'PASSWORD': 'nguyennguyen123',
         'HOST': ''  # mặc định localhost
     }
 }
