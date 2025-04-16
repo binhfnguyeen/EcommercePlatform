@@ -144,7 +144,8 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def update_address(self, request, pk):
         order = self.get_object()
         if order.user != request.user:
-            return Response({'error': 'Bạn không có quyền truy cập địa chỉ đơn hàng này!'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'Bạn không có quyền truy cập địa chỉ đơn hàng này!'},
+                            status=status.HTTP_403_FORBIDDEN)
 
         new_address = request.data.get('shipping_address')
 
@@ -168,6 +169,15 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
         return Response(OrderDetailWithProductSerializer(orderdetails, many=True).data, status=status.HTTP_200_OK)
 
 
-class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView):
+class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Payment.objects.filter(active=True)
     serializer_class = PaymentSerializer
+    permission_classes = [perms.PaymentOwner]
+
+    def get_queryset(self):
+        query = self.queryset
+        if self.action.__eq__('list'):
+            id = self.request.query_params.get('id')
+            if id:
+                query = query.filter(id=id)
+        return query
