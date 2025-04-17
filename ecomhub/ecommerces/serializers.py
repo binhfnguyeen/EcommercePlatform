@@ -116,11 +116,3 @@ class OrderDetailWithProductSerializer(ModelSerializer):
     class Meta:
         model = OrderDetail
         fields = ['id', 'product', 'quantity']
-
-
-class OrderDetailWithOrderSerializer(ModelSerializer):
-    order = OrderSerializer()
-
-    class Meta:
-        model = OrderDetail
-        fields = ['id', 'order', 'quantity']

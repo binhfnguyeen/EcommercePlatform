@@ -103,8 +103,7 @@ class OrderDetail(BaseModel):
 
 
 PAYMENT_METHODS = [
-    ('MOMO', 'Momo'),
-    ('CREDIT', 'Thẻ tín dụng'),
+    ('PAYPAL', 'Paypal'),
     ('COD', 'Thanh toán khi nhận hàng'),
     ('BANK', 'Chuyển khoản ngân hàng'),
 ]

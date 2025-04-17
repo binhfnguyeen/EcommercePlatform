@@ -11,7 +11,8 @@ router.register('shops', views.ShopViewSet)
 router.register('products', views.ProductViewSet)
 router.register('comments', views.CommentViewSet)
 router.register('orders', views.OrderViewSet)
-router.register('payments', views.PaymentViewSet)
+router.register(r'payments', views.PaymentViewSet, basename='payments')
+
 
 schema_view = get_schema_view(
     openapi.Info(

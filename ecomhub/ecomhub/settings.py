@@ -159,3 +159,7 @@ print(optimize_url)
 # Transform the image: auto-crop to square aspect_ratio
 auto_crop_url, _ = cloudinary_url("shoes", width=500, height=500, crop="auto", gravity="auto")
 print(auto_crop_url)
+
+PAYPAL_CLIENT_ID = "AemDUXuwdJQ9e4T71_RRzWyU5T6f30or_mSU_riuhG6fDVhGCOlbkjwasYBUtAMlFKMCk_cOSyLbX7fo"
+PAYPAL_SECRET = "EIw5O0zFLD3V82vvonNlOsTZFGk2WdIQwHhruVT4MMJOvqQRDTsmv9NA71AN7on73Z31smlxN8AO0dZw"
+
