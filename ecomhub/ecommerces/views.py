@@ -3,6 +3,7 @@ from _ast import Or
 import requests
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.template.defaulttags import comment
 from django.utils.timezone import activate
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -52,6 +53,38 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Shop.objects.filter(active=True)
     serializer_class = ShopSerializer
+    permission_classes = [perms.IsOwnerShop]
+
+    @action(methods=['get'], url_path='products', detail=True)
+    def get_product(self, request, pk):
+        shop = self.get_object()
+
+        # Fix: 'prfetch_related' should be 'prefetch_related'
+        products = shop.products.all()  # Assuming a related_name of 'products' on the relation
+
+        paginator = paginators.ProductPaginator()
+        page = paginator.paginate_queryset(products, request)
+
+        if page is not None:
+            serializer = ProductSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['post'], url_path='create_product', detail=True)
+    def create_product(self, request, pk):
+        shop = ShopSerializer(Shop.objects.get(pk=pk))
+        cate = CategorySerializer(Category.objects.get(name=request.data.get('category')))
+        p = ProductSerializer(data={
+            'name': request.data.get('name'),
+            'price': request.data.get('price'),
+            'shop': shop.data,
+            'category': cate.data
+        })
+        p.is_valid(raise_exception=True)
+        d = p.save()
+        return Response(ProductSerializer(d).data, status=status.HTTP_201_CREATED)
 
 
 class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
@@ -93,15 +126,32 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
                 return Response(CommentSerializer(comments, many=True).data)
 
 
+
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
     permission_classes = [perms.CommentOwner]
 
 
-class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView,generics.RetrieveAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
+
+    @action(methods=['post'],url_path='reply',detail=True)
+    def reply(self,request,pk):
+        try:
+            comment_parent=Comment.objects.get(pk=pk)
+        except Comment.DoesNotExits:
+            return Response({'error':'Parent comment not found.'},status=status.HTTP_404_NOT_FOUND)
+        comment_child=CommentSerializer(data={
+            "content":request.data.get('content'),
+            "user":request.user.pk,
+            "comment_parent_id":comment_parent.id,
+            "product":comment_parent.product
+        })
+        comment_child.is_valid()
+        r=comment_child.save()
+        return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
 
 class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
