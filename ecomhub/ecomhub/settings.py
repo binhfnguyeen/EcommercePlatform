@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -27,10 +26,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,9 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ecommerces.apps.EcommercesConfig',
+    'rest_framework',
+    'oauth2_provider',
+    'drf_yasg',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+}
+
+OAUTH2_PROVIDER = {'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'}
+
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 MIDDLEWARE = [
@@ -72,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecomhub.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -81,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'nguyennguyen123',
+        'PASSWORD': 'Khanhnhat2902',
         'HOST': ''  # mặc định localhost
     }
 }
@@ -106,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -117,7 +124,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -135,9 +141,9 @@ from cloudinary.utils import cloudinary_url
 
 # Configuration
 cloudinary.config(
-    cloud_name = "dwivkhh8t",
-    api_key = "925656835271691",
-    api_secret = "xggQhqIzVzwLbOJx05apmM4Od7U", # Click 'View API Keys' above to copy your API secret
+    cloud_name="dwivkhh8t",
+    api_key="925656835271691",
+    api_secret="xggQhqIzVzwLbOJx05apmM4Od7U",  # Click 'View API Keys' above to copy your API secret
     secure=True
 )
 
@@ -153,3 +159,7 @@ print(optimize_url)
 # Transform the image: auto-crop to square aspect_ratio
 auto_crop_url, _ = cloudinary_url("shoes", width=500, height=500, crop="auto", gravity="auto")
 print(auto_crop_url)
+
+PAYPAL_CLIENT_ID = "AemDUXuwdJQ9e4T71_RRzWyU5T6f30or_mSU_riuhG6fDVhGCOlbkjwasYBUtAMlFKMCk_cOSyLbX7fo"
+PAYPAL_SECRET = "EIw5O0zFLD3V82vvonNlOsTZFGk2WdIQwHhruVT4MMJOvqQRDTsmv9NA71AN7on73Z31smlxN8AO0dZw"
+
