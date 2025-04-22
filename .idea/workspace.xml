@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b427f41-01e9-48b4-aa64-84c440406eb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/EcommercePlatform.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EcommercePlatform.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecomhub/ecomhub/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecomhub/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

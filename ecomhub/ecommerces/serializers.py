@@ -105,7 +105,6 @@ class PaymentSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-
     class Meta:
         model = Order
         fields = ['id', 'active', 'user', 'total', 'shipping_address']
@@ -113,6 +112,7 @@ class OrderSerializer(ModelSerializer):
 
 class OrderDetailWithProductSerializer(ModelSerializer):
     product = ProductSerializer()
+
     class Meta:
         model = OrderDetail
         fields = ['id', 'product', 'quantity']
