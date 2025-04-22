@@ -9,9 +9,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecomhub/ecomhub/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecomhub/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/paginators.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/paginators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/perms.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/perms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +58,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+        <option value="bundled-python-sdk-5b207ade9991-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.17890.14" />
       </set>
     </attachedChunks>
   </component>
