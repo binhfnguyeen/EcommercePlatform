@@ -20,7 +20,10 @@ from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
     ProductImageSerializer, OrderSerializer, OrderDetailWithProductSerializer, \
     PaymentSerializer, CartSerializer, CartDetailSerializer
+from django.db.models import Sum, F, functions as db_func, Q
+from rest_framework.views import APIView
 from django.conf import settings
+from datetime import datetime
 
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -141,7 +144,7 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
     def reply(self, request, pk):
         try:
             comment_parent = Comment.objects.get(pk=pk)
-        except Comment.DoesNotExits:
+        except Comment.D:
             return Response({'error': 'Parent comment not found.'}, status=status.HTTP_404_NOT_FOUND)
         comment_child = CommentSerializer(data={
             "content": request.data.get('content'),
@@ -332,6 +335,10 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
         try:
             payment = Payment.objects.get(order__pk=order_pk)
             payment.status = True
+            order = payment.order
+            order.status = 'PAID'
+            order.save()
+
             print(f"Đã thanh toán thành công Order có id {order_pk}")
             payment.save()
         except Payment.DoesNotExist:

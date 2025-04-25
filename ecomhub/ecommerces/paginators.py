@@ -10,7 +10,7 @@ class CommentPaginator(pagination.PageNumberPagination):
 
 
 class OrderPaginator(pagination.PageNumberPagination):
-    page_size = 3
+    page_size = 10
 
 
 class ProductPaginator(pagination.PageNumberPagination):
@@ -18,4 +18,4 @@ class ProductPaginator(pagination.PageNumberPagination):
 
 
 class PaymentPaginator(pagination.PageNumberPagination):
-    page_size = 5
+    page_size = 10

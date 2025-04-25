@@ -105,28 +105,28 @@ class PaymentSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-
     class Meta:
         model = Order
-        fields = ['id', 'active', 'user', 'total', 'shipping_address']
+        fields = ['id', 'active', 'user', 'total', 'shipping_address', 'status']
 
 
 class OrderDetailWithProductSerializer(ModelSerializer):
     product = ProductSerializer()
+
     class Meta:
         model = OrderDetail
         fields = ['id', 'product', 'quantity']
 
+
 class CartDetailSerializer(ModelSerializer):
     class Meta:
-        model=CartDetail
-        fields=['id','quantity','product','cart']
+        model = CartDetail
+        fields = ['id', 'quantity', 'product', 'cart']
 
 
 class CartSerializer(ModelSerializer):
-    details=CartDetailSerializer(many=True, read_only=True) # Error here without read_only or source
+    details = CartDetailSerializer(many=True, read_only=True)  # Error here without read_only or source
+
     class Meta:
-        model=Cart
-        fields=['id','user','total','details']
-
-
+        model = Cart
+        fields = ['id', 'user', 'total', 'details']
