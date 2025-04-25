@@ -1,4 +1,5 @@
 from _ast import Or
+from itertools import product
 
 import requests
 from django.http import HttpResponse
@@ -7,7 +8,7 @@ from django.template.defaulttags import comment
 from django.utils.timezone import activate
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
-from rest_framework.templatetags.rest_framework import data
+from rest_framework.templatetags.rest_framework import data, items
 from urllib3 import request
 from . import paginators
 from . import perms
@@ -18,7 +19,7 @@ from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
     ProductImageSerializer, OrderSerializer, OrderDetailWithProductSerializer, \
-    PaymentSerializer
+    PaymentSerializer, CartSerializer, CartDetailSerializer
 from django.conf import settings
 
 
@@ -347,3 +348,31 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
 
         return Response({"message": "Thanh toán đã bị hủy bỏ! Bạn có thể thử lại và chọn phương thức khác"},
                         status=status.HTTP_200_OK)
+
+
+class CartViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
+    queryset = Cart.objects.filter(active=True).prefetch_related('details')
+    serializer_class = CartSerializer
+    def get_object(self):
+        return Cart.objects.get(user=self.request.user)
+
+    @action(methods=['post'],detail=True,url_path='add_product')
+    def add_product(self,request,pk):
+        try:
+            product=Product.objects.get(pk=request.data.get('product'))
+        except Product.DoesNotExist:
+            Response({'error': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        t=CartDetail.objects.get(product=product.id,cart=pk)
+        if t:
+            t.quantity+=request.data.get('quantity')
+            return Response(CartDetailSerializer(t).data, status=status.HTTP_200_OK)
+        cartDetail=CartDetailSerializer(data={
+            'product':product.id,
+            'quantity':request.data.get('quantity'),
+            'cart':pk
+        })
+        cartDetail.is_valid()
+        item=cartDetail.save()
+
+        return Response(CartDetailSerializer(item).data,status=status.HTTP_201_CREATED)
