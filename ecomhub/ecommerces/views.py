@@ -1,4 +1,5 @@
 from _ast import Or
+from itertools import product
 
 import requests
 from django.http import HttpResponse
@@ -7,7 +8,7 @@ from django.template.defaulttags import comment
 from django.utils.timezone import activate
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
-from rest_framework.templatetags.rest_framework import data
+from rest_framework.templatetags.rest_framework import data, items
 from urllib3 import request
 from . import paginators
 from . import perms
@@ -18,7 +19,7 @@ from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
     ProductImageSerializer, OrderSerializer, OrderDetailWithProductSerializer, \
-    PaymentSerializer
+    PaymentSerializer, CartSerializer, CartDetailSerializer
 from django.conf import settings
 
 
@@ -126,31 +127,30 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
                 return Response(CommentSerializer(comments, many=True).data)
 
 
-
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
     permission_classes = [perms.CommentOwner]
 
 
-class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView,generics.RetrieveAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
 
-    @action(methods=['post'],url_path='reply',detail=True)
-    def reply(self,request,pk):
+    @action(methods=['post'], url_path='reply', detail=True)
+    def reply(self, request, pk):
         try:
-            comment_parent=Comment.objects.get(pk=pk)
+            comment_parent = Comment.objects.get(pk=pk)
         except Comment.DoesNotExits:
-            return Response({'error':'Parent comment not found.'},status=status.HTTP_404_NOT_FOUND)
-        comment_child=CommentSerializer(data={
-            "content":request.data.get('content'),
-            "user":request.user.pk,
-            "comment_parent_id":comment_parent.id,
-            "product":comment_parent.product
+            return Response({'error': 'Parent comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+        comment_child = CommentSerializer(data={
+            "content": request.data.get('content'),
+            "user": request.user.pk,
+            "comment_parent_id": comment_parent.id,
+            "product": comment_parent.product
         })
         comment_child.is_valid()
-        r=comment_child.save()
+        r = comment_child.save()
         return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
 
@@ -162,6 +162,7 @@ class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
 class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     queryset = Order.objects.filter(active=True)
     serializer_class = OrderSerializer
+    permission_classes = [perms.OrderOwner]
     pagination_class = paginators.OrderPaginator
 
     def get_queryset(self):
@@ -177,7 +178,7 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def get_object(self):
         return generics.get_object_or_404(self.queryset, pk=self.kwargs.get('pk'))
 
-    @action(methods=['delete'], detail=True, url_path='order_cancel', permission_classes=[permissions.IsAuthenticated])
+    @action(methods=['delete'], detail=True, url_path='order_cancel')
     def cancel_order(self, request, pk):
         order = self.get_object()
 
@@ -189,7 +190,7 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
 
         return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
 
-    @action(methods=['patch'], detail=True, url_path='update_address', permission_classes=[permissions.IsAuthenticated])
+    @action(methods=['patch'], detail=True, url_path='update_address')
     def update_address(self, request, pk):
         order = self.get_object()
         if order.user != request.user:
@@ -347,3 +348,31 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
 
         return Response({"message": "Thanh toán đã bị hủy bỏ! Bạn có thể thử lại và chọn phương thức khác"},
                         status=status.HTTP_200_OK)
+
+
+class CartViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
+    queryset = Cart.objects.filter(active=True).prefetch_related('details')
+    serializer_class = CartSerializer
+    def get_object(self):
+        return Cart.objects.get(user=self.request.user)
+
+    @action(methods=['post'],detail=True,url_path='add_product')
+    def add_product(self,request,pk):
+        try:
+            product=Product.objects.get(pk=request.data.get('product'))
+        except Product.DoesNotExist:
+            Response({'error': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        t=CartDetail.objects.get(product=product.id,cart=pk)
+        if t:
+            t.quantity+=request.data.get('quantity')
+            return Response(CartDetailSerializer(t).data, status=status.HTTP_200_OK)
+        cartDetail=CartDetailSerializer(data={
+            'product':product.id,
+            'quantity':request.data.get('quantity'),
+            'cart':pk
+        })
+        cartDetail.is_valid()
+        item=cartDetail.save()
+
+        return Response(CartDetailSerializer(item).data,status=status.HTTP_201_CREATED)

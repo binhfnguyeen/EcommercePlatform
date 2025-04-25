@@ -3,7 +3,9 @@ from rest_framework import permissions
 
 class IsOwnerShop(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):
-        return super().has_object_permission(request, view, obj) and request.user == obj and request.user.is_shop_owner==True
+        return super().has_object_permission(request, view,
+                                             obj) and request.user == obj and request.user.is_shop_owner == True
+
 
 class OwnerPerms(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj):

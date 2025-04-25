@@ -116,3 +116,17 @@ class OrderDetailWithProductSerializer(ModelSerializer):
     class Meta:
         model = OrderDetail
         fields = ['id', 'product', 'quantity']
+
+class CartDetailSerializer(ModelSerializer):
+    class Meta:
+        model=CartDetail
+        fields=['id','quantity','product','cart']
+
+
+class CartSerializer(ModelSerializer):
+    details=CartDetailSerializer(many=True, read_only=True) # Error here without read_only or source
+    class Meta:
+        model=Cart
+        fields=['id','user','total','details']
+
+

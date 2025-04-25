@@ -65,7 +65,7 @@ class Product(BaseModel):
 
 
 class Cart(BaseModel):
-    total = models.IntegerField(default=0) # Tổng giá trị giỏ hàng hiện tại (chưa áp dụng giảm giá, phí ship)
+    total = models.IntegerField(default=0)  # Tổng giá trị giỏ hàng hiện tại (chưa áp dụng giảm giá, phí ship)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
 
 
@@ -111,6 +111,6 @@ PAYMENT_METHODS = [
 
 class Payment(BaseModel):
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHODS, default='COD')
-    total = models.IntegerField(default=0) # Số tiền người dùng đã thực sự trả (thường nên bằng Order.total)
+    total = models.IntegerField(default=0)  # Số tiền người dùng đã thực sự trả (thường nên bằng Order.total)
     status = models.BooleanField()
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment', null=True)
