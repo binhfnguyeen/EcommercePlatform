@@ -127,31 +127,30 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
                 return Response(CommentSerializer(comments, many=True).data)
 
 
-
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
     permission_classes = [perms.CommentOwner]
 
 
-class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView,generics.RetrieveAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
 
-    @action(methods=['post'],url_path='reply',detail=True)
-    def reply(self,request,pk):
+    @action(methods=['post'], url_path='reply', detail=True)
+    def reply(self, request, pk):
         try:
-            comment_parent=Comment.objects.get(pk=pk)
+            comment_parent = Comment.objects.get(pk=pk)
         except Comment.DoesNotExits:
-            return Response({'error':'Parent comment not found.'},status=status.HTTP_404_NOT_FOUND)
-        comment_child=CommentSerializer(data={
-            "content":request.data.get('content'),
-            "user":request.user.pk,
-            "comment_parent_id":comment_parent.id,
-            "product":comment_parent.product
+            return Response({'error': 'Parent comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+        comment_child = CommentSerializer(data={
+            "content": request.data.get('content'),
+            "user": request.user.pk,
+            "comment_parent_id": comment_parent.id,
+            "product": comment_parent.product
         })
         comment_child.is_valid()
-        r=comment_child.save()
+        r = comment_child.save()
         return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
 
@@ -163,6 +162,7 @@ class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
 class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     queryset = Order.objects.filter(active=True)
     serializer_class = OrderSerializer
+    permission_classes = [perms.OrderOwner]
     pagination_class = paginators.OrderPaginator
 
     def get_queryset(self):
@@ -178,7 +178,7 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def get_object(self):
         return generics.get_object_or_404(self.queryset, pk=self.kwargs.get('pk'))
 
-    @action(methods=['delete'], detail=True, url_path='order_cancel', permission_classes=[permissions.IsAuthenticated])
+    @action(methods=['delete'], detail=True, url_path='order_cancel')
     def cancel_order(self, request, pk):
         order = self.get_object()
 
@@ -190,7 +190,7 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
 
         return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
 
-    @action(methods=['patch'], detail=True, url_path='update_address', permission_classes=[permissions.IsAuthenticated])
+    @action(methods=['patch'], detail=True, url_path='update_address')
     def update_address(self, request, pk):
         order = self.get_object()
         if order.user != request.user:

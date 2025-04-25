@@ -129,3 +129,4 @@ class CartSerializer(ModelSerializer):
         model=Cart
         fields=['id','user','total','details']
 
+

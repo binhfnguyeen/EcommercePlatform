@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="4b427f41-01e9-48b4-aa64-84c440406eb1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/urls.py" afterDir="false" />
+=======
+>>>>>>> a3618f6e04a3275fed87d0456e933811bda8f90c
       <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +61,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+        <option value="bundled-python-sdk-5b207ade9991-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.17890.14" />
       </set>
     </attachedChunks>
   </component>
