@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4b427f41-01e9-48b4-aa64-84c440406eb1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/urls.py" afterDir="false" />
-=======
->>>>>>> a3618f6e04a3275fed87d0456e933811bda8f90c
       <change beforePath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecomhub/ecommerces/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,5 +72,16 @@
       <updated>1743683196355</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

@@ -12,7 +12,7 @@ router.register('products', views.ProductViewSet)
 router.register('comments', views.CommentViewSet)
 router.register('orders', views.OrderViewSet)
 router.register(r'payments', views.PaymentViewSet, basename='payments')
-router.register('cart',views.CartViewSet)
+router.register('cart', views.CartViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -38,4 +38,5 @@ urlpatterns = [
             schema_view.with_ui('redoc', cache_timeout=0),
             name='schema-redoc'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('shop/stats/', views.ShopRevenueStatsAPIView.as_view(), name='shop-revenue-stats'),
 ]

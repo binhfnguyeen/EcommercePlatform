@@ -20,7 +20,10 @@ from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
     ProductImageSerializer, OrderSerializer, OrderDetailWithProductSerializer, \
     PaymentSerializer, CartSerializer, CartDetailSerializer
+from django.db.models import Sum, F, functions as db_func, Q
+from rest_framework.views import APIView
 from django.conf import settings
+from datetime import datetime
 
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -40,7 +43,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
             u = request.user
 
             for k, v in request.data.items():
-                if k in ['first_name', 'last_name', 'avatar']:
+                if k in ['first_name', 'last_name', 'avatar', 'is_shop_owner']:
                     setattr(u, k, v)
                 elif k.__eq__('password'):
                     u.set_password(v)
@@ -141,7 +144,7 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
     def reply(self, request, pk):
         try:
             comment_parent = Comment.objects.get(pk=pk)
-        except Comment.DoesNotExits:
+        except Comment.D:
             return Response({'error': 'Parent comment not found.'}, status=status.HTTP_404_NOT_FOUND)
         comment_child = CommentSerializer(data={
             "content": request.data.get('content'),
@@ -160,7 +163,7 @@ class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
-    queryset = Order.objects.filter(active=True)
+    queryset = Order.objects.all().order_by('id')
     serializer_class = OrderSerializer
     permission_classes = [perms.OrderOwner]
     pagination_class = paginators.OrderPaginator
@@ -186,6 +189,7 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
             return Response({'error': 'Bạn không có quyền truy cập đơn hàng này'}, status=status.HTTP_400_BAD_REQUEST)
 
         order.active = False
+        order.status = 'CANCELLED'
         order.save()
 
         return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
@@ -332,6 +336,10 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
         try:
             payment = Payment.objects.get(order__pk=order_pk)
             payment.status = True
+            order = payment.order
+            order.status = 'PAID'
+            order.save()
+
             print(f"Đã thanh toán thành công Order có id {order_pk}")
             payment.save()
         except Payment.DoesNotExist:
@@ -350,29 +358,79 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
                         status=status.HTTP_200_OK)
 
 
-class CartViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
+class CartViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Cart.objects.filter(active=True).prefetch_related('details')
     serializer_class = CartSerializer
+
     def get_object(self):
         return Cart.objects.get(user=self.request.user)
 
-    @action(methods=['post'],detail=True,url_path='add_product')
-    def add_product(self,request,pk):
+    @action(methods=['post'], detail=True, url_path='add_product')
+    def add_product(self, request, pk):
         try:
-            product=Product.objects.get(pk=request.data.get('product'))
+            product = Product.objects.get(pk=request.data.get('product'))
         except Product.DoesNotExist:
             Response({'error': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
 
-        t=CartDetail.objects.get(product=product.id,cart=pk)
+        t = CartDetail.objects.get(product=product.id, cart=pk)
         if t:
-            t.quantity+=request.data.get('quantity')
+            t.quantity += request.data.get('quantity')
             return Response(CartDetailSerializer(t).data, status=status.HTTP_200_OK)
-        cartDetail=CartDetailSerializer(data={
-            'product':product.id,
-            'quantity':request.data.get('quantity'),
-            'cart':pk
+        cartDetail = CartDetailSerializer(data={
+            'product': product.id,
+            'quantity': request.data.get('quantity'),
+            'cart': pk
         })
         cartDetail.is_valid()
-        item=cartDetail.save()
+        item = cartDetail.save()
 
-        return Response(CartDetailSerializer(item).data,status=status.HTTP_201_CREATED)
+        return Response(CartDetailSerializer(item).data, status=status.HTTP_201_CREATED)
+
+
+class ShopRevenueStatsAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        if not user.is_shop_owner:
+            return Response({'error': 'Bạn không có quyền truy cập'}, status=status.HTTP_403_FORBIDDEN)
+
+        shop = getattr(user, 'shop', None)
+
+        if not shop:
+            return Response({'error': 'Không tìm thấy shop'}, status=status.HTTP_404_NOT_FOUND)
+
+        year = int(request.query_params.get('year', datetime.now().year))
+        month = request.query_params.get('month')
+        quarter = request.query_params.get('quarter')
+
+        orderdetails = OrderDetail.objects.filter(
+            product__shop=shop,
+            order__status='COMPLETED',
+            created_date__year=year
+        )
+
+        if month:
+            orderdetails = orderdetails.filter(created_date__month=int(month))
+
+        if quarter:
+            quarter = int(quarter)
+            start_month = (quarter - 1) * 3 + 1
+            end_month = start_month + 2
+            orderdetails = orderdetails.filter(created_date__month__gte=start_month, created_date__month__lte=end_month)
+
+        product_stats = orderdetails.values(name=F('product__name')).annotate(
+            total_quantity=Sum('quantity'),
+            total_revenue=Sum(F('quantity') * F('product__price'))
+        ).order_by('-total_revenue')
+
+        category_stats = orderdetails.values(name=F('product__category__name')).annotate(
+            total_quantity=Sum('quantity'),
+            total_revenue=Sum(F('quantity') * F('product__price'))
+        ).order_by('-total_revenue')
+
+        return Response({
+            'product_stats': product_stats,
+            'category_stats': category_stats
+        })
