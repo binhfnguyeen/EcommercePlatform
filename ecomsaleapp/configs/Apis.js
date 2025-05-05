@@ -1,6 +1,8 @@
-import axios from "axios"
+import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_DOMAIN;
+// const BASE_URL = process.env.REACT_APP_DOMAIN;
+
+const BASE_URL="https://ecomsaletestapi.onrender.com/"
 
 export const endpoints = {
     'categorys': '/categorys/',
@@ -9,7 +11,18 @@ export const endpoints = {
     'products': '/products/',
     'comments': '/comments/',
     'orders': '/orders/',
-    'payments': '/payments/'
+    'payments': '/payments/',
+    'token':'/o/token/',
+    'current_user':'/users/current-user/'
+}
+
+export const authApis=(token)=>{
+    return axios.create({
+        baseURL:BASE_URL,
+        headers:{
+            "Authorization":`Bearer ${token}`
+        }
+    })
 }
 
 export default axios.create({
