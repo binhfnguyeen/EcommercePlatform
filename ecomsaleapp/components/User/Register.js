@@ -72,7 +72,7 @@ const Register = () => {
     const toggleShopOwner = () => {
         const newChecked = !checked;
         setChecked(newChecked);
-        setState(newChecked.toString(), "is_shop_owner");
+        setState(newChecked, "is_shop_owner");
     };
 
     const register = async () => {
@@ -89,6 +89,8 @@ const Register = () => {
                                 type: user.avatar.type
                             });
                         } else {
+                            if(key=='is_shop_owner')
+                                form.append(key,user[key].toString())
                             form.append(key, user[key]);
                         }
                     }
