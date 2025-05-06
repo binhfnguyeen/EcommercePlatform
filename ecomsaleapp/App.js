@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Profile from './components/User/Profile';
 import { useReducer,useContext } from 'react';
 import { Icon } from 'react-native-paper';
+import Shop from './components/Shop/Shop';
 
 
 
@@ -24,6 +25,7 @@ const StackNavigate=()=>{
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="login" component={Login} />
       <Tab.Screen name="register" component={Register} />
+      <Tab.Screen name="shop" component={Shop} />
     </Stack.Navigator>
   )
 }
