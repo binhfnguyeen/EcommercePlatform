@@ -40,7 +40,7 @@ class UserSerializer(ModelSerializer):
 class ShopSerializer(ModelSerializer):
     class Meta:
         model = Shop
-        fields = ['id', 'name']
+        fields = ['id', 'name','user']
 
 
 class ProductImageSerializer(ModelSerializer):

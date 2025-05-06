@@ -36,7 +36,7 @@ const Register = () => {
     const [user, setUser] = useState({});
     const [msg, setMsg] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [checked,setChecked]=useState(true);
+    const [checked,setChecked]=useState(false);
 
 
     const picker = async () => {
@@ -90,8 +90,9 @@ const Register = () => {
                             });
                         } else {
                             if(key=='is_shop_owner')
-                                form.append(key,user[key].toString())
-                            form.append(key, user[key]);
+                                form.append(key,user[key].toString());
+                            else
+                                {form.append(key, user[key]);}
                         }
                     }
                 }
