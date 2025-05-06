@@ -94,6 +94,7 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
 class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Product.objects.filter(active=True).prefetch_related('images')
     serializer_class = ProductSerializer
+    pagination_class = paginators.ProductPaginator
 
     def get_permissions(self):
         if self.action.__eq__('get_comments'):

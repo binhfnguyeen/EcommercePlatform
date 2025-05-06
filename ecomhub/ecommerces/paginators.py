@@ -19,3 +19,7 @@ class ProductPaginator(pagination.PageNumberPagination):
 
 class PaymentPaginator(pagination.PageNumberPagination):
     page_size = 10
+
+
+class ProductPaginator(pagination.PageNumberPagination):
+    page_size = 20
