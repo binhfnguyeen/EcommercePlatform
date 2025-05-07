@@ -108,6 +108,16 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
     def get_object(self):
         return generics.get_object_or_404(self.queryset, pk=self.kwargs.get('pk'))
 
+    def get_queryset(self):
+        query = self.queryset
+
+        if self.action.__eq__('list'):
+            name = self.request.query_params.get('name')
+            if name:
+                query = query.filter(name__icontains=name)
+
+            return query
+
     @action(methods=['get', 'post'], url_path='comments', detail=True)
     def get_comments(self, request, pk):
         if request.method.__eq__('POST'):
