@@ -1,5 +1,6 @@
 from _ast import Or
 from itertools import product
+from pickle import FALSE
 
 import requests
 from django.http import HttpResponse
@@ -59,6 +60,20 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
     serializer_class = ShopSerializer
     permission_classes = [perms.IsOwnerShop]
 
+    @action(methods=['get'],detail=False, url_path='my_shop',  permission_classes=[perms.IsOwnerShop])
+    def get_my_shop(self,request):
+        try:
+            shop = Shop.objects.get(user=request.user)
+            serializer = ShopSerializer(shop)
+        except Shop.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(serializer.data)
+
+
+
+
+
     @action(methods=['get'], url_path='products', detail=True)
     def get_product(self, request, pk):
         shop = self.get_object()
@@ -92,7 +107,7 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
 
 
 class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
-    queryset = Product.objects.filter(active=True).prefetch_related('images')
+    queryset = Product.objects.filter(active=True).prefetch_related('images').order_by('id')
     serializer_class = ProductSerializer
     pagination_class = paginators.ProductPaginator
 

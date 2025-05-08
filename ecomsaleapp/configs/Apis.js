@@ -14,7 +14,11 @@ export const endpoints = {
     'payments': '/payments/',
     'token':'/o/token/',
     'current_user':'/users/current-user/',
+<<<<<<< HEAD
     'product': (productId) => `/products/${productId}/`
+=======
+    'my-shop':'shops/my_shop/'
+>>>>>>> 864d8600d1fb65b614430e91bb0899a7a0abf9a3
 }
 
 export const authApis=(token)=>{

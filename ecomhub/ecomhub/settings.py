@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'nguyennguyen123',
+        'PASSWORD': 'Khanhnhat2902',
         'HOST': ''  # mặc định localhost
     }
 }
