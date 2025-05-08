@@ -22,20 +22,10 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigate = () => {
   return (
-<<<<<<< HEAD
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="productdetail" component={ProductDetail} />
-=======
-    <Stack.Navigator>
-      {/* <Tab.Screen name="home" component={Home} /> */}
-      {/* <Tab.Screen name="login" component={Login} />
-      <Tab.Screen name="register" component={Register} /> */}
-      <Stack.Screen name="home" component={Home} options={{title: "Trang chủ"}}/>
       <Stack.Screen name="shop" component={MyShop} options={{title: "Shop"}}/>
->>>>>>> 864d8600d1fb65b614430e91bb0899a7a0abf9a3
-      {/* <Stack.Screen name="login" component={Login} />
-      <Stack.Screen name="register" component={Register} /> */}
     </Stack.Navigator>
   )
 }
