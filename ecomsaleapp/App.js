@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home/Home';
 import Login from './components/User/Login';
 import Register from './components/User/Register';
+import ProductDetail from './components/Home/ProductDetail';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyUserReducer from './reducers/MyUserReducer';
 import { MyUserContext } from './configs/MyContext';
@@ -20,8 +21,9 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigate = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="home" component={Home} options={{title: "Trang chủ"}}/>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="home" component={Home} />
+      <Stack.Screen name="productdetail" component={ProductDetail} />
       {/* <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} /> */}
     </Stack.Navigator>

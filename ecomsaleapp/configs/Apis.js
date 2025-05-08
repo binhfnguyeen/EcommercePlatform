@@ -13,7 +13,8 @@ export const endpoints = {
     'orders': '/orders/',
     'payments': '/payments/',
     'token':'/o/token/',
-    'current_user':'/users/current-user/'
+    'current_user':'/users/current-user/',
+    'product': (productId) => `/products/${productId}/`
 }
 
 export const authApis=(token)=>{
