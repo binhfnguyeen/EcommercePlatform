@@ -15,6 +15,7 @@ import Profile from './components/User/Profile';
 import { useReducer, useContext } from 'react';
 import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
+import ShopDetail from './components/Shop/ShopDetail';
 
 
 
@@ -22,10 +23,11 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigate = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator  screenOptions={{headerShown: false}}>
       <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="productdetail" component={ProductDetail} />
-      <Stack.Screen name="shop" component={MyShop} options={{title: "Shop"}}/>
+      <Stack.Screen name="MyShop" component={MyShop} options={{title: "Shop"}}/>
+      <Stack.Screen name="ShopDetail" component={ShopDetail}/>
     </Stack.Navigator>
   )
 }
@@ -44,7 +46,7 @@ const TabNavigator = () => {
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
         <Tab.Screen name="profile" component={Profile} options={{ title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20} /> }} />
-        <Tab.Screen name="shopprofile" component={MyShop} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
+        <Tab.Screen name="MyShop" component={MyShop} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
       </>}
     </Tab.Navigator>
   )

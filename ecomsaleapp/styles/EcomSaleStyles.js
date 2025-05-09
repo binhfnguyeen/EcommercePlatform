@@ -8,5 +8,12 @@ export default StyleSheet.create({
     input_text:{
         width:"auto",
     },
+
+    header:{
+        padding: 60,
+        textAlign: 'center',
+        background: "#1abc9c",
+        fontSize: 30,
+    }
     
 })

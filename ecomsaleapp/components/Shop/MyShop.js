@@ -1,60 +1,35 @@
-// import { useContext, useEffect, useState } from "react"
-// import { MyUserContext } from "../../configs/MyContext"
-// import Apis, { authApis,endpoints } from "../../configs/Apis"
-// import { View } from "react-native"
-// import AsyncStorage from "@react-native-async-storage/async-storage"
-
-
-// const MyShop = ()=>{
-//     const user =useContext(MyUserContext)
-//     const [shop,setShop]=useState([])
-//     const[loading,setLoading]=useState(false)
-
-//     const loadShop= async () =>{
-//         try{
-//             setLoading(true)
-//             console.info(user.access_token)
-//             console.info(user)
-//             let token= await AsyncStorage.getItem('token')
-//             console.info(token)
-//             let res=await authApis(token).get(endpoints['shops'])
-//             setShop([...shop,...res.data.results])
-//         }catch(ex){
-//             console.info(ex)
-//         }finally{
-//             setLoading(false)
-//         }
-       
-//     }
-
-//     useEffect(()=>{
-//         let timer=setTimeout(()=>{loadShop();
-//         },500);
-//         console.info(shop)
-//         return () => clearTimeout(timer);
-//     },[])
-
-
-//     return(
-
-//         <View>
-//             {shop.map(s=><Text>{s.name}</Text>)}
-//         </View>
-//     )
-    
-// }
-// export default MyShop;
-
 import { useContext, useEffect, useState } from "react";
 import { MyUserContext } from "../../configs/MyContext";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EcomSaleStyles from "../../styles/EcomSaleStyles";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+
+const Stack=createNativeStackNavigator();
 const MyShop = () => {
     const user = useContext(MyUserContext);
-    const [shop, setShop] = useState([]);
+    const [shop, setShop] = useState({});
     const [loading, setLoading] = useState(false);
+    const navigation=useNavigation();
+
+
+    // const StackNavigate = () => {
+        // return (
+        //     <NavigationContainer>
+        //         <Stack.Navigator initialRouteName="shopdetail" screenOptions={{headerShown: false}}>
+        //             <Stack.Screen name="myshop" component={MyShop} />
+        //             <Stack.Screen name="shopdetail" component={ShopDetail} />
+        //         </Stack.Navigator>
+        //     </NavigationContainer>
+        // )
+        // }
+    
+    // const setState=(value,field)=>{
+    //     setShop({[field]:value})
+    // }
 
     const loadShop = async () => {
         try {
@@ -66,12 +41,19 @@ const MyShop = () => {
             }
 
             const res = await authApis(token).get(endpoints['my-shop']);
-            console.info(res.data)
-            setShop( [...shop, ...res.data]);
+            for(let d in res.data){
+                // setState(res.data[d],d);
+                setShop(res.data)
+                // console.info(res.data)
+                // console.info(shop)
+            }
+            // setShop(res.data)
         } catch (ex) {
             console.error(ex);
         } finally {
             setLoading(false);
+            // console.info(res.data)
+            console.info(shop.user)
         }
     };
 
@@ -81,7 +63,9 @@ const MyShop = () => {
 
     return (
         <View>
-            {shop.map(s => <Text key={s.id}>{s.name}</Text>)}
+            <Text style={EcomSaleStyles.header}>Của hàng của bạn</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})}><Text>{shop.name}</Text></TouchableOpacity> */}
         </View>
     );
 };
