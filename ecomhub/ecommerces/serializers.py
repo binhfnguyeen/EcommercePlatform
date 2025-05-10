@@ -89,7 +89,7 @@ class CommentSerializer(ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'content', 'image', 'comment_parent_id', 'product']
+        fields = ['id', 'user', 'star', 'content', 'image', 'comment_parent_id', 'product']
 
         extra_kwargs = {
             'product': {

@@ -157,13 +157,13 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
 
 
 class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
-    queryset = Comment.objects.filter(active=True)
+    queryset = Comment.objects.filter(active=True).order_by('id')
     serializer_class = CommentSerializer
     permission_classes = [perms.CommentOwner]
 
 
 class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
-    queryset = Comment.objects.filter(active=True)
+    queryset = Comment.objects.filter(active=True).order_by('id')
     serializer_class = CommentSerializer
     pagination_class = paginators.CommentPaginator
 
