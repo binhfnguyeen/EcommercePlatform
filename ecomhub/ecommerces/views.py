@@ -165,6 +165,7 @@ class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateA
 class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Comment.objects.filter(active=True)
     serializer_class = CommentSerializer
+    pagination_class = paginators.CommentPaginator
 
     @action(methods=['post'], url_path='reply', detail=True)
     def reply(self, request, pk):
