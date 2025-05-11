@@ -60,8 +60,8 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
     serializer_class = ShopSerializer
     permission_classes = [perms.IsOwnerShop]
 
-    @action(methods=['get'],detail=False, url_path='my_shop',  permission_classes=[perms.IsOwnerShop])
-    def get_my_shop(self,request):
+    @action(methods=['get'], detail=False, url_path='my_shop', permission_classes=[perms.IsOwnerShop])
+    def get_my_shop(self, request):
         try:
             shop = Shop.objects.get(user=request.user)
             serializer = ShopSerializer(shop)
@@ -69,10 +69,6 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(serializer.data)
-
-
-
-
 
     @action(methods=['get'], url_path='products', detail=True)
     def get_product(self, request, pk):
@@ -174,17 +170,16 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
     def reply(self, request, pk):
         try:
             comment_parent = Comment.objects.get(pk=pk)
-        except Comment.D:
+        except Comment.DoesNotExist:
             return Response({'error': 'Parent comment not found.'}, status=status.HTTP_404_NOT_FOUND)
         comment_child = CommentSerializer(data={
             "content": request.data.get('content'),
             "user": request.user.pk,
             'image': request.data.get('image'),
-            "comment_parent_id": comment_parent.id,
-            "product": comment_parent.product
+            "product": comment_parent.product.pk
         })
         comment_child.is_valid()
-        r = comment_child.save()
+        r = comment_child.save(comment_parent=comment_parent)
         return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
 
