@@ -6,6 +6,7 @@ import Home from './components/Home/Home';
 import Login from './components/User/Login';
 import Register from './components/User/Register';
 import ProductDetail from './components/Home/ProductDetail';
+import ProductComment from './components/Home/ProductComment';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyUserReducer from './reducers/MyUserReducer';
 import { MyUserContext } from './configs/MyContext';
@@ -16,6 +17,7 @@ import { useReducer, useContext } from 'react';
 import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
+import ReplyComment from './components/Home/ReplyComment';
 
 
 
@@ -26,6 +28,8 @@ const StackNavigate = () => {
     <Stack.Navigator  screenOptions={{headerShown: false}}>
       <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="productdetail" component={ProductDetail} />
+      <Stack.Screen name="productcomment" component={ProductComment} />
+      <Stack.Screen name="replycomment" component={ReplyComment}/>
       <Stack.Screen name="MyShop" component={MyShop} options={{title: "Shop"}}/>
       <Stack.Screen name="ShopDetail" component={ShopDetail}/>
     </Stack.Navigator>

@@ -10,11 +10,15 @@ export const endpoints = {
     'shops': '/shops/',
     'products': '/products/',
     'comments': '/comments/',
+    'comment-detail': (commentId) => `/comments/${commentId}/`,
+    'comment-reply': (commentId) => `/comments/${commentId}/reply`,
+    'comment-replies': (commentId) => `/comments/${commentId}/replies/`,
     'orders': '/orders/',
     'payments': '/payments/',
     'token':'/o/token/',
     'current_user':'/users/current-user/',
     'product': (productId) => `/products/${productId}/`,
+    'product-comments': (productId)=>`/products/${productId}/comments/`,
     'my-shop':'shops/my_shop/',
     'shop-detail':(shopId)=>`/shops/${shopId}/products`
 }
