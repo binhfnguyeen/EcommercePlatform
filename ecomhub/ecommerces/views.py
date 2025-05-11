@@ -182,6 +182,24 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
         r = comment_child.save(comment_parent=comment_parent)
         return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
+    @action(methods=['get'], url_path='replies', detail=True)
+    def get_replies(self, request, pk=None):
+        try:
+            parent_comment = Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            return Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        replies = Comment.objects.filter(comment_parent=parent_comment, active=True).select_related('user')
+
+        paginator = paginators.CommentPaginator()
+        page = paginator.paginate_queryset(replies, request)
+        if page is not None:
+            serializer = CommentSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
+        serializer = CommentSerializer(replies, many=True)
+        return Response(serializer.data)
+
 
 class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Product.objects.filter(active=True)
