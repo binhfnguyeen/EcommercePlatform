@@ -141,6 +141,9 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
                 'content': request.data.get('content'),
                 'user': request.user.pk,
                 'product': pk,
+                'star': request.data.get('star'),
+                'image': request.data.get('image'),
+                'comment_parent_id': request.data.get('comment_parent_id')
             })
             t.is_valid(raise_exception=True)
             c = t.save()
