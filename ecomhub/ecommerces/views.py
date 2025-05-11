@@ -179,6 +179,7 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
         comment_child = CommentSerializer(data={
             "content": request.data.get('content'),
             "user": request.user.pk,
+            'image': request.data.get('image'),
             "comment_parent_id": comment_parent.id,
             "product": comment_parent.product
         })
