@@ -11,7 +11,7 @@ export const endpoints = {
     'products': '/products/',
     'comments': '/comments/',
     'comment-detail': (commentId) => `/comments/${commentId}/`,
-    'comment-reply': (commentId) => `/comments/${commentId}/reply`,
+    'comment-reply': (commentId) => `/comments/${commentId}/reply/`,
     'comment-replies': (commentId) => `/comments/${commentId}/replies/`,
     'orders': '/orders/',
     'payments': '/payments/',

@@ -42,7 +42,7 @@ const ReplyComment = ({ route }) => {
             try {
 
                 const res = await Apis.get(`${endpoints['comment-replies'](commentParentId)}?page=${page}`);
-                setCommentInProduct(page === 1 ? res.data.results : prev => [...prev, ...res.data.results]);
+                setReplies(page === 1 ? res.data.results : prev => [...prev, ...res.data.results]);
                 console.log(res.data.results);
                 if (res.data.next === null)
                     setPage(0);
@@ -93,7 +93,7 @@ const ReplyComment = ({ route }) => {
 
             const resJson = await response.json();
             imgUrl = resJson.secure_url;
-            path = imgUrl.substring(imgUrl.indexOf('/image/upload'));
+            path = imgUrl.substring(imgUrl.indexOf('image/upload'));
             console.info("Upload thành công:", path);
         }
         return path;
@@ -102,26 +102,25 @@ const ReplyComment = ({ route }) => {
     const submitReply = async () => {
         try {
             const token = await AsyncStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-            const user = await getCurrentUser();
-            console.info(`Lấy user để đăng bình luận ${user.id}`)
-            if (!user) {
-                alert("Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.");
-                return;
-            }
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            };
 
             path = await uploadImgToCloudinary();
 
             const body = {
-                user: user.id,
+                // user: user.id,
                 content: reply,
                 image: path ?? null,
-                product: productId
+                // product: productId
             };
 
             console.log("Body gửi lên:", body);
 
-            await Apis.post(endpoints["comment-reply"](commentParentId), body, { headers });
+            const res = await Apis.post(endpoints["comment-reply"](commentParentId), body, { headers });
+
+            console.log("Reply submitted successfully:", res.data.results)
 
             setReply("");
             setImage(null);

@@ -178,8 +178,8 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
             'image': request.data.get('image'),
             "product": comment_parent.product.pk
         })
-        comment_child.is_valid()
-        r = comment_child.save(comment_parent=comment_parent)
+        comment_child.is_valid(raise_exception=True)
+        r = comment_child.save(comment_parent=comment_parent, active=True)
         return Response(CommentSerializer(r).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], url_path='replies', detail=True)
