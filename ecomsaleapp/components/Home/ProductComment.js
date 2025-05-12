@@ -94,7 +94,7 @@ const ProductComment = ({ route }) => {
 
             const resJson = await response.json();
             imgUrl = resJson.secure_url;
-            path = imgUrl.substring(imgUrl.indexOf('/image/upload'));
+            path = imgUrl.substring(imgUrl.indexOf('image/upload'));
             console.info("Upload thành công:", path);
         }
         return path;
