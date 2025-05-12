@@ -36,6 +36,15 @@ const StackNavigate = () => {
   )
 }
 
+const ShopNavigate =()=>{
+  return(
+    <Stack.Navigator initialRouteName="myshop" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="myshop" component={MyShop} />
+        <Stack.Screen name="shopdetail" component={ShopDetail} />
+    </Stack.Navigator>
+  )
+}
+
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -50,7 +59,7 @@ const TabNavigator = () => {
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
         <Tab.Screen name="profile" component={Profile} options={{ title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20} /> }} />
-        <Tab.Screen name="MyShop" component={MyShop} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
+        <Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
       </>}
     </Tab.Navigator>
   )

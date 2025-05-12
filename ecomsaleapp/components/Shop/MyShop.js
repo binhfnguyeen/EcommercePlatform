@@ -17,19 +17,19 @@ const MyShop = () => {
 
 
     // const StackNavigate = () => {
-        // return (
-        //     <NavigationContainer>
-        //         <Stack.Navigator initialRouteName="shopdetail" screenOptions={{headerShown: false}}>
-        //             <Stack.Screen name="myshop" component={MyShop} />
-        //             <Stack.Screen name="shopdetail" component={ShopDetail} />
-        //         </Stack.Navigator>
-        //     </NavigationContainer>
-        // )
-        // }
+    //     return (
+    //         <NavigationContainer>
+    //             <Stack.Navigator initialRouteName="shopdetail" screenOptions={{headerShown: false}}>
+    //                 <Stack.Screen name="myshop" component={MyShop} />
+    //                 <Stack.Screen name="shopdetail" component={ShopDetail} />
+    //             </Stack.Navigator>
+    //         </NavigationContainer>
+    //     )
+    //     }
     
-    // const setState=(value,field)=>{
-    //     setShop({[field]:value})
-    // }
+    const setState=(value,field)=>{
+        setShop({[field]:value})
+    }
 
     const loadShop = async () => {
         try {
@@ -64,8 +64,8 @@ const MyShop = () => {
     return (
         <View>
             <Text style={EcomSaleStyles.header}>Của hàng của bạn</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity>
-            {/* <TouchableOpacity onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})}><Text>{shop.name}</Text></TouchableOpacity> */}
+            {/* <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity> */}
+            <TouchableOpacity onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})}><Text>{shop.name}</Text></TouchableOpacity>
         </View>
     );
 };
