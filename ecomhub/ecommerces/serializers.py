@@ -15,7 +15,7 @@ class CategorySerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar']
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar', 'phone']
 
     def create(self, validated_data):
         data = validated_data.copy()

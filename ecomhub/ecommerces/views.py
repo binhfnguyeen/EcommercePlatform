@@ -44,7 +44,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
             u = request.user
 
             for k, v in request.data.items():
-                if k in ['first_name', 'last_name', 'avatar', 'is_shop_owner']:
+                if k in ['first_name', 'last_name', 'avatar', 'is_shop_owner', 'phone']:
                     setattr(u, k, v)
                 elif k.__eq__('password'):
                     u.set_password(v)
