@@ -253,7 +253,10 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
         order.total = total
         order.save()
 
-        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Đặt hàng thành công',
+            'order_id': order.id,
+            'order': OrderSerializer(order).data}, status=status.HTTP_200_OK)
 
     @action(methods=['delete'], detail=True, url_path='order_cancel')
     def cancel_order(self, request, pk):
