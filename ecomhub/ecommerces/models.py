@@ -101,6 +101,7 @@ class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.IntegerField(default=0)  # Tổng giá trị đơn hàng cuối cùng (đã tính giảm giá, phí ship)
     shipping_address = models.CharField(max_length=150, null=True)
+    phone = models.CharField(max_length=10, null=True)
     status = models.CharField(max_length=20, choices=ORDER_STATUSES, default='PENDING')
 
     def __str__(self):

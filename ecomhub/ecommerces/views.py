@@ -228,13 +228,14 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def create(self, request, *args, **kwargs):
         user = request.user
         shipping_address = request.data.get("shipping_address")
-        order_status  = request.data.get("status")
+        phone = request.data.get("phone")
+        order_status = request.data.get("status")
         items = request.data.get('items', [])
 
         if not items:
             return Response({'error': 'Danh sách sản phẩm không được để trống'}, status=status.HTTP_400_BAD_REQUEST)
 
-        order = Order.objects.create(user=user, shipping_address=shipping_address, status=order_status)
+        order = Order.objects.create(user=user, shipping_address=shipping_address, phone=phone, status=order_status)
 
         total = 0
         for item in items:
