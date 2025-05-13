@@ -225,6 +225,36 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def get_object(self):
         return generics.get_object_or_404(self.queryset, pk=self.kwargs.get('pk'))
 
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        shipping_address = request.data.get("shipping_address")
+        order_status  = request.data.get("status")
+        items = request.data.get('items', [])
+
+        if not items:
+            return Response({'error': 'Danh sách sản phẩm không được để trống'}, status=status.HTTP_400_BAD_REQUEST)
+
+        order = Order.objects.create(user=user, shipping_address=shipping_address, status=order_status)
+
+        total = 0
+        for item in items:
+            product_id = item.get('product_id')
+            quantity = item.get('quantity', 1)
+
+            try:
+                product = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                order.delete()
+                return Response({'error': f"Sản phẩm có ID {product_id} không tồn tại"}, status=status.HTTP_404_NOT_FOUND)
+
+            OrderDetail.objects.create(order=order, product=product, quantity=quantity)
+            total += product.price * quantity
+
+        order.total = total
+        order.save()
+
+        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
     @action(methods=['delete'], detail=True, url_path='order_cancel')
     def cancel_order(self, request, pk):
         order = self.get_object()
