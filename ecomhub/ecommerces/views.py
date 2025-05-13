@@ -320,60 +320,61 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
 
     @action(methods=['post'], detail=True, url_path='create_paypal_payment')
     def create_paypal_payment(self, request, pk):
-        payment = self.get_object()
-        order = payment.order
+        if request.method == "POST":
+            payment = self.get_object()
+            order = payment.order
 
-        if not order or not order.active:
-            return Response({"error": "Đơn hàng không tồn tại hoặc đã bị hủy!"}, status=status.HTTP_404_NOT_FOUND)
+            if not order or not order.active:
+                return Response({"error": "Đơn hàng không tồn tại hoặc đã bị hủy!"}, status=status.HTTP_404_NOT_FOUND)
 
-        if order.user != request.user:
-            return Response({"error": "Bạn không có quyền truy cập đơn hàng này"}, status=status.HTTP_403_FORBIDDEN)
+            if order.user != request.user:
+                return Response({"error": "Bạn không có quyền truy cập đơn hàng này"}, status=status.HTTP_403_FORBIDDEN)
 
-        client_id = settings.PAYPAL_CLIENT_ID
-        client_secret = settings.PAYPAL_SECRET
-        auth = (client_id, client_secret)
-        token_res = requests.post(
-            'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-            data={'grant_type': 'client_credentials'},
-            auth=auth
-        )
+            client_id = settings.PAYPAL_CLIENT_ID
+            client_secret = settings.PAYPAL_SECRET
+            auth = (client_id, client_secret)
+            token_res = requests.post(
+                'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+                data={'grant_type': 'client_credentials'},
+                auth=auth
+            )
 
-        if token_res.status_code != 200:
-            return Response({"error": "Lỗi khi lấy access token từ Paypal"}, status=500)
-        access_token = token_res.json().get('access_token')
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json'
-        }
-        body = {
-            "intent": "CAPTURE",
-            "purchase_units": [
-                {
-                    "reference_id": f"ORDER-{order.id}",
-                    "description": "Thanh toán đơn hàng EcomSale",
-                    "amount": {
-                        "currency_code": "USD",
-                        "value": str(order.total)
-                    }
-                }
-            ],
-            "application_context": {
-                "return_url": "http://127.0.0.1:8000/payments/paypal-success",
-                "cancel_url": "http://127.0.0.1:8000/payments/paypal-cancel"
+            if token_res.status_code != 200:
+                return Response({"error": "Lỗi khi lấy access token từ Paypal"}, status=500)
+            access_token = token_res.json().get('access_token')
+            headers = {
+                'Authorization': f'Bearer {access_token}',
+                'Content-Type': 'application/json'
             }
-        }
-        res = requests.post(
-            'https://api-m.sandbox.paypal.com/v2/checkout/orders',
-            json=body,
-            headers=headers
-        )
-        if res.status_code != 201:
-            return Response({'error': 'Không thể tạo đơn PayPal'}, status=500)
+            body = {
+                "intent": "CAPTURE",
+                "purchase_units": [
+                    {
+                        "reference_id": f"ORDER-{order.id}",
+                        "description": "Thanh toán đơn hàng EcomSale",
+                        "amount": {
+                            "currency_code": "USD",
+                            "value": str(order.total)
+                        }
+                    }
+                ],
+                "application_context": {
+                    "return_url": "http://127.0.0.1:8000/payments/paypal-success",
+                    "cancel_url": "http://127.0.0.1:8000/payments/paypal-cancel"
+                }
+            }
+            res = requests.post(
+                'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+                json=body,
+                headers=headers
+            )
+            if res.status_code != 201:
+                return Response({'error': 'Không thể tạo đơn PayPal'}, status=500)
 
-        data = res.json()
-        approve_url = next((link['href'] for link in data['links'] if link['rel'] == 'approve'), None)
+            data = res.json()
+            approve_url = next((link['href'] for link in data['links'] if link['rel'] == 'approve'), None)
 
-        return Response({'paypal_approve_url': approve_url}, status=status.HTTP_200_OK)
+            return Response({'paypal_approve_url': approve_url}, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False, url_path='paypal-success')
     def paypal_success_callback(self, request):
