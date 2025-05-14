@@ -18,7 +18,9 @@ import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
 import ReplyComment from './components/Home/ReplyComment';
-
+import Order from './components/Order/Order';
+import PaymentsPaypal from './components/Order/PaymentsPaypal';
+import ShoppingCart from './components/Cart/ShoppingCart';
 
 
 const Stack = createNativeStackNavigator();
@@ -30,8 +32,11 @@ const StackNavigate = () => {
       <Stack.Screen name="productdetail" component={ProductDetail} />
       <Stack.Screen name="productcomment" component={ProductComment} />
       <Stack.Screen name="replycomment" component={ReplyComment}/>
+      <Stack.Screen name="order" component={Order}/>
       <Stack.Screen name="MyShop" component={MyShop} options={{title: "Shop"}}/>
       <Stack.Screen name="ShopDetail" component={ShopDetail}/>
+      <Stack.Screen name="paymentspaypal" component={PaymentsPaypal}/>
+      <Stack.Screen name="shoppingcart" component={ShoppingCart}/>
     </Stack.Navigator>
   )
 }
