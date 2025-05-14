@@ -266,11 +266,16 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
         if order.user != request.user:
             return Response({'error': 'Bạn không có quyền truy cập đơn hàng này'}, status=status.HTTP_400_BAD_REQUEST)
 
+        payment = order.payment
+        payment.active = False
+        payment.status = False
+
         order.active = False
         order.status = 'CANCELLED'
         order.save()
+        payment.save()
 
-        return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
+        return Response({'message': 'Đơn hàng đã được hủy thành công.'}, status=status.HTTP_200_OK)
 
     @action(methods=['patch'], detail=True, url_path='update_address')
     def update_address(self, request, pk):
@@ -376,94 +381,119 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
 
             return Response({'paypal_approve_url': approve_url}, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=False, url_path='paypal-success')
-    def paypal_success_callback(self, request):
-        order_id = request.query_params.get('token')
-        if not order_id:
-            return Response({'error': 'Thiếu mã đơn hàng PayPal (token)'}, status=status.HTTP_400_BAD_REQUEST)
+def paypal_success_view(request):
+    token = request.GET.get("token")
+    payer_id = request.GET.get("PayerID")
 
-        client_id = settings.PAYPAL_CLIENT_ID
-        client_secret = settings.PAYPAL_SECRET
-        auth = (client_id, client_secret)
-        token_res = requests.post(
-            'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-            data={'grant_type': 'client_credentials'},
-            auth=auth
-        )
+    if not token or not payer_id:
+        return HttpResponse("Thiếu thông tin token hoặc payer_id", status=400)
 
-        if token_res.status_code != 200:
-            return Response({"error": "Lỗi khi lấy access token từ Paypal"}, status=500)
+    client_id = settings.PAYPAL_CLIENT_ID
+    client_secret = settings.PAYPAL_SECRET
+    auth = (client_id, client_secret)
 
-        access_token = token_res.json().get('access_token')
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json'
-        }
+    token_res = requests.post(
+        'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+        data={'grant_type': 'client_credentials'},
+        auth=auth
+    )
 
-        capture_res = requests.post(
-            f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture',
-            headers=headers
-        )
+    if token_res.status_code != 200:
+        return HttpResponse("Lỗi lấy access token", status=500)
 
-        if capture_res.status_code != 201:
-            return Response({'error': 'Không thể xác nhận thanh toán PayPal'}, status=500)
+    access_token = token_res.json().get('access_token')
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
 
-        capture_data = capture_res.json()
-        reference_id = capture_data['purchase_units'][0]['reference_id']
-        order_pk = reference_id.replace("ORDER-", "")
+    capture_res = requests.post(
+        f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{token}/capture',
+        headers=headers
+    )
 
-        try:
-            payment = Payment.objects.get(order__pk=order_pk)
-            payment.status = True
-            order = payment.order
-            order.status = 'PAID'
-            order.save()
+    if capture_res.status_code != 201:
+        return HttpResponse("Lỗi khi xác nhận thanh toán", status=500)
 
-            print(f"Đã thanh toán thành công Order có id {order_pk}")
-            payment.save()
-        except Payment.DoesNotExist:
-            return Response({'error': 'Không tìm thấy thanh toán phù hợp trong hệ thống'}, status=404)
+    reference_id = capture_res.json()['purchase_units'][0]['reference_id']
+    order_id = reference_id.replace("ORDER-", "")
 
-        return Response({'message': 'Đã xác nhận thanh toán thành công!'}, status=status.HTTP_200_OK)
+    try:
+        payment = Payment.objects.get(order__id=order_id)
+        payment.status = True
+        payment.save()
 
-    @action(methods=['get'], detail=False, url_path='paypal-cancel')
-    def paypal_cancel_callback(self, request):
-        token = request.query_params.get('token')
+        order = payment.order
+        order.status = 'PAID'
+        order.save()
+    except Payment.DoesNotExist:
+        return HttpResponse("Không tìm thấy thanh toán", status=404)
 
-        if not token:
-            return Response({"error": "Mã đơn hàng không có trong yêu cầu!"}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"message": "Thanh toán đã bị hủy bỏ! Bạn có thể thử lại và chọn phương thức khác"},
-                        status=status.HTTP_200_OK)
+    return HttpResponse("Thanh toán thành công! Cảm ơn bạn.")
 
 
-class CartViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+def paypal_cancel_view(request):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponse("Mã đơn hàng không có trong yêu cầu!", status=400)
+
+    return HttpResponse("Thanh toán đã bị hủy bỏ! Bạn có thể thử lại và chọn phương thức khác", status=200)
+
+
+class CartViewSet(viewsets.GenericViewSet):
     queryset = Cart.objects.filter(active=True).prefetch_related('details')
     serializer_class = CartSerializer
 
-    def get_object(self):
-        return Cart.objects.get(user=self.request.user)
+    # def get_object(self):
+    #     return Cart.objects.get(user=self.request.user)
 
-    @action(methods=['post'], detail=True, url_path='add_product')
-    def add_product(self, request, pk):
+    def get_user_cart(self):
+        cart, created = Cart.objects.get_or_create(
+            user = self.request.user
+        )
+        return cart
+
+    @action(methods=['get'], detail=False, url_path='my_cart')
+    def my_cart(self, request):
+        cart = self.get_user_cart()
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data)
+
+
+    @action(methods=['post'], detail=False, url_path='add_product')
+    def add_product(self, request):
+        cart = self.get_user_cart()
+        product_id = request.data.get('product_id')
         try:
-            product = Product.objects.get(pk=request.data.get('product'))
+            quantity = int(request.data.get('quantity', 1))
+        except ValueError:
+            return Response({'error': 'Số lượng không hợp lệ.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not product_id:
+            return Response({'error': 'Vui lòng cung cấp ID sản phẩm.'}, status=status.HTTP_400_BAD_REQUEST)
+        if quantity <= 0:
+            return Response({'error': 'Số lượng sản phẩm phải lớn hơn 0.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
-            Response({'error': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': f'Sản phẩm với ID {product_id} không tồn tại.'})
 
-        t = CartDetail.objects.get(product=product.id, cart=pk)
-        if t:
-            t.quantity += request.data.get('quantity')
-            return Response(CartDetailSerializer(t).data, status=status.HTTP_200_OK)
-        cartDetail = CartDetailSerializer(data={
-            'product': product.id,
-            'quantity': request.data.get('quantity'),
-            'cart': pk
-        })
-        cartDetail.is_valid()
-        item = cartDetail.save()
+        cart_detail, created = CartDetail.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={'quantity': quantity}
+        )
 
-        return Response(CartDetailSerializer(item).data, status=status.HTTP_201_CREATED)
+        if not created:
+            cart_detail.quantity = F('quantity') + quantity
+            cart_detail.save(update_fields=['quantity'])
+            cart_detail.refresh_from_db()
+
+        return Response(
+            CartDetailSerializer(cart_detail).data,
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        )
 
 
 class ShopRevenueStatsAPIView(APIView):
