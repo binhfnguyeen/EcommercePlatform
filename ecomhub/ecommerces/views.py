@@ -443,9 +443,7 @@ def paypal_cancel_view(request):
 class CartViewSet(viewsets.GenericViewSet):
     queryset = Cart.objects.filter(active=True).prefetch_related('details')
     serializer_class = CartSerializer
-
-    # def get_object(self):
-    #     return Cart.objects.get(user=self.request.user)
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_user_cart(self):
         cart, created = Cart.objects.get_or_create(
