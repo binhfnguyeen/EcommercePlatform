@@ -454,6 +454,10 @@ class CartViewSet(viewsets.GenericViewSet):
     @action(methods=['get'], detail=False, url_path='my_cart')
     def my_cart(self, request):
         cart = self.get_user_cart()
+
+        cart.total = sum([d.product.price * d.quantity for d in cart.details.all()])
+        cart.save(update_fields=['total'])
+
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
 
@@ -488,10 +492,32 @@ class CartViewSet(viewsets.GenericViewSet):
             cart_detail.save(update_fields=['quantity'])
             cart_detail.refresh_from_db()
 
+        cart.total = sum([d.product.price * d.quantity for d in cart.details.all()])
+        cart.save(update_fields=['total'])
+
         return Response(
             CartDetailSerializer(cart_detail).data,
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
         )
+
+    @action(methods=['delete'], detail=False, url_path='remove_product')
+    def remove_product(self, request):
+        cart = self.get_user_cart()
+        product_id = request.data.get('product_id')
+
+        if not product_id:
+            return Response({'error': 'Vui lòng cung cấp ID sản phẩm.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart_detail = CartDetail.objects.get(cart=cart, product__id=product_id)
+            cart_detail.delete()
+        except CartDetail.DoesNotExist:
+            return Response({'error': 'Sản phẩm không tồn tại trong giỏ hàng.'}, status=status.HTTP_404_NOT_FOUND)
+
+        cart.total = sum([d.product.price * d.quantity for d in cart.details.all()])
+        cart.save(update_fields=['total'])
+
+        return Response({'message': 'Đã xoá sản phẩm khỏi giỏ hàng.'}, status=status.HTTP_200_OK)
 
 
 class ShopRevenueStatsAPIView(APIView):
