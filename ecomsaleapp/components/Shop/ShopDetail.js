@@ -124,9 +124,9 @@ useEffect(() => {
                 })}
             /> */}
             <View style={Style.evaluateInlineSeeAll}>
-                <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
+                
                 <TouchableOpacity onPress={() => navigation.navigate("createproduct")}>
-                    <Text style={{ color: "#2196F3", fontSize: 14 }}>Tất cả &gt;</Text>
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
                 </TouchableOpacity>
             </View>
             <FlatList
