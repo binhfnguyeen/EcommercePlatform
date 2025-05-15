@@ -44,6 +44,7 @@ const ProductDetail = ({ route }) => {
                 const res = await Apis.get(endpoints["my-cart"], {headers});
                 const cart = res.data;
                 setMyCart(cart);
+                console.log(cart);
 
                 const totalCount = cart.details.reduce((sum, item) => sum + item.quantity, 0);
                 setCountProduct(totalCount);
@@ -104,6 +105,7 @@ const ProductDetail = ({ route }) => {
 
                 <TouchableOpacity style={Style.searchBar}>
                     <Searchbar placeholder="Tìm kiếm sản phẩm..." 
+                        onPress={()=>navigation.replace("home")}
                         inputStyle={{ 
                             fontSize: 14,
                             paddingVertical: 0,
@@ -120,7 +122,7 @@ const ProductDetail = ({ route }) => {
                         
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.viewCart} onPress={()=>navigation.navigate("shoppingcart", {myCartId: myCart.id})}> 
+                <TouchableOpacity style={Style.viewCart} onPress={()=>navigation.replace("shoppingcart", {productId: productId})}> 
                     <AntDesign name="shoppingcart" size={24} color="#2196F3" />
                     <View style={Style.cartBadge}>
                         <Text style={Style.badgeText}>{countProduct.toString()}</Text>

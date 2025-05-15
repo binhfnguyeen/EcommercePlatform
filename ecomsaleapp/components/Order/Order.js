@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, View, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import Styles from "./Styles";
 import Apis, { endpoints } from "../../configs/Apis";
@@ -7,11 +7,14 @@ import { useNavigation } from "@react-navigation/native";
 
 const Order = ({ route }) => {
     const productId = route.params?.productId;
+    const {myCart} = route.params; 
     const [shippingAddress, setShippingAddress] = useState("");
     const [status, setStatus] = useState("PENDING");
     const [quantity, setQuantity] = useState(1);
     const [phone, setPhone] = useState("");
     const navigation = useNavigation();
+    const [cartItems, setCartItems] = useState([]);
+
     const getCurrentUser = async () => {
         const token = await AsyncStorage.getItem("token");
         console.log(token)
@@ -20,7 +23,7 @@ const Order = ({ route }) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        return res.data
+        return res.data;
     }
 
     const incQuantity = () => {
@@ -31,6 +34,12 @@ const Order = ({ route }) => {
         if (quantity > 1)
             setQuantity(prev => prev - 1);
     }
+
+    useEffect(() => {
+        if (myCart && myCart.details) {
+            setCartItems(myCart.details);
+        }
+    }, [myCart]);
 
     const handleSubmit = async () => {
         try {
@@ -50,9 +59,12 @@ const Order = ({ route }) => {
                 shipping_address: shippingAddress,
                 phone: phone,
                 status: "PENDING",
-                items: [
-                    { product_id: productId, quantity: quantity }
-                ]
+                items: productId
+                    ? [{ product_id: productId, quantity: quantity }]
+                    : cartItems.map(item => ({
+                        product_id: item.product,
+                        quantity: item.quantity
+                    }))
             };
 
             const orderRes = await Apis.post(endpoints["orders"], orderBody, { headers: orderHeaders });
@@ -70,7 +82,7 @@ const Order = ({ route }) => {
             const createdPayment = paymentRes.data;
             console.log("Đã tạo Payment", createdPayment);
 
-            navigation.navigate("paymentspaypal", { order: createdOrder, payment: createdPayment, productId: productId });
+            navigation.navigate("paymentspaypal", { order: createdOrder, payment: createdPayment, productId: productId, myCart: myCart });
 
         } catch (err) {
             console.error("Lỗi trong quá trình đặt hàng và thanh toán:", err);

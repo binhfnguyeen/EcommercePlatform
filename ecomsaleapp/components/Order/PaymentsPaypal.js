@@ -3,8 +3,8 @@ import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
-const PaymentsPaypal = ({route}) => {
-    const { order, payment, productId } = route.params;
+const PaymentsPaypal = ({ route }) => {
+    const { order, payment, productId, myCart } = route.params;
     const navigation = useNavigation();
     const handleCreatePaypalPayment = async () => {
         try {
@@ -18,8 +18,22 @@ const PaymentsPaypal = ({route}) => {
             );
 
             if (res.data.paypal_approve_url) {
+                if (myCart?.details?.length > 0) {
+                    await Promise.all(
+                        myCart.details.map(item =>
+                            Apis.delete(endpoints["remove-product-cart"], {
+                                headers,
+                                data: { product_id: item.product }
+                            })
+                        )
+                    );
+                    console.log("Đã xoá các sản phẩm khỏi giỏ hàng");
+                }
+
                 Linking.openURL(res.data.paypal_approve_url);
-                navigation.replace("productdetail", { productId: productId });
+                {
+                    productId ?navigation.replace("productdetail", { productId: productId }):navigation.replace("home")
+                }
             } else {
                 Alert.alert("Lỗi", "Không nhận được liên kết Paypal");
             }
@@ -56,7 +70,7 @@ const PaymentsPaypal = ({route}) => {
         }
     }
 
-    
+
     return (
         <View>
             <Text>Đơn hàng #{order.id}</Text>

@@ -10,6 +10,7 @@ const Style = StyleSheet.create({
 
     flatListContent: {
         padding: 10,
+        paddingTop: 70
     },
 
     columnWrapper: {
@@ -170,6 +171,7 @@ const Style = StyleSheet.create({
         fontSize: 18,
         color: "#e91e63",
         fontWeight: "500",
+        flex: 1
     },
 
     commentContainer: {
@@ -284,14 +286,26 @@ const Style = StyleSheet.create({
     },
 
     searchBar: {
+        flex: 2,
+        marginHorizontal: 8,
+        justifyContent: "center",
+    },
+
+    searchBarHome: {
         flex: 3,
         marginHorizontal: 8,
         justifyContent: "center",
     },
 
     viewCart: {
-        flex: 0.8,
+        flex: 1,
         alignItems: "flex-end",
+        justifyContent: "center",
+    },
+
+    viewCartHome: {
+        flex: 1,
+        alignItems: "center",
         justifyContent: "center",
     },
 
@@ -299,6 +313,19 @@ const Style = StyleSheet.create({
         position: 'absolute',
         top: -4,
         right: -8,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        minWidth: 16,
+        height: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 3,
+    },
+
+    cartBadgeHome: {
+        position: 'absolute',
+        top: -4,
+        right: 8,
         backgroundColor: 'red',
         borderRadius: 10,
         minWidth: 16,

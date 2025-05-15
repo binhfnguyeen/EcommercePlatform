@@ -19,6 +19,7 @@ export const endpoints = {
     'paypal-payment': (paymentId) => `/payments/${paymentId}/create_paypal_payment/`,
     'my-cart': '/carts/my_cart/',
     'add-cart': '/carts/add_product/',
+    'remove-product-cart': '/carts/remove_product/',
     'token':'/o/token/',
     'current_user':'/users/current-user/',
     'product': (productId) => `/products/${productId}/`,
