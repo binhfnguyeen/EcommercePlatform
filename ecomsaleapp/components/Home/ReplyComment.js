@@ -110,17 +110,15 @@ const ReplyComment = ({ route }) => {
             path = await uploadImgToCloudinary();
 
             const body = {
-                // user: user.id,
                 content: reply,
                 image: path ?? null,
-                // product: productId
             };
 
             console.log("Body gửi lên:", body);
 
             const res = await Apis.post(endpoints["comment-reply"](commentParentId), body, { headers });
 
-            console.log("Reply submitted successfully:", res.data.results)
+            console.log("Gửi dữ liệu:", res.data)
 
             setReply("");
             setImage(null);

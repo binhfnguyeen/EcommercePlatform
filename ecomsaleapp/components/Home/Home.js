@@ -4,6 +4,8 @@ import { ActivityIndicator, FlatList, Image, KeyboardAvoidingView, Platform, Saf
 import { List, Searchbar } from "react-native-paper";
 import Style from "./Style";
 import { useNavigation } from "@react-navigation/native";
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Home = () => {
@@ -12,6 +14,8 @@ const Home = () => {
     const [page, setPage] = useState(1);
     const [name, setName] = useState("");
     const [hasMore, setHasMore] = useState(true);
+    const [myCart, setMyCart] = useState([]);
+    const [countProduct, setCountProduct] = useState(0);
     const navigation = useNavigation();
     const typingTimeout = useRef(null);
 
@@ -33,6 +37,31 @@ const Home = () => {
             setLoading(false);
         }
     };
+
+    const loadMyCart = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const headers = { Authorization: `Bearer ${token}` };
+            if (token) {
+                const res = await Apis.get(endpoints["my-cart"], {headers});
+                const cart = res.data;
+                setMyCart(cart);
+                console.log(cart);
+
+                const totalCount = cart.details.reduce((sum, item) => sum + item.quantity, 0);
+                setCountProduct(totalCount);
+            } else {
+                setMyCart(null);
+                setCountProduct(0);
+            }
+        } catch (err) {
+             console.error(err);
+        }
+    }
+
+    useEffect(()=>{
+        loadMyCart();
+    }, [])
 
     useEffect(() => {
         if (typingTimeout.current) clearTimeout(typingTimeout.current);
@@ -74,7 +103,15 @@ const Home = () => {
 
     return (
         <SafeAreaView style={Style.container}>
-            <Searchbar placeholder="Tìm kiếm sản phẩm..." value={name} onChangeText={setName} />
+            <View style={Style.barHeader}>
+                <Searchbar placeholder="Tìm kiếm sản phẩm..." value={name} onChangeText={setName} style={Style.searchBarHome}/>
+                <TouchableOpacity style={Style.viewCartHome} onPress={()=>navigation.replace("shoppingcart")}> 
+                    <AntDesign name="shoppingcart" size={24} color="#2196F3" />
+                    <View style={Style.cartBadgeHome}>
+                        <Text style={Style.badgeText}>{countProduct.toString()}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
             <FlatList
                 data={products}
                 keyExtractor={(item) => item.id.toString()}

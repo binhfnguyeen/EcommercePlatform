@@ -12,7 +12,7 @@ router.register('products', views.ProductViewSet)
 router.register('comments', views.CommentViewSet)
 router.register('orders', views.OrderViewSet)
 router.register(r'payments', views.PaymentViewSet, basename='payments')
-router.register('cart', views.CartViewSet)
+router.register('carts', views.CartViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,4 +39,6 @@ urlpatterns = [
             name='schema-redoc'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('shop/stats/', views.ShopRevenueStatsAPIView.as_view(), name='shop-revenue-stats'),
+    path('paypal-success/', views.paypal_success_view, name='paypal-success'),
+    path('paypal-cancel/', views.paypal_cancel_view, name='paypal-cancel'),
 ]
