@@ -18,6 +18,7 @@ import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
 import ReplyComment from './components/Home/ReplyComment';
+import CreateProduct from './components/Shop/CreateShopProduct';
 
 
 
@@ -41,6 +42,8 @@ const ShopNavigate =()=>{
     <Stack.Navigator initialRouteName="myshop" screenOptions={{headerShown: false}}>
         <Stack.Screen name="myshop" component={MyShop} />
         <Stack.Screen name="shopdetail" component={ShopDetail} />
+        <Stack.Screen name="createproduct" component={CreateProduct}/>
+        <Stack.Screen name="productdetail" component={ProductDetail}/>
     </Stack.Navigator>
   )
 }

@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'nguyennguyen123',
+        'PASSWORD': 'Khanhnhat2902',
         'HOST': ''  # mặc định localhost
     }
 }
@@ -148,8 +148,8 @@ cloudinary.config(
     secure=True
 )
 
-ClIENT_ID='YvWemnq2yRiFjOrorgxYZ4KwDD52nB5y2uG14wRZ'
-ClIENT_SECRET='uyUuA9xZcRCP3J415HPMT8oJzeckoL6tfNzDAtiDqW7KIj9CBmVgUaLtr39J0NV0sO5nLJnWmRciaYjwowz1s07LcXFB3Z9isrwPqejny1ewgKh6LRR1AcqfkJcWeqLk'
+ClIENT_ID='sMAC7gVbaRDVjY7eh6zJjXpAzThKgJZI95rRx9wf'
+ClIENT_SECRET='Quojp96sFwoQ1VOjL044Z8SMaQ4pM92kGwiNKusX6zcOGFr2WRHypxs5P0095NQ3gkjUtspm9aRJgpMlaa1JZ41dev9kmOTo0p2RJji2ZOSdM0QhRXNkdXim1miRjLpa'
 PAYPAL_CLIENT_ID = "AemDUXuwdJQ9e4T71_RRzWyU5T6f30or_mSU_riuhG6fDVhGCOlbkjwasYBUtAMlFKMCk_cOSyLbX7fo"
 PAYPAL_SECRET = "EIw5O0zFLD3V82vvonNlOsTZFGk2WdIQwHhruVT4MMJOvqQRDTsmv9NA71AN7on73Z31smlxN8AO0dZw"
 

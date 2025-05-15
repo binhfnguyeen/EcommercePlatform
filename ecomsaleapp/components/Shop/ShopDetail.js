@@ -4,16 +4,45 @@ import { ActivityIndicator, FlatList, Image, KeyboardAvoidingView, Platform, Saf
 import { useNavigation } from "@react-navigation/native";
 import Style from "../Home/Style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TabView, SceneMap } from 'react-native-tab-view';
+import { Dimensions } from 'react-native';
+import CreateProduct from "./CreateShopProduct";
 
-
+const winWith={ width: Dimensions.get('window').width };
 const ShopDetail = ({route})=>{
-    shopId=route.params?.shopId;
+    const shopId=route.params?.shopId;
     const [products,setProducts]=useState([])
     const[loading,setLoading]=useState(false)
     const [name, setName] = useState("");
     const typingTimeout = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const navigation=useNavigation();
+    const [index, setIndex] = useState(0);
+
+    const renderScene = SceneMap({
+        first: ShopDetail,
+        second: CreateProduct,
+    });
+
+    const routes = [
+        { key: 'first', title: 'First' },
+        { key: 'second', title: 'Second' },
+    ];
+
+    // const TabViewExample=()=> {
+    // const layout = useWindowDimensions();
+    // const [index, setIndex] = useState(0);
+
+    // return (
+    //     <TabView
+    //     navigationState={{ index, routes }}
+    //     renderScene={renderScene}
+    //     onIndexChange={setIndex}
+    //     initialLayout={{ width: layout.width }}
+    //     />
+    // );
+    // }
 
 
     const loadProducts = async (pageToLoad = 1, nameFilter = "", reset = false) => {
@@ -86,6 +115,20 @@ useEffect(() => {
 
     return (
         <SafeAreaView style={Style.container}>
+            {/* <TabView
+                navigationState={{ index, routes }}
+                onIndexChange={setIndex}
+                renderScene={SceneMap({
+                first: ShopDetail,
+                second: CreateProduct,
+                })}
+            /> */}
+            <View style={Style.evaluateInlineSeeAll}>
+                <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("createproduct")}>
+                    <Text style={{ color: "#2196F3", fontSize: 14 }}>Tất cả &gt;</Text>
+                </TouchableOpacity>
+            </View>
             <FlatList
                 data={products}
                 keyExtractor={(item) => item.id.toString()}
@@ -101,3 +144,57 @@ useEffect(() => {
 };
 
 export default ShopDetail;
+
+
+// const initialLayout = { width: Dimensions.get('window').width };
+
+// const ShopDetail = ({ route }) => {
+//     const shopId = route.params?.shopId;
+//     const navigation = useNavigation();
+
+//     const [index, setIndex] = useState(0);
+//     const [routes] = useState([
+//         { key: 'all', title: 'Tất cả' },
+//         { key: 'top', title: 'Top Đánh giá' },
+//         { key: 'sale', title: 'Khuyến mãi' },
+//     ]);
+
+//     const AllProducts = () => (
+//         <FlatList
+//             data={products}
+//             keyExtractor={(item) => item.id.toString()}
+//             renderItem={renderItem}
+//             numColumns={2}
+//             onEndReached={loadMore}
+//             ListFooterComponent={() => loading ? <ActivityIndicator /> : null}
+//             contentContainerStyle={Style.flatListContent}
+//             columnWrapperStyle={Style.columnWrapper}
+//         />
+//     );
+
+//     const TopRated = () => (
+//         <Text style={{ textAlign: 'center', marginTop: 20 }}>Coming soon: Top Rated</Text>
+//     );
+
+//     const OnSale = () => (
+//         <Text style={{ textAlign: 'center', marginTop: 20 }}>Coming soon: On Sale</Text>
+//     );
+
+//     const renderScene = SceneMap({
+//         all: AllProducts,
+//         top: TopRated,
+//         sale: OnSale,
+//     });
+
+//     return (
+//         <SafeAreaView style={Style.container}>
+//             <TabView
+//                 navigationState={{ index, routes }}
+//                 renderScene={renderScene}
+//                 onIndexChange={setIndex}
+//                 initialLayout={initialLayout}
+//                 style={{ marginTop: 10 }}
+//             />
+//         </SafeAreaView>
+//     );
+// };

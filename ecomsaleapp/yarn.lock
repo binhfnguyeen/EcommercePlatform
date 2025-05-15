@@ -4136,6 +4136,11 @@ react-native-is-edge-to-edge@^1.1.6:
   resolved "https://registry.npmjs.org/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.7.tgz"
   integrity sha512-EH6i7E8epJGIcu7KpfXYXiV2JFIYITtq+rVS8uEb+92naMRBdxhTuS8Wn2Q7j9sqyO0B+Xbaaf9VdipIAmGW4w==
 
+react-native-pager-view@^6.7.1, "react-native-pager-view@>= 6.0.0":
+  version "6.7.1"
+  resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-6.7.1.tgz"
+  integrity sha512-cBSr6xw4g5N7Kd3VGWcf+kmaH7iBWb0DXAf2bVo3bXkzBcBbTOmYSvc0LVLHhUPW8nEq5WjT9LCIYAzgF++EXw==
+
 react-native-paper@^5.13.5:
   version "5.13.5"
   resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.13.5.tgz"
@@ -4180,6 +4185,13 @@ react-native-svg@*:
     css-select "^5.1.0"
     css-tree "^1.1.3"
     warn-once "0.1.1"
+
+react-native-tab-view@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/react-native-tab-view/-/react-native-tab-view-4.1.0.tgz"
+  integrity sha512-A6pse3u7343aTw8OKxCyC90XG7ytnLBBn2QOxVByQ3TqPTi+X/bUW+B28GBpgNPODl4jscAsXW4qmAJqXDjJ+g==
+  dependencies:
+    use-latest-callback "^0.2.3"
 
 react-native-vector-icons@*, react-native-vector-icons@^10.2.0:
   version "10.2.0"

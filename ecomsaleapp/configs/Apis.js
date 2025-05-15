@@ -20,7 +20,8 @@ export const endpoints = {
     'product': (productId) => `/products/${productId}/`,
     'product-comments': (productId)=>`/products/${productId}/comments/`,
     'my-shop':'shops/my_shop/',
-    'shop-detail':(shopId)=>`/shops/${shopId}/products/`
+    'shop-detail':(shopId)=>`/shops/${shopId}/products/`,
+    'create-product':(shopId)=>`/shops/${shopId}/create_product/`
 }
 
 export const authApis=(token)=>{

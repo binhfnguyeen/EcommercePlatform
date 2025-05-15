@@ -23,10 +23,12 @@
     "react-dom": "19.0.0",
     "react-native": "^0.79.2",
     "react-native-image-slider-box": "github:megamaxs1234/react-native-image-slider-box",
+    "react-native-pager-view": "^6.7.1",
     "react-native-paper": "^5.13.5",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "^4.10.0",
     "react-native-star-rating-widget": "^1.9.2",
+    "react-native-tab-view": "^4.1.0",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {

@@ -1,5 +1,7 @@
+from itertools import product
+
 from django.template.defaulttags import comment
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,StringRelatedField
 from unicodedata import category
 
 from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
@@ -46,7 +48,7 @@ class ShopSerializer(ModelSerializer):
 class ProductImageSerializer(ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'image','product']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -55,26 +57,12 @@ class ProductImageSerializer(ModelSerializer):
 
 
 class ProductSerializer(ModelSerializer):
-    shop = ShopSerializer()
-    category = CategorySerializer()
     images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
         fields = ['id', 'name', 'shop', 'category', 'price', 'images']
 
-    def create(self, validated_data):
-        data = validated_data.copy()
-        p = Product(name=data['name'], price=data['price'])
-        if data['shop']:
-            s, _ = Shop.objects.get_or_create(name=data['shop']['name'])
-            p.shop = s
-        if data['category']:
-            c, _ = Category.objects.get_or_create(name=data['category']['name'])
-            p.category = c
-        p.save()
-
-        return p
 
 
 class ProductDetailSerializer(ProductSerializer):
