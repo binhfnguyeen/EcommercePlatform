@@ -83,12 +83,17 @@ const ProductDetail = ({ route }) => {
             loadProduct();
             loadFirstComment();
             loadMyCart();
-            console(product.shop)
         } else {
             Alert.alert("Lỗi", "Không xác định được sản phẩm");
             navigation.goBack();
         }
     }, []);
+
+    useEffect(() => {
+        if (product) {
+            console.log(product.shop);
+        }
+    }, [product]);
 
     const onCurrentImagePressed = (index) => {
         setSelectedImage(imgUrls[index]);

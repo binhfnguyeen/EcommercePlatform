@@ -30,6 +30,7 @@ const Home = () => {
             const merged = reset ? newProducts : [...products, ...newProducts];
             const unique = Array.from(new Map(merged.map(p => [p.id, p])).values());
             setProducts(unique);
+            console.log(unique);
             setHasMore(res.data.next !== null);
         } catch {
             console.log("Không lấy được danh sách sản phẩm");
@@ -95,7 +96,7 @@ const Home = () => {
                     <Text style={Style.productName}>{item.name}</Text>
                     <Text style={Style.price}>{item.price.toLocaleString()} VNĐ</Text>
                     <Text style={Style.subText}>Danh mục: {item.category}</Text>
-                    <Text style={Style.subText}>Cửa hàng: {item.shop}</Text>
+                    <Text style={Style.subText}>Cửa hàng: {item?.shop}</Text>
                 </View>
             </TouchableOpacity>
         );
