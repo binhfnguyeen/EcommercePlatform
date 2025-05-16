@@ -83,6 +83,7 @@ const ProductDetail = ({ route }) => {
             loadProduct();
             loadFirstComment();
             loadMyCart();
+            console(product.shop)
         } else {
             Alert.alert("Lỗi", "Không xác định được sản phẩm");
             navigation.goBack();
@@ -200,7 +201,7 @@ const ProductDetail = ({ route }) => {
                 <TouchableOpacity>
                     <View style={[Style.shopContainer, { flexDirection: "row", alignItems: "center" }]}>
                         <AntDesign name="isv" size={20} color="#333" style={{ marginRight: 5 }} />
-                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop?.name}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop}</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>

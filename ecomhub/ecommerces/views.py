@@ -119,6 +119,8 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
             print(i)
             i.is_valid(raise_exception=True)
             i.save()
+        print(d.shop)
+        d.refresh_from_db()
         return Response(ProductSerializer(d).data, status=status.HTTP_201_CREATED)
 
 

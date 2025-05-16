@@ -106,8 +106,8 @@ useEffect(() => {
                 <View style={Style.cardContent}>
                     <Text style={Style.productName}>{item.name}</Text>
                     <Text style={Style.price}>{item.price.toLocaleString()} VNĐ</Text>
-                    <Text style={Style.subText}>Danh mục: {item.category.name}</Text>
-                    <Text style={Style.subText}>Cửa hàng: {item.shop.name}</Text>
+                    <Text style={Style.subText}>Danh mục: {item.category}</Text>
+                    <Text style={Style.subText}>Cửa hàng: {item.shop}</Text>
                 </View>
             </TouchableOpacity>
         );
