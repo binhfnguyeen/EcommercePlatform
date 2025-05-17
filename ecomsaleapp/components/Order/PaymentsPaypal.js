@@ -58,7 +58,7 @@ const PaymentsPaypal = ({ route }) => {
                 Alert.alert("Thành công", "Đơn hàng đã được huỷ", [
                     {
                         text: "OK",
-                        onPress: () => navigation.replace("productdetail", { productId: productId })
+                        onPress: () => productId ?navigation.replace("productdetail", { productId: productId }):navigation.replace("home")
                     }
                 ]);
             } else {

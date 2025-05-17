@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.defaulttags import comment
 from django.utils.timezone import activate
+from rest_framework import filters
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
@@ -56,13 +57,6 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
         return Response(serializers.UserSerializer(request.user).data)
 
-# class ProductImageViewSet(viewsets.ViewSet,generics.CreateAPIView,ListAPIView):
-#     queryset = ProductImage.objects.filter(active=True)
-#     serializer_class = ProductImageSerializer
-#     permission_classes = [perms.IsOwnerShop]
-#     parser_classes = [parsers.MultiPartParser]
-
-
 class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Shop.objects.filter(active=True)
     serializer_class = ShopSerializer
@@ -83,8 +77,7 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
     def get_product(self, request, pk):
         shop = self.get_object()
 
-        # Fix: 'prfetch_related' should be 'prefetch_related'
-        products = shop.products.all()  # Assuming a related_name of 'products' on the relation
+        products = shop.products.all()
 
         paginator = paginators.ProductPaginator()
         page = paginator.paginate_queryset(products, request)
@@ -99,8 +92,8 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
     @action(methods=['post'], url_path='create_product', detail=True)
     def create_product(self, request, pk):
 
-        shop=Shop.objects.get(pk=pk)
-        category=Category.objects.get(pk=request.data.get('category'))
+        shop = Shop.objects.get(pk=pk)
+        category = Category.objects.get(pk=request.data.get('category'))
         p = ProductSerializer(data={
             'name': request.data.get('name'),
             'price': request.data.get('price'),
@@ -112,9 +105,9 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
         print(d.id)
         print(request.data.get('images'))
         for img in request.FILES.getlist('images'):
-            i=ProductImageSerializer(data={
-                'product':d.id,
-                'image':img
+            i = ProductImageSerializer(data={
+                'product': d.id,
+                'image': img
             })
             print(i)
             i.is_valid(raise_exception=True)
@@ -125,9 +118,11 @@ class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
 
 
 class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
-    queryset = Product.objects.filter(active=True).prefetch_related('images').order_by('id')
+    queryset = Product.objects.filter(active=True).prefetch_related('images').all()
     serializer_class = ProductSerializer
     pagination_class = paginators.ProductPaginator
+    filter_backends = [filters.OrderingFilter, ]
+    ordering_fields = ['name', 'price']
 
     def get_permissions(self):
         if self.action.__eq__('get_comments'):
@@ -149,7 +144,19 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAP
             if name:
                 query = query.filter(name__icontains=name)
 
-            return query
+            min_price = self.request.query_params.get('min_price')
+            max_price = self.request.query_params.get('max_price')
+            if min_price:
+                query = query.filter(price__gte=min_price)
+            if max_price:
+                query = query.filter(price__lte=max_price)
+
+            shop_name = self.request.query_params.get('shop_name')
+            if shop_name:
+                query = query.filter(shop__name__icontains=shop_name)
+        for backend in list(self.filter_backends):
+            query = backend().filter_queryset(self.request, query, self)
+        return query
 
     @action(methods=['get', 'post'], url_path='comments', detail=True)
     def get_comments(self, request, pk):
@@ -223,7 +230,7 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
         return Response(serializer.data)
 
 
-class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView,generics.CreateAPIView):
+class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Product.objects.filter(active=True)
     serializer_class = ProductImageSerializer
     parser_classes = [parsers.MultiPartParser]
@@ -269,7 +276,8 @@ class OrderViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
                 product = Product.objects.get(pk=product_id)
             except Product.DoesNotExist:
                 order.delete()
-                return Response({'error': f"Sản phẩm có ID {product_id} không tồn tại"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error': f"Sản phẩm có ID {product_id} không tồn tại"},
+                                status=status.HTTP_404_NOT_FOUND)
 
             OrderDetail.objects.create(order=order, product=product, quantity=quantity)
             total += product.price * quantity
@@ -404,6 +412,7 @@ class PaymentViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIV
 
             return Response({'paypal_approve_url': approve_url}, status=status.HTTP_200_OK)
 
+
 def paypal_success_view(request):
     token = request.GET.get("token")
     payer_id = request.GET.get("PayerID")
@@ -470,7 +479,7 @@ class CartViewSet(viewsets.GenericViewSet):
 
     def get_user_cart(self):
         cart, created = Cart.objects.get_or_create(
-            user = self.request.user
+            user=self.request.user
         )
         return cart
 
@@ -483,7 +492,6 @@ class CartViewSet(viewsets.GenericViewSet):
 
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
-
 
     @action(methods=['post'], detail=False, url_path='add_product')
     def add_product(self, request):

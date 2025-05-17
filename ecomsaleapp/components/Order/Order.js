@@ -98,16 +98,17 @@ const Order = ({ route }) => {
             <Text style={Styles.label}>Số điện thoại:</Text>
             <TextInput style={Styles.input} value={phone} onChangeText={setPhone} placeholder="Nhập số điện thoại..."/>
 
-            <Text style={Styles.label}>Số lượng:</Text>
-            <View style={Styles.quantityContainer}>
-                <TouchableOpacity onPress={decQuantity} style={Styles.button} >
-                    <Text style={Styles.buttonText}>-</Text>
-                </TouchableOpacity>
-                <TextInput style={Styles.input} value={quantity} onChangeText={setQuantity} placeholder={quantity.toString()} />
-                <TouchableOpacity onPress={incQuantity} style={Styles.button}>
-                    <Text style={Styles.buttonText}>+</Text>
-                </TouchableOpacity>
-            </View>
+            {productId ? <Text style={Styles.label}>Số lượng:</Text> : null}
+            {productId ?
+                <View style={Styles.quantityContainer}>
+                    <TouchableOpacity onPress={decQuantity} style={Styles.button} >
+                        <Text style={Styles.buttonText}>-</Text>
+                    </TouchableOpacity>
+                    <TextInput style={Styles.input} value={quantity} onChangeText={setQuantity} placeholder={quantity.toString()} />
+                    <TouchableOpacity onPress={incQuantity} style={Styles.button}>
+                        <Text style={Styles.buttonText}>+</Text>
+                    </TouchableOpacity>
+                </View> : null}
 
             <TouchableOpacity style={Styles.button} onPress={handleSubmit}>
                 <Text style={Styles.buttonText}>Xác nhận thanh toán</Text>
