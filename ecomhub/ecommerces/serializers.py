@@ -1,6 +1,7 @@
 from itertools import product
 
 from django.template.defaulttags import comment
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from unicodedata import category
 
@@ -76,14 +77,19 @@ class ProductDetailSerializer(ProductSerializer):
 
 
 class CommentSerializer(ModelSerializer):
+    like_count = serializers.SerializerMethodField()
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['user'] = UserSerializer(instance.user).data
         return data
 
+    def get_like_count(self, obj):
+        return obj.likes.count()
+
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'star', 'content', 'image', 'comment_parent', 'product']
+        fields = ['id', 'user', 'star', 'content', 'image', 'comment_parent', 'product', 'like_count']
 
         extra_kwargs = {
             'product': {

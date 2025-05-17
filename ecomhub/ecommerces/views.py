@@ -18,7 +18,7 @@ from . import paginators
 from . import perms
 from . import serializers
 from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
-    OrderDetail, Payment, User
+    OrderDetail, Payment, User, CommentLike
 from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
@@ -228,6 +228,31 @@ class CommentViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retr
 
         serializer = CommentSerializer(replies, many=True)
         return Response(serializer.data)
+
+    @action(methods=['post'], detail=True, url_path='like')
+    def like(self, request, pk):
+        try:
+            comment = Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
+
+        if not created:
+            return Response({'message': 'You have already liked this comment.'}, status=status.HTTP_200_OK)
+
+        return Response({'message': 'Comment liked successfully.'}, status=status.HTTP_201_CREATED)
+
+    @action(methods=['get'], detail=True, url_path='likes')
+    def get_likes(self, request, pk):
+        try:
+            comment = Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        like_count = comment.likes.count()
+        return Response({'like_count': like_count})
+
 
 
 class ProductImageViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
