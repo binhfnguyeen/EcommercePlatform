@@ -14,6 +14,10 @@ export default StyleSheet.create({
         textAlign: 'center',
         background: "#1abc9c",
         fontSize: 30,
+    },
+    flex_view:{
+        flexDirection: "row",
+        flexWrap:"wrap",
+        justifyContent:"center"
     }
-    
 })

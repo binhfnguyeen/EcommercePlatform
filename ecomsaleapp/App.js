@@ -19,7 +19,7 @@ import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
 import ReplyComment from './components/Home/ReplyComment';
 import CreateProduct from './components/Shop/CreateShopProduct';
-
+import { Provider as PaperProvider } from 'react-native-paper';
 import Order from './components/Order/Order';
 import PaymentsPaypal from './components/Order/PaymentsPaypal';
 import ShoppingCart from './components/Cart/ShoppingCart';
@@ -79,15 +79,17 @@ export default App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null)
 
   return (
-    <MyUserContext.Provider value={user}>
-      <MyDispatchContext.Provider value={dispatch}>
-        <NavigationContainer>
+    <PaperProvider>
+      <MyUserContext.Provider value={user}>
+        <MyDispatchContext.Provider value={dispatch}>
+          <NavigationContainer>
 
-          <TabNavigator />
+            <TabNavigator />
 
-        </NavigationContainer>
-      </MyDispatchContext.Provider>
-    </MyUserContext.Provider>
+          </NavigationContainer>
+        </MyDispatchContext.Provider>
+      </MyUserContext.Provider>
+    </PaperProvider>
   );
 }
 

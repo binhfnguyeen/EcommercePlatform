@@ -125,7 +125,7 @@ useEffect(() => {
             /> */}
             <View style={Style.evaluateInlineSeeAll}>
                 
-                <TouchableOpacity onPress={() => navigation.navigate("createproduct")}>
+                <TouchableOpacity onPress={() => navigation.navigate("createproduct",{"shopId":shopId})}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
                 </TouchableOpacity>
             </View>
