@@ -128,6 +128,9 @@ useEffect(() => {
                 <TouchableOpacity onPress={() => navigation.navigate("createproduct",{"shopId":shopId})}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("shopstats")}>
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>Xem thống kê doanh thu</Text>
+                </TouchableOpacity>
             </View>
             <FlatList
                 data={products}
