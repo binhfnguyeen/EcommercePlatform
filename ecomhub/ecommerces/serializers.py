@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from unicodedata import category
 
-from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
+from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Order, \
     OrderDetail, Payment, User
 
 

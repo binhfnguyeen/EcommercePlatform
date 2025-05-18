@@ -7,7 +7,7 @@ const Style = StyleSheet.create({
     container: {
         flex: 1,
     },
-
+    
     flatListContent: {
         padding: 10,
         paddingTop: 70
@@ -280,7 +280,7 @@ const Style = StyleSheet.create({
     }, 
 
     returnButton: {
-        flex: 0.8,
+        flex: 0.5,
         alignItems: "flex-start",
         justifyContent: "center",
     },
@@ -298,7 +298,7 @@ const Style = StyleSheet.create({
     },
 
     viewCart: {
-        flex: 1,
+        flex: 0.5,
         alignItems: "flex-end",
         justifyContent: "center",
     },
@@ -340,6 +340,109 @@ const Style = StyleSheet.create({
         fontSize: 10,
         fontWeight: 'bold',
     },
+
+    filterContainer: {
+        padding: 12,
+        backgroundColor: "#f2f2f2",
+        marginHorizontal: 10,
+        marginTop: 5,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#ddd",
+    },
+
+    filterLabel: {
+        fontWeight: "bold",
+        fontSize: 14,
+        marginBottom: 4,
+        color: "#333",
+    },
+
+    priceRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 10,
+        gap: 8,
+    },
+
+    priceInput: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        backgroundColor: "#fff",
+    },
+
+    shopInput: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        backgroundColor: "#fff",
+        marginBottom: 10,
+    },
+
+    orderRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 10,
+        flex: 1
+    },
+
+    orderButton: {
+        flex: 1,
+        paddingVertical: 8,
+        backgroundColor: "#e0e0e0",
+        borderRadius: 6,
+        textAlign: "center",
+        textAlignVertical: "center",
+        fontWeight: "500",
+        color: "#333",
+    },
+
+    heartButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#FFEAEA",
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+    }, 
+
+    messageButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#E6F0FF",
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 20
+    }, 
+
+    searchContainer: {
+        flex: 3,
+        marginHorizontal: 10,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        height: 40,
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        paddingHorizontal: 12,
+        elevation: 2,
+    },
+    
+    searchBarInput: {
+        fontSize: 14,
+        paddingVertical: 0,
+        height: 40,
+        marginTop: -2,
+    },
+
 
 });
 

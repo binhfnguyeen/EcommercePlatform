@@ -1,4 +1,4 @@
-import { View, Text, FlatList, ActivityIndicator, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,6 +8,7 @@ import StarRatingWidget from 'react-native-star-rating-widget';
 import * as ImgPicker from 'expo-image-picker';
 import axios, { Axios } from "axios";
 import { useNavigation } from "@react-navigation/native";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ProductComment = ({ route }) => {
     const productId = route.params?.productId;
@@ -55,6 +56,33 @@ const ProductComment = ({ route }) => {
             }
         }
     };
+
+    const handleLikeComment = async (commentId) => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            if (!token) {
+                Alert.alert("Không thể like!", "Bạn cần đăng nhập trước..", [
+                    {
+                        text: "OK"
+                    }
+                ]);
+                return;
+            }
+            const headers = { Authorization: `Bearer ${token}` };
+            const res = await Apis.post(endpoints["comment-like"](commentId),  {}, {headers})
+
+            console.info(res.data);
+            await loadCommentInProduct();
+
+        } catch (err){
+            if (err.response?.status === 400 || err.response?.status === 409) {
+                Alert.alert("Thông báo", "Bạn đã like rồi!", [{ text: "OK" }]);
+            } else {
+                console.error("Lỗi khi like:", err);
+                Alert.alert("Lỗi", "Không thể thực hiện like. Vui lòng thử lại sau.");
+            }
+        }
+    }
 
     const pickImage = async () => {
         let { status } = await ImgPicker.requestMediaLibraryPermissionsAsync();
@@ -140,7 +168,7 @@ const ProductComment = ({ route }) => {
             setImage(null);
             setPage(1);
             setCommentInProduct([]);
-            loadCommentInProduct();
+            await loadCommentInProduct();
         } catch (err) {
             console.error("Lỗi khi gửi bình luận: ", err);
         }
@@ -151,6 +179,10 @@ const ProductComment = ({ route }) => {
             <View style={Style.commentHeader}>
                 <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${parent.user.avatar}` }} style={Style.avatar} />
                 <Text style={{ fontWeight: "bold" }}>{parent.user.first_name} {parent.user.last_name}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                    <AntDesign name="heart" size={16} color="#FF3B30" />
+                    <Text style={{ marginLeft: 4 }}>{parent.like_count}</Text>
+                </View>
             </View>
             <StarRating star={parent.star} />
             <Text style={{ marginTop: 5 }}>{parent.content}</Text>
@@ -160,7 +192,23 @@ const ProductComment = ({ route }) => {
                     style={{ width: "50%", height: 100, resizeMode: "contain", marginTop: 5, borderRadius: 10 }}
                 />
             )}
-            <TouchableOpacity onPress={()=>navigation.navigate("replycomment", {'commentParentId': parent.id, 'productId': productId})} ><Text>Trả lời</Text></TouchableOpacity>
+            <View style={{ flexDirection: "row", marginTop: 8, gap: 12 }}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("replycomment", { commentParentId: parent.id, productId })}
+                    style={Style.messageButton}
+                >
+                    <AntDesign name="message1" size={16} color="#2196F3" />
+                    <Text style={{ marginLeft: 6, color: "#2196F3", fontWeight: "600" }}>Trả lời</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => handleLikeComment(parent.id)}
+                    style={Style.heartButton}
+                >
+                    <AntDesign name="heart" size={16} color="#FF3B30" />
+                    <Text style={{ marginLeft: 6, color: "#FF3B30", fontWeight: "600" }}>Thích</Text>
+                </TouchableOpacity>
+            </View>
             {commentInProduct
                 .filter(reply => reply.comment_parent === parent.id)
                 .map(reply => (
@@ -168,6 +216,10 @@ const ProductComment = ({ route }) => {
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${reply.user.avatar}` }} style={Style.replyAvatar} />
                             <Text style={{ fontWeight: "bold" }}>{reply.user.first_name} {reply.user.last_name}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                                <AntDesign name="heart" size={16} color="#FF3B30" />
+                                <Text style={{ marginLeft: 4 }}>{reply.like_count}</Text>
+                            </View>
                         </View>
                         <Text style={{ marginTop: 3 }}>{reply.content}</Text>
                         {reply.image && (

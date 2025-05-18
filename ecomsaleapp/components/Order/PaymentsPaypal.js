@@ -1,10 +1,14 @@
-import { Alert, Linking, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import Styles from "./Styles";
+import { useEffect, useState } from "react";
+import PaymentStyles from "./PaymentsStyles";
 
 const PaymentsPaypal = ({ route }) => {
     const { order, payment, productId, myCart } = route.params;
+    const [user, setUser] = useState({})
     const navigation = useNavigation();
     const handleCreatePaypalPayment = async () => {
         try {
@@ -43,6 +47,19 @@ const PaymentsPaypal = ({ route }) => {
         }
     }
 
+    const getCurrentUser = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const headers = { Authorization: `Bearer ${token}` };
+            
+            const res = await Apis.get(endpoints["current_user"], {headers})
+            console.log(res.data);
+            setUser(res.data)
+        } catch (err) {
+            console.log("Lỗi: ", err)
+        }
+    }
+
     const handleCancelOrder = async () => {
         try {
             const token = await AsyncStorage.getItem("token");
@@ -70,20 +87,46 @@ const PaymentsPaypal = ({ route }) => {
         }
     }
 
+    useEffect(() => {
+        getCurrentUser();
+    }, []);
 
     return (
-        <View>
-            <Text>Đơn hàng #{order.id}</Text>
-            <Text>Thanh toán: {payment.payment_method}</Text>
+        <ScrollView contentContainerStyle={PaymentStyles.container}>
+            <View style={PaymentStyles.card}>
+                <Text style={PaymentStyles.title}>Thông tin đơn hàng</Text>
+                <Text style={PaymentStyles.label}>ID đơn hàng:</Text>
+                <Text style={PaymentStyles.value}>#{order.id}</Text>
 
-            <TouchableOpacity style={Styles.button} onPress={handleCancelOrder}>
-                <Text style={Styles.buttonText}>Hủy thanh toán</Text>
+                <Text style={PaymentStyles.label}>Họ và tên:</Text>
+                <Text style={PaymentStyles.value}>{user?.last_name} {user?.first_name}</Text>
+
+                <Text style={PaymentStyles.label}>Số điện thoại:</Text>
+                <Text style={PaymentStyles.value}>{order.phone}</Text>
+
+                <Text style={PaymentStyles.label}>Địa chỉ nhận:</Text>
+                <Text style={PaymentStyles.value}>{order.shipping_address}</Text>
+
+                <Text style={PaymentStyles.label}>Trạng thái đơn hàng:</Text>
+                <Text style={[PaymentStyles.value, order.status === "PENDING" && PaymentStyles.pending]}>
+                    {order.status === "PENDING" ? "Đang xử lý" : order.status}
+                </Text>
+
+                <Text style={PaymentStyles.label}>Tổng giá tiền:</Text>
+                <Text style={[PaymentStyles.value, PaymentStyles.price]}>{order.total.toLocaleString()} VND</Text>
+
+                <Text style={PaymentStyles.label}>Thanh toán:</Text>
+                <Text style={PaymentStyles.value}>{payment.payment_method}</Text>
+            </View>
+
+            <TouchableOpacity style={PaymentStyles.button} onPress={handleCancelOrder}>
+                <Text style={PaymentStyles.buttonText}>Hủy thanh toán</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={Styles.button} onPress={handleCreatePaypalPayment}>
-                <Text style={Styles.buttonText}>Thanh toán bằng paypal</Text>
+            <TouchableOpacity style={PaymentStyles.buttonPrimary} onPress={handleCreatePaypalPayment}>
+                <Text style={PaymentStyles.buttonText}>Thanh toán bằng PayPal</Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 }
 

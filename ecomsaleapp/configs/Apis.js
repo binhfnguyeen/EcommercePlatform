@@ -13,6 +13,7 @@ export const endpoints = {
     'comment-detail': (commentId) => `/comments/${commentId}/`,
     'comment-reply': (commentId) => `/comments/${commentId}/reply/`,
     'comment-replies': (commentId) => `/comments/${commentId}/replies/`,
+    'comment-like': (commentId)=>`/comments/${commentId}/like/`,
     'orders': '/orders/',
     'cancel-order': (orderId)=>`/orders/${orderId}/order_cancel/`,
     'payments': '/payments/',

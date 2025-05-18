@@ -10,7 +10,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from "react-native-paper";
-import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductDetail = ({ route }) => {
@@ -109,22 +108,11 @@ const ProductDetail = ({ route }) => {
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.searchBar}>
+                <TouchableOpacity style={Style.searchContainer}>
                     <Searchbar placeholder="Tìm kiếm sản phẩm..." 
                         onPress={()=>navigation.replace("home")}
-                        inputStyle={{ 
-                            fontSize: 14,
-                            paddingVertical: 0,
-                            marginTop: -2,
-                            height: 36}}
-                        icon={() => <Icon name="search" size={18} color="#888" />}
-                        style={{
-                            borderRadius: 24,
-                            height: 36,
-                            backgroundColor: '#f2f2f2',
-                            paddingVertical: 0,
-                            elevation: 0,
-                        }}/>
+                        inputStyle={Style.searchBarInput}
+                        style={{ backgroundColor: 'transparent', elevation: 0,  width: "100%" }}/>
                         
                 </TouchableOpacity>
 
@@ -156,7 +144,7 @@ const ProductDetail = ({ route }) => {
                     <Modal visible={modalVisible} transparent onRequestClose={() => setModalVisible(false)}>
                         <View style={Style.modalContainer}>
                             <TouchableOpacity onPress={() => setModalVisible(false)} style={Style.closeButton}>
-                                <Text style={Style.closeButtonText}>✕ Đóng</Text>
+                                <Text style={Style.closeButtonText}><AntDesign name="close" size={24} color="#fff" /> Đóng</Text>
                             </TouchableOpacity>
                             {selectedImage && <Image source={{ uri: selectedImage }} style={Style.modalImage} />}
                         </View>
@@ -185,6 +173,10 @@ const ProductDetail = ({ route }) => {
                                 <Text style={{ fontWeight: "bold" }}>
                                     {commentInProduct[0].user.first_name} {commentInProduct[0].user.last_name}
                                 </Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                                    <AntDesign name="heart" size={16} color="#FF3B30" />
+                                    <Text style={{ marginLeft: 4 }}>{commentInProduct[0].like_count}</Text>
+                                </View>
                             </View>
                             <StarRating star={commentInProduct[0].star} />
                             <Text style={{ marginTop: 5 }}>{commentInProduct[0].content}</Text>

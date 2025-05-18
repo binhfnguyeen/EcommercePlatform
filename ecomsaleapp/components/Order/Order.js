@@ -101,14 +101,20 @@ const Order = ({ route }) => {
             {productId ? <Text style={Styles.label}>Số lượng:</Text> : null}
             {productId ?
                 <View style={Styles.quantityContainer}>
-                    <TouchableOpacity onPress={decQuantity} style={Styles.button} >
-                        <Text style={Styles.buttonText}>-</Text>
+                    <TouchableOpacity onPress={decQuantity} style={Styles.quantityButton}>
+                        <Text style={Styles.quantityButtonText}>-</Text>
                     </TouchableOpacity>
-                    <TextInput style={Styles.input} value={quantity} onChangeText={setQuantity} placeholder={quantity.toString()} />
-                    <TouchableOpacity onPress={incQuantity} style={Styles.button}>
-                        <Text style={Styles.buttonText}>+</Text>
+                    <TextInput
+                        style={Styles.quantityInput}
+                        value={quantity.toString()}
+                        onChangeText={text => setQuantity(parseInt(text) || 1)}
+                        keyboardType="numeric"
+                    />
+                    <TouchableOpacity onPress={incQuantity} style={Styles.quantityButton}>
+                        <Text style={Styles.quantityButtonText}>+</Text>
                     </TouchableOpacity>
-                </View> : null}
+                </View> : null
+            }
 
             <TouchableOpacity style={Styles.button} onPress={handleSubmit}>
                 <Text style={Styles.buttonText}>Xác nhận thanh toán</Text>

@@ -1,47 +1,68 @@
 import { StyleSheet } from "react-native";
 
-export default Styles = StyleSheet.create({
+export default StyleSheet.create({
     container: {
-        padding: 16,
-        backgroundColor: "#fff",
+        flex: 1,
+        padding: 20,
+        backgroundColor: "#f8f9fa",
     },
-
     label: {
         fontSize: 16,
+        fontWeight: "600",
         marginBottom: 6,
-        marginTop: 12,
+        marginTop: 16,
+        color: "#333",
     },
-
     input: {
         borderWidth: 1,
         borderColor: "#ccc",
-        borderRadius: 6,
-        padding: 10,
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 14,
         fontSize: 16,
+        backgroundColor: "#fff",
     },
-
     quantityContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 8,
-        alignContent: "center"
+        justifyContent: "space-between",
+        marginTop: 10,
     },
-
     button: {
-        padding: 10,
-        backgroundColor: "#eee",
-        borderRadius: 5,
-        marginHorizontal: 10,
+        backgroundColor: "#007bff",
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 20,
     },
-
     buttonText: {
+        color: "#fff",
+        fontWeight: "600",
+        fontSize: 16,
+    },
+    quantityButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        backgroundColor: "#dee2e6",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    quantityButtonText: {
         fontSize: 18,
         fontWeight: "bold",
     },
-
-    quantityText: {
-        fontSize: 16,
-        minWidth: 30,
+    quantityInput: {
+        flex: 1,
         textAlign: "center",
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        marginHorizontal: 10,
+        paddingVertical: 8,
+        backgroundColor: "#fff",
     }
 });

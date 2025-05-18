@@ -17,7 +17,7 @@ from urllib3 import request
 from . import paginators
 from . import perms
 from . import serializers
-from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
+from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Order, \
     OrderDetail, Payment, User, CommentLike
 from rest_framework import viewsets, permissions, generics, parsers, status
 from rest_framework.decorators import action
