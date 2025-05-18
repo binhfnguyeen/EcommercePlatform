@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, Shop, Inventory, Cart, CartDetail, Order, OrderDetail, Payment, Category, Comment
+from .models import Product, ProductImage, Shop, Inventory, Cart, CartDetail, Order, OrderDetail, Payment, Category, Comment, CommentLike
 
 
 # Register your models here.
@@ -70,6 +70,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['product', 'user', 'star', 'content', 'image', 'comment_parent']
 
 
+class CommentLikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'comment']
+
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Inventory, InventoryAdmin)
@@ -78,4 +81,5 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(CommentLike, CommentLikeAdmin)
 admin.site.site_header = "EcomSale Admin"

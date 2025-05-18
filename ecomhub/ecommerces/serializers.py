@@ -1,8 +1,11 @@
+from itertools import product
+
 from django.template.defaulttags import comment
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from unicodedata import category
 
-from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Discount, Order, \
+from .models import Category, Product, Inventory, ProductImage, Shop, Cart, CartDetail, Comment, Order, \
     OrderDetail, Payment, User
 
 
@@ -15,7 +18,7 @@ class CategorySerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar']
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar', 'phone']
 
     def create(self, validated_data):
         data = validated_data.copy()
@@ -40,13 +43,13 @@ class UserSerializer(ModelSerializer):
 class ShopSerializer(ModelSerializer):
     class Meta:
         model = Shop
-        fields = ['id', 'name']
+        fields = ['id', 'name','user']
 
 
 class ProductImageSerializer(ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'image','product']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -55,26 +58,18 @@ class ProductImageSerializer(ModelSerializer):
 
 
 class ProductSerializer(ModelSerializer):
-    shop = ShopSerializer()
-    category = CategorySerializer()
     images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
         fields = ['id', 'name', 'shop', 'category', 'price', 'images']
 
-    def create(self, validated_data):
-        data = validated_data.copy()
-        p = Product(name=data['name'], price=data['price'])
-        if data['shop']:
-            s, _ = Shop.objects.get_or_create(name=data['shop']['name'])
-            p.shop = s
-        if data['category']:
-            c, _ = Category.objects.get_or_create(name=data['category']['name'])
-            p.category = c
-        p.save()
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['shop'] = instance.shop.__str__()  # or instance.shop.__str__()
+        representation['category'] = instance.category.__str__()
+        return representation
 
-        return p
 
 
 class ProductDetailSerializer(ProductSerializer):
@@ -82,14 +77,19 @@ class ProductDetailSerializer(ProductSerializer):
 
 
 class CommentSerializer(ModelSerializer):
+    like_count = serializers.SerializerMethodField()
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['user'] = UserSerializer(instance.user).data
         return data
 
+    def get_like_count(self, obj):
+        return obj.likes.count()
+
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'content', 'image', 'comment_parent_id', 'product']
+        fields = ['id', 'user', 'star', 'content', 'image', 'comment_parent', 'product', 'like_count']
 
         extra_kwargs = {
             'product': {
@@ -107,7 +107,7 @@ class PaymentSerializer(ModelSerializer):
 class OrderSerializer(ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'active', 'user', 'total', 'shipping_address', 'status']
+        fields = ['id', 'active', 'user', 'total', 'shipping_address', 'phone','status']
 
 
 class OrderDetailWithProductSerializer(ModelSerializer):

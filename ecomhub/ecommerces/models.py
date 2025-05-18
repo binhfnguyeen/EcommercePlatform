@@ -7,6 +7,7 @@ from django.db import models
 class User(AbstractUser):
     is_shop_owner = models.BooleanField(default=0)
     avatar = CloudinaryField(null=True)
+    phone = models.CharField(max_length=10, null=True)
 
 
 class BaseModel(models.Model):
@@ -30,15 +31,15 @@ class Inventory(BaseModel):
     product = models.OneToOneField('Product', on_delete=models.CASCADE, null=True, related_name="inventory")
 
 
-class Discount(BaseModel):
-    name = models.CharField(max_length=50)
-    percentage = models.FloatField(default=0)
-    amount = models.IntegerField(default=0)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
-    order = models.ForeignKey('Order', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
-
-    def __str__(self):
-        return self.name
+# class Discount(BaseModel):
+#     name = models.CharField(max_length=50)
+#     percentage = models.FloatField(default=0)
+#     amount = models.IntegerField(default=0)
+#     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
+#     order = models.ForeignKey('Order', on_delete=models.CASCADE, null=True, blank=True, related_name="discounts")
+#
+#     def __str__(self):
+#         return self.name
 
 
 class ProductImage(BaseModel):
@@ -90,8 +91,6 @@ class Comment(BaseModel):
 ORDER_STATUSES = [
     ('PENDING', 'Chờ xác nhận'),
     ('PAID', 'Đã thanh toán'),
-    ('SHIPPING', 'Đang giao'),
-    ('COMPLETED', 'Đã giao'),
     ('CANCELLED', 'Đã hủy'),
 ]
 
@@ -100,6 +99,7 @@ class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.IntegerField(default=0)  # Tổng giá trị đơn hàng cuối cùng (đã tính giảm giá, phí ship)
     shipping_address = models.CharField(max_length=150, null=True)
+    phone = models.CharField(max_length=10, null=True)
     status = models.CharField(max_length=20, choices=ORDER_STATUSES, default='PENDING')
 
     def __str__(self):
@@ -115,12 +115,22 @@ class OrderDetail(BaseModel):
 PAYMENT_METHODS = [
     ('PAYPAL', 'Paypal'),
     ('COD', 'Thanh toán khi nhận hàng'),
-    ('BANK', 'Chuyển khoản ngân hàng'),
 ]
 
 
 class Payment(BaseModel):
     payment_method = models.CharField(max_length=50, choices=PAYMENT_METHODS, default='COD')
-    total = models.IntegerField(default=0)  # Số tiền người dùng đã thực sự trả (thường nên bằng Order.total)
+    total = models.IntegerField(default=0)
     status = models.BooleanField()
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment', null=True)
+
+
+class CommentLike(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="liked_comments")
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="likes")
+
+    class Meta:
+        unique_together = ('user', 'comment')
+
+    def __str__(self):
+        return f"{self.user.username} liked comment {self.comment.id}"
