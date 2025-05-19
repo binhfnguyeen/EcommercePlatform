@@ -148,11 +148,11 @@ const CreateProduct = ({route}) => {
                 mode="outlined"
                 onPress={() => setMenuVisible(true)}
                 style={{ justifyContent: 'flex-start' }}
-              >
+                >
                 {category ? category.name : "Chọn danh mục"}
               </Button>
             }
-          >
+            >
             {categories.map((cat) => (
               <Menu.Item
                 key={cat.id}

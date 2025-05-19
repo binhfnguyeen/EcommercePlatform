@@ -40,7 +40,6 @@ const Home = () => {
             const merged = reset ? newProducts : [...products, ...newProducts];
             const unique = Array.from(new Map(merged.map(p => [p.id, p])).values());
             setProducts(unique);
-            console.log(unique);
             setHasMore(res.data.next !== null);
         } catch {
             console.log("Không lấy được danh sách sản phẩm");
@@ -57,7 +56,6 @@ const Home = () => {
                 const res = await Apis.get(endpoints["my-cart"], { headers });
                 const cart = res.data;
                 setMyCart(cart);
-                console.log(cart);
 
                 const totalCount = cart.details.reduce((sum, item) => sum + item.quantity, 0);
                 setCountProduct(totalCount);
