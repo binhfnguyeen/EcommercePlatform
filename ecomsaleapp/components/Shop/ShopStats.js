@@ -6,6 +6,8 @@ import { BarChart } from "react-native-gifted-charts";
 import {Dimensions,FlatList,TouchableOpacity} from 'react-native';
 import { Button,Menu } from "react-native-paper";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
+import Ionicons from "react-native-vector-icons/Ionicons"
+import Style from "../Home/Style";
 
 const ShopStats=()=>{
     const [data,setData]=useState({});
@@ -80,6 +82,12 @@ const ShopStats=()=>{
     };
     return(
         <View style={{margin:8, justifyContent:"center"}}>
+            
+            <View>
+                <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("shopdetail")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
+            </View>
             <Text style={{fontSize:20,backgroundColor:"#2196F3"}}>Thống kê theo quý:</Text>
             <QuarterBar onQuarterPress={handleQuarterChange} />
             <Text style={{fontSize:20,backgroundColor:"#2196F3"}}>Thống kê theo tháng:</Text>

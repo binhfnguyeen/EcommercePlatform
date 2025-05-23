@@ -283,7 +283,8 @@ const Style = StyleSheet.create({
         flex: 0.5,
         alignItems: "flex-start",
         justifyContent: "center",
-    },
+        backgroundColor: '#FFFF66',
+    },  
 
     searchBar: {
         flex: 2,

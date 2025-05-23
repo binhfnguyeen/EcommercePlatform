@@ -24,6 +24,7 @@ import Order from './components/Order/Order';
 import PaymentsPaypal from './components/Order/PaymentsPaypal';
 import ShoppingCart from './components/Cart/ShoppingCart';
 import ShopStats from './components/Shop/ShopStats';
+import CreateShop from './components/Shop/CreateShop';
 
 
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,7 @@ const ShopNavigate =()=>{
         <Stack.Screen name="createproduct" component={CreateProduct}/>
         <Stack.Screen name="productdetail" component={ProductDetail}/>
         <Stack.Screen name="shopstats" component={ShopStats}/>
+        <Stack.Screen name="createshop" component={CreateShop}/>
     </Stack.Navigator>
   )
 }

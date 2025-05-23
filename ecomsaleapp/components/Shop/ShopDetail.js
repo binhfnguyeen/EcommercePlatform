@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
 import CreateProduct from "./CreateShopProduct";
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 const winWith={ width: Dimensions.get('window').width };
 const ShopDetail = ({route})=>{
@@ -115,6 +116,11 @@ useEffect(() => {
 
     return (
         <SafeAreaView style={Style.container}>
+            {/* <View style={Style.barHeader}>
+                <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("myshop")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
+            </View> */}
             {/* <TabView
                 navigationState={{ index, routes }}
                 onIndexChange={setIndex}
@@ -124,6 +130,10 @@ useEffect(() => {
                 })}
             /> */}
             <View style={Style.evaluateInlineSeeAll}>
+
+                <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("myshop")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
                 
                 <TouchableOpacity onPress={() => navigation.navigate("createproduct",{"shopId":shopId})}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
