@@ -7,6 +7,7 @@ import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { ActivityIndicator } from "react-native-paper";
 
 
 const Stack=createNativeStackNavigator();
@@ -58,11 +59,13 @@ const MyShop = () => {
         loadShop();
     }, []);
 
+    if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+
     return (
         <View>
             <Text style={EcomSaleStyles.header}>Của hàng của bạn</Text>
-            {!shop ? <>
-            <TouchableOpacity onPress={() => navigation.navigate('createshop')} style={{
+            {!shop ? (
+            <TouchableOpacity disabled={loading} loading={loading} mode="contained" onPress={() => navigation.navigate('createshop')} style={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 50,          
@@ -70,14 +73,14 @@ const MyShop = () => {
                     borderRadius:20,
                     margin:8 
                 }}><Text>Tạo của hàng của bạn</Text></TouchableOpacity>
-            </>:<> <TouchableOpacity onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})} style={{
+            ):( <TouchableOpacity disabled={loading} loading={loading} mode="contained" onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})} style={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 50,          
                     backgroundColor: '#2196F3',
                     borderRadius:20,
                     margin:8 
-                }}><Text>{shop.name}</Text></TouchableOpacity></>}
+                }}><Text>{shop.name}</Text></TouchableOpacity>)}
             
             {/* <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity> */}
            
