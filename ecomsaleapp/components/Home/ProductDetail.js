@@ -22,12 +22,14 @@ const ProductDetail = ({ route }) => {
     const [myCart, setMyCart] = useState([]);
     const [countProduct, setCountProduct] = useState(0);
     const navigation = useNavigation();
+    const [shop, setShop] = useState({})
 
     const loadProduct = async () => {
         try {
             const res = await Apis.get(endpoints['product'](productId));
             setProduct(res.data);
             setImgUrls(res.data.images?.map(img => img.image));
+            setShop(res.data.shop);
         } catch (err) {
             console.error(err);
         }
@@ -202,12 +204,15 @@ const ProductDetail = ({ route }) => {
                 <TouchableOpacity>
                     <View style={[Style.shopContainer, { flexDirection: "row", alignItems: "center" }]}>
                         <AntDesign name="isv" size={20} color="#333" style={{ marginRight: 5 }} />
-                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop.name}</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>
             <View style={Style.barFooter}>
-                <TouchableOpacity style={Style.chat} onPress={()=>navigation.navigate("chat")}>
+                <TouchableOpacity style={Style.chat} onPress={()=>{
+                    navigation.navigate("chat", {'shop': shop})
+                    console.log("SHOP to send:", shop);
+                    }}>
                     <AntDesign name="message1" size={24} color="#2196F3" />
                 </TouchableOpacity>
 

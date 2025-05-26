@@ -1,10 +1,11 @@
 import { Text, View } from "react-native"
 
-const Chat = () => {
+const Chat = ({route}) => {
+    const {shop} = route.params;
     return (
         <View>
-            <Text>ID: </Text>
-            <Text>Tên cửa hàng:</Text>
+            <Text>ID: {shop.id}</Text>
+            <Text>Tên cửa hàng: {shop.name}</Text>
         </View>
     );
 }
