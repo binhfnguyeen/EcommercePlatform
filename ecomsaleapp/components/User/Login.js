@@ -61,9 +61,11 @@ const Login = () => {
                     
                 });
                 console.info(res.data)
-                await AsyncStorage.setItem("token",res.data.access_token)
+                await AsyncStorage.setItem("token",res.data.access_token);
                 
                 let u= await authApis(res.data.access_token).get(endpoints['current_user'])
+                await AsyncStorage.setItem("userId", u.data.id.toString());
+                await AsyncStorage.setItem("userName", u.data.username);
                 console.info(u.data)
                 console.info(AsyncStorage.getItem('token'))
 
