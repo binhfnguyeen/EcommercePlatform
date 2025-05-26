@@ -24,9 +24,13 @@ const ProductDetail = ({ route }) => {
     const navigation = useNavigation();
 
     const loadProduct = async () => {
-        let res = await Apis.get(endpoints['product'](productId));
-        setProduct(res.data);
-        setImgUrls(res.data.images?.map(img => img.image));
+        try {
+            const res = await Apis.get(endpoints['product'](productId));
+            setProduct(res.data);
+            setImgUrls(res.data.images?.map(img => img.image));
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const loadFirstComment = async () => {
@@ -40,7 +44,7 @@ const ProductDetail = ({ route }) => {
             const token = await AsyncStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };
             if (token) {
-                const res = await Apis.get(endpoints["my-cart"], {headers});
+                const res = await Apis.get(endpoints["my-cart"], { headers });
                 const cart = res.data;
                 setMyCart(cart);
                 console.log(cart);
@@ -52,7 +56,7 @@ const ProductDetail = ({ route }) => {
                 setCountProduct(0);
             }
         } catch (err) {
-             console.error(err);
+            console.error(err);
         }
     }
 
@@ -62,18 +66,18 @@ const ProductDetail = ({ route }) => {
             const headers = { Authorization: `Bearer ${token}` };
             if (!token) {
                 Alert.alert("Lỗi", "Bạn cần đăng nhập trước.");
-                return;   
-            } 
+                return;
+            }
             const body = {
                 "product_id": productId,
                 "quantity": 1
             }
 
-            const res = await Apis.post(endpoints["add-cart"], body ,{headers});
+            const res = await Apis.post(endpoints["add-cart"], body, { headers });
             console.info("Thêm thành công sản phẩm vào giỏ: ", res.data);
             loadMyCart();
         } catch (err) {
-             console.error(err);
+            console.error(err);
         }
     }
 
@@ -109,21 +113,21 @@ const ProductDetail = ({ route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={Style.searchContainer}>
-                    <Searchbar placeholder="Tìm kiếm sản phẩm..." 
-                        onPress={()=>navigation.replace("home")}
+                    <Searchbar placeholder="Tìm kiếm sản phẩm..."
+                        onPress={() => navigation.replace("home")}
                         inputStyle={Style.searchBarInput}
-                        style={{ backgroundColor: 'transparent', elevation: 0,  width: "100%" }}/>
-                        
+                        style={{ backgroundColor: 'transparent', elevation: 0, width: "100%" }} />
+
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.viewCart} onPress={()=>navigation.replace("shoppingcart", {productId: productId})}> 
+                <TouchableOpacity style={Style.viewCart} onPress={() => navigation.replace("shoppingcart", { productId: productId })}>
                     <AntDesign name="shoppingcart" size={24} color="#2196F3" />
                     <View style={Style.cartBadge}>
                         <Text style={Style.badgeText}>{countProduct.toString()}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{paddingBottom: 55, paddingTop: 55}}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 55, paddingTop: 55 }}>
                 <View style={Style.headerContainer}>
                     <SliderBox
                         images={imgUrls}
@@ -203,15 +207,15 @@ const ProductDetail = ({ route }) => {
                 </TouchableOpacity>
             </ScrollView>
             <View style={Style.barFooter}>
-                <TouchableOpacity style={Style.chat}>
+                <TouchableOpacity style={Style.chat} onPress={()=>navigation.navigate("chat")}>
                     <AntDesign name="message1" size={24} color="#2196F3" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={Style.addCart} onPress={addToCart}>
-                    <FontAwesome name="cart-plus" size={24} color="#2196F3"/>
+                    <FontAwesome name="cart-plus" size={24} color="#2196F3" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.buyNowButton} onPress={()=>navigation.navigate("order", {'productId': productId})}>
+                <TouchableOpacity style={Style.buyNowButton} onPress={() => navigation.navigate("order", { 'productId': productId })}>
                     <Text style={{ color: '#fff', fontWeight: 'bold' }}>Mua ngay</Text>
                 </TouchableOpacity>
             </View>

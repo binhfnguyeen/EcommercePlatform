@@ -25,6 +25,7 @@ import PaymentsPaypal from './components/Order/PaymentsPaypal';
 import ShoppingCart from './components/Cart/ShoppingCart';
 import ShopStats from './components/Shop/ShopStats';
 import CreateShop from './components/Shop/CreateShop';
+import Chat from './components/Chat/Chat';
 
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ const StackNavigate = () => {
       <Stack.Screen name="ShopDetail" component={ShopDetail}/>
       <Stack.Screen name="paymentspaypal" component={PaymentsPaypal}/>
       <Stack.Screen name="shoppingcart" component={ShoppingCart}/>
+      <Stack.Screen name="chat" component={Chat}/>
     </Stack.Navigator>
   )
 }
