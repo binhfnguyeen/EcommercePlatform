@@ -1,25 +1,37 @@
-import { useContext, useEffect } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { MyDispatchContext, MyUserContext } from "../../configs/MyContext";
 import { SafeAreaView, View, StyleSheet, Image } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
     const user = useContext(MyUserContext);
     const dispatch = useContext(MyDispatchContext);
     const navigation = useNavigation();
-
-    useEffect(() => {
-        if (user === null) {
-            navigation.jumpTo("login");
-        }
-    }, [user]);
+    const[loading,setLoading]=useState(false)
 
     if (user?._j !== null) {
         const u = user._j;
 
+    const logout= async ()=>{
+        try{
+            setLoading(true)
+            await AsyncStorage.removeItem("token")
+            dispatch({
+                "type":"logout",
+            })
+        }catch(ex){
+            console.info(ex)
+        }finally{
+            setLoading(false)
+            console.info(user)
+        }
+        
+    }
+
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container}>  
                 <View style={styles.card}>
                     {u.avatar && (
                         <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${u.avatar}` }} style={styles.avatar} />
@@ -46,8 +58,10 @@ const Profile = () => {
                     </Button>
 
                     <Button
+                        disabled={loading} 
+                        loading={loading}
                         mode="outlined"
-                        onPress={() => dispatch({ type: "logout" })}
+                        onPress={logout}
                         style={styles.logoutButton}
                         labelStyle={{ color: "#e53935" }}
                         icon="logout"

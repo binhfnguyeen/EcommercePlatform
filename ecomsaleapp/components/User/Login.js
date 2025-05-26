@@ -51,8 +51,8 @@ const Login = () => {
                         form.append(key,user[key])
                     }
                 }
-                console.info(form)
-                console.info(Apis.defaults)
+                // console.info(form)
+                // console.info(Apis.defaults)
                 let res = await Apis.post(endpoints['token'], {
                     ...user,
                     "client_id":"9DgjVd5V4sLg5ZyppXVYuOnIGouBs4Bk96cnsPxe",
@@ -74,7 +74,7 @@ const Login = () => {
                     "payload":u.data
                 })
 
-                console.info(MyDispatchContext)
+                // console.info(MyDispatchContext)
                 // nav.navigate("profile")
 
             } catch (ex) {
