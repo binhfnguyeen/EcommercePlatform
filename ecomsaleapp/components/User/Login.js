@@ -51,8 +51,8 @@ const Login = () => {
                         form.append(key,user[key])
                     }
                 }
-                console.info(form)
-                console.info(Apis.defaults)
+                // console.info(form)
+                // console.info(Apis.defaults)
                 let res = await Apis.post(endpoints['token'], {
                     ...user,
                     "client_id":"9DgjVd5V4sLg5ZyppXVYuOnIGouBs4Bk96cnsPxe",
@@ -60,11 +60,11 @@ const Login = () => {
                     "grant_type": "password"
                     
                 });
-                console.info(res.data)
+                // console.info(res.data)
                 await AsyncStorage.setItem("token",res.data.access_token)
                 
                 let u= await authApis(res.data.access_token).get(endpoints['current_user'])
-                console.info(u.data)
+                // console.info(u.data)
                 console.info(AsyncStorage.getItem('token'))
 
                 dispatch({
@@ -72,7 +72,7 @@ const Login = () => {
                     "payload":u.data
                 })
 
-                console.info(MyDispatchContext)
+                // console.info(MyDispatchContext)
                 // nav.navigate("profile")
 
             } catch (ex) {

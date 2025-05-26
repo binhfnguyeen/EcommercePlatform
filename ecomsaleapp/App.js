@@ -13,7 +13,7 @@ import { MyUserContext } from './configs/MyContext';
 import { MyDispatchContext } from './configs/MyContext';
 import { NavigationContainer } from '@react-navigation/native';
 import Profile from './components/User/Profile';
-import { useReducer, useContext } from 'react';
+import { useReducer, useContext, useEffect } from 'react';
 import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
@@ -69,7 +69,7 @@ const TabNavigator = () => {
     <Tab.Navigator screenOptions={{headerShown: true}}>
       <Tab.Screen name='index' component={StackNavigate} options={{title: "EcomSale", tabBarIcon: () => <Icon size={30} source="home" />}}/>
 
-      {user === null ? <>
+      {user === null || user._j==null ? <>
         <Tab.Screen name="login" component={Login} options={{ title: "Đăng nhập", tabBarIcon: () => <Icon source="account" size={20} /> }} />
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
