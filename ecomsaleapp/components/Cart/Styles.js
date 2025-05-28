@@ -56,6 +56,16 @@ const Styles = StyleSheet.create({
         alignItems: "flex-start",
         justifyContent: "center",
     },
+
+    textMyCart: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        zIndex: -1
+    }
 });
 
 export default Styles;

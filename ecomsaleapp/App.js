@@ -26,6 +26,8 @@ import ShoppingCart from './components/Cart/ShoppingCart';
 import ShopStats from './components/Shop/ShopStats';
 import CreateShop from './components/Shop/CreateShop';
 import Chat from './components/Chat/Chat';
+import HistoryChat from './components/Chat/HistoryChat';
+import HistoryOrders from './components/Order/HistoryOrders';
 
 
 const Stack = createNativeStackNavigator();
@@ -60,6 +62,17 @@ const ShopNavigate =()=>{
   )
 }
 
+const ProfileNavigate = () => {
+  return (
+    <Stack.Navigator initialRouteName='profile_main' screenOptions={{headerShown: false}}>
+      <Stack.Screen name="profile_main" component={Profile} />
+      <Stack.Screen name="historychat" component={HistoryChat} />
+      <Stack.Screen name="historyorders" component={HistoryOrders}/>
+      <Stack.Screen name="chat" component={Chat}/>
+    </Stack.Navigator>
+  )
+}
+
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -73,7 +86,7 @@ const TabNavigator = () => {
         <Tab.Screen name="login" component={Login} options={{ title: "Đăng nhập", tabBarIcon: () => <Icon source="account" size={20} /> }} />
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
-        <Tab.Screen name="profile" component={Profile} options={{ title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20} /> }} />
+        <Tab.Screen name="profile" component={ProfileNavigate} options={{title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20}/>}}/>
         <Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
       </>}
     </Tab.Navigator>

@@ -1,19 +1,28 @@
-import { useEffect, useState } from "react";
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Apis, { endpoints } from "../../configs/Apis";
 import Styles from "./Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ShoppingCart = ({route}) => {
     const productId = route.params?.productId;
     const [products, setProducts] = useState({});
     const [myCart, setMyCart] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
     const navigation = useNavigation();
+    
     const loadCart = async () => {
         try {
             const token = await AsyncStorage.getItem("token");
+
+            if (!token) {
+                setIsLoggedIn(false);
+                return;
+            }
+
             const headers = { Authorization: `Bearer ${token}` };
 
             const res = await Apis.get(endpoints["my-cart"], { headers });
@@ -63,30 +72,63 @@ const ShoppingCart = ({route}) => {
         }
     };
 
-    useEffect(() => {
-        loadCart();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            loadCart();
+        }, [])
+    );
+
 
     useEffect(() => {
         loadProducts();
     }, [myCart]);
 
-
-
-    if (myCart === null)
+    if (!isLoggedIn) {
         return (
-            <View style={{ padding: 16 }}>
-                <Text>Bạn chưa đăng nhập hoặc giỏ hàng trống.</Text>
+            <View style={{ flex: 1 }}>
+                <View style={Styles.barHeader}>
+                    <TouchableOpacity style={Styles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
+                        <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                    </TouchableOpacity>
+                    <Text style={Styles.textMyCart}>
+                        Giỏ hàng của bạn
+                    </Text>
+                </View>
+
+                <View style={{ padding: 16, paddingTop: 50, alignItems: "center" }}>
+                    <Text>Bạn chưa đăng nhập. Vui lòng đăng nhập để xem giỏ hàng.</Text>
+                </View>
             </View>
         );
+    }
+
+
+    if (myCart === null) {
+        return (
+            <View style={{ flex: 1 }}>
+                <View style={Styles.barHeader}>
+                    <TouchableOpacity style={Styles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
+                        <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                    </TouchableOpacity>
+                    <Text style={Styles.textMyCart}>
+                        Giỏ hàng của bạn
+                    </Text>
+                </View>
+
+                <View style={{ padding: 16, paddingTop: 50, alignItems: "center" }}>
+                    <Text>Đang tải giỏ hàng <ActivityIndicator size="small" color="#0000ff" /></Text>
+                </View>
+            </View>
+        );
+    }
 
     return (
         <View style={{flex: 1}}>
             <View style={Styles.barHeader}>
-                <TouchableOpacity style={Styles.returnButton} onPress={() => {productId?navigation.replace("productdetail", {productId: productId}):navigation.replace("home")}}>
+                <TouchableOpacity style={Styles.returnButton} onPress={() => {productId?navigation.navigate("productdetail", {productId: productId}):navigation.navigate("home")}}>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
-                <Text style={{ fontSize: 18, fontWeight: "bold",  alignItems: "center"}}>
+                <Text style={Styles.textMyCart}>
                     Giỏ hàng của bạn
                 </Text>
             </View>

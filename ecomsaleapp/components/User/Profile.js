@@ -18,6 +18,8 @@ const Profile = () => {
         try{
             setLoading(true)
             await AsyncStorage.removeItem("token")
+            await AsyncStorage.removeItem("userId")
+            await AsyncStorage.removeItem("userName")
             dispatch({
                 "type":"logout",
             })
@@ -43,7 +45,7 @@ const Profile = () => {
                         mode="contained"
                         style={styles.button}
                         icon="history"
-                        // onPress={() => navigation.navigate("order")}
+                        onPress={() => navigation.navigate("historyorders")}
                     >
                         Xem lịch sử đơn hàng
                     </Button>
@@ -52,7 +54,7 @@ const Profile = () => {
                         mode="contained"
                         style={[styles.button, { backgroundColor: "#03A9F4" }]}
                         icon="message-text"
-                        // onPress={() => navigation.navigate("chat")}
+                        onPress={() => navigation.navigate("historychat")}
                     >
                         Xem lịch sử chat
                     </Button>
