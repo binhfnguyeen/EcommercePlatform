@@ -73,6 +73,7 @@ class CommentAdmin(admin.ModelAdmin):
 class CommentLikeAdmin(admin.ModelAdmin):
     list_display = ['user', 'comment']
 
+
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Inventory, InventoryAdmin)

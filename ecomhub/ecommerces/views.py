@@ -623,3 +623,5 @@ class ShopRevenueStatsAPIView(APIView):
             'product_stats': product_stats,
             'category_stats': category_stats
         })
+
+
