@@ -27,6 +27,7 @@ export const endpoints = {
     'current_user':'/users/current-user/',
     'product': (productId) => `/products/${productId}/`,
     'product-comments': (productId)=>`/products/${productId}/comments/`,
+    'product-compare': (productId) => `/products/${productId}/compare/`,
     'my-shop':'/shops/my_shop/',
     'shop-detail':(shopId)=>`/shops/${shopId}/products/`,
     'create-product':(shopId)=>`/shops/${shopId}/create_product/`,

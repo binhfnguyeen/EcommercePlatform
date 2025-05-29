@@ -23,6 +23,7 @@ const ProductDetail = ({ route }) => {
     const [countProduct, setCountProduct] = useState(0);
     const navigation = useNavigation();
     const [shop, setShop] = useState({})
+    const [productsCompare, setProductsCompare] = useState([])
 
     const loadProduct = async () => {
         try {
@@ -57,6 +58,17 @@ const ProductDetail = ({ route }) => {
                 setMyCart(null);
                 setCountProduct(0);
             }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const loadProductsCompare = async (productId) => {
+        try {
+            const res = await Apis.get(endpoints['product-compare'](productId));
+            
+            setProductsCompare(res.data)
+            console.log("Danh sách sản phẩm so sánh: ", res.data)
         } catch (err) {
             console.error(err);
         }
@@ -99,6 +111,10 @@ const ProductDetail = ({ route }) => {
             console.log(product.shop);
         }
     }, [product]);
+
+    useEffect(()=>{
+        loadProductsCompare(productId);
+    }, [productId]);
 
     const onCurrentImagePressed = (index) => {
         setSelectedImage(imgUrls[index]);
@@ -207,6 +223,35 @@ const ProductDetail = ({ route }) => {
                         <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop.name}</Text>
                     </View>
                 </TouchableOpacity>
+                <View style={{ paddingHorizontal: 10, marginTop: 20 }}>
+                    <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>Sản phẩm tương tự</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {productsCompare.map((item) => (
+                            <TouchableOpacity key={item.id}
+                            onPress={() => navigation.replace("productdetail", { productId: item.id })}
+                            >
+                                <View style={{ marginRight: 15, width: 150 }}>
+                                    <Image
+                                        source={{ uri: item.image }}
+                                        style={{ width: "100%", height: 120, borderRadius: 10 }}
+                                        resizeMode="cover"
+                                    />
+                                    <Text numberOfLines={1} style={{ fontWeight: "bold", marginTop: 5 }}>{item.name}</Text>
+                                    <Text style={{ color: "#555" }}>{item.price.toLocaleString()} VND</Text>
+                                    <Text style={{ fontSize: 12, color: "#999" }}>{item.shop}</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+                                        <AntDesign name="star" size={14} color="#FFD700" />
+                                        <Text style={{ marginLeft: 4 }}>{item.avg_star?.toFixed(1) || '0.0'}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
+                                        <AntDesign name="message1" size={14} color="#555" />
+                                        <Text style={{ marginLeft: 4 }}>{item.total_comments || 0} bình luận</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
             </ScrollView>
             <View style={Style.barFooter}>
                 <TouchableOpacity style={Style.chat} onPress={()=>{
