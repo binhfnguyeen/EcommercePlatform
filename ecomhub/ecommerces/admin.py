@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db.models import Sum
+
 from .models import Product, ProductImage, Shop, Inventory, Cart, CartDetail, Order, OrderDetail, Payment, Category, Comment, CommentLike
 
 

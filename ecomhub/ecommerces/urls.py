@@ -39,6 +39,7 @@ urlpatterns = [
             name='schema-redoc'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('shop/stats/', views.ShopRevenueStatsAPIView.as_view(), name='shop-revenue-stats'),
+    path('adminshop/stats/',views.AdminShopStatsView.as_view(),name='adminshop-revenue-stats'),
     path('paypal-success/', views.paypal_success_view, name='paypal-success'),
     path('paypal-cancel/', views.paypal_cancel_view, name='paypal-cancel'),
 ]

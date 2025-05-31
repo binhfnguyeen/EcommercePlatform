@@ -28,6 +28,8 @@ import CreateShop from './components/Shop/CreateShop';
 import Chat from './components/Chat/Chat';
 import HistoryChat from './components/Chat/HistoryChat';
 import HistoryOrders from './components/Order/HistoryOrders';
+import AdminShopStatsScreen from './components/Admin/AdminShopStats';
+import ShopStat from './components/Admin/ShopStat';
 
 
 const Stack = createNativeStackNavigator();
@@ -69,6 +71,9 @@ const ProfileNavigate = () => {
       <Stack.Screen name="historychat" component={HistoryChat} />
       <Stack.Screen name="historyorders" component={HistoryOrders}/>
       <Stack.Screen name="chat" component={Chat}/>
+      <Stack.Screen name="stats" component={AdminShopStatsScreen}/>
+      <Stack.Screen name="statdetail" component={ShopStat}/>
+
     </Stack.Navigator>
   )
 }

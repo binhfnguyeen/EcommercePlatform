@@ -31,7 +31,8 @@ export const endpoints = {
     'my-shop':'/shops/my_shop/',
     'shop-detail':(shopId)=>`/shops/${shopId}/products/`,
     'create-product':(shopId)=>`/shops/${shopId}/create_product/`,
-    'shop-stat':'/shop/stats/'
+    'shop-stat':'/shop/stats/',
+    'admin-stat':'/adminshop/stats/'
 }
 
 export const authApis=(token)=>{
