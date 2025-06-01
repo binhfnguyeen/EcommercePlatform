@@ -77,6 +77,9 @@ const ShopStats = ({ route }) => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    console.log("Dữ liệu cập nhật:", data);
+  }, [data]);
 
   useEffect(() => {
     loadStat(month, quarter);
@@ -99,7 +102,6 @@ const ShopStats = ({ route }) => {
     dataPointText: item.total_revenue.toString(),
     label: `T${item.month}`
   })) || [];
-
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16, backgroundColor: "#f4f6f8" }}>
@@ -147,23 +149,32 @@ const ShopStats = ({ route }) => {
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 20, marginBottom: 8 }}>
         📈 Doanh thu theo tháng
       </Text>
-      <LineChart
-        data={monthlyStats}
-        width={windowWidth - 32}
-        height={220}
-        hideDataPoints={false}
-        color="#4CAF50"
-        thickness={3}
-        areaChart
-        curved
-        startFillColor="#a5d6a7"
-        endFillColor="#ffffff"
-        yAxisTextStyle={{ color: '#333' }}
-        xAxisLabelTextStyle={{ fontSize: 12 }}
-        dataPointsColor="#388E3C"
-        isAnimated
-        animationDuration={800}
-      />
+      {monthlyStats.length > 0 ? (
+        <LineChart
+          data={monthlyStats}
+          width={windowWidth - 32}
+          height={220}
+          hideDataPoints={false}
+          color="#4CAF50"
+          thickness={3}
+          areaChart
+          curved
+          startFillColor="rgba(76, 175, 80, 0.3)"
+          endFillColor="rgba(255, 255, 255, 0)"
+          yAxisTextStyle={{ color: '#333' }}
+          xAxisLabelTextStyle={{ fontSize: 12, color: '#333' }}
+          dataPointsColor="#388E3C"
+          isAnimated
+          animationDuration={800}
+          initialSpacing={10}
+          spacing={30}
+        />
+      ) : (
+        <Text style={{ textAlign: 'center', marginTop: 16, color: '#888' }}>
+          Không có dữ liệu để hiển thị
+        </Text>
+      )}
+
     </ScrollView>
   );
 };

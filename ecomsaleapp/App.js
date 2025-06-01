@@ -9,7 +9,7 @@ import ProductDetail from './components/Home/ProductDetail';
 import ProductComment from './components/Home/ProductComment';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyUserReducer from './reducers/MyUserReducer';
-import { MyUserContext } from './configs/MyContext';
+import { MyShopContext, MyShopDispatchContext, MyUserContext } from './configs/MyContext';
 import { MyDispatchContext } from './configs/MyContext';
 import { NavigationContainer } from '@react-navigation/native';
 import Profile from './components/User/Profile';
@@ -30,6 +30,7 @@ import HistoryChat from './components/Chat/HistoryChat';
 import HistoryOrders from './components/Order/HistoryOrders';
 import AdminShopStatsScreen from './components/Admin/AdminShopStats';
 import ShopStat from './components/Admin/ShopStat';
+import MyShopReducer from './reducers/MyShopReducer';
 
 
 const Stack = createNativeStackNavigator();
@@ -92,7 +93,8 @@ const TabNavigator = () => {
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
         <Tab.Screen name="profile" component={ProfileNavigate} options={{title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20}/>}}/>
-        <Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
+        {user._j.is_shop_owner==true ?(<Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />):(<></>)}
+        
       </>}
     </Tab.Navigator>
   )
@@ -101,16 +103,21 @@ const TabNavigator = () => {
 
 export default App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null)
+  const [shop,shopdispatch]=useReducer(MyShopReducer,null)
 
   return (
     <PaperProvider>
       <MyUserContext.Provider value={user}>
         <MyDispatchContext.Provider value={dispatch}>
-          <NavigationContainer>
+          <MyShopContext.Provider value={shop}>
+            <MyShopDispatchContext.Provider value={shopdispatch}>
+              <NavigationContainer>
 
-            <TabNavigator />
+                <TabNavigator />
 
-          </NavigationContainer>
+              </NavigationContainer>
+            </MyShopDispatchContext.Provider>
+          </MyShopContext.Provider>
         </MyDispatchContext.Provider>
       </MyUserContext.Provider>
     </PaperProvider>

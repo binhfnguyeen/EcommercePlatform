@@ -5,7 +5,7 @@ import Apis, { authApis, endpoints } from "../../configs/Apis";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { MyDispatchContext } from "../../configs/MyContext";
+import { MyDispatchContext, MyShopDispatchContext } from "../../configs/MyContext";
 
 
 const Login = () => {
@@ -25,6 +25,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const nav=useNavigation();
     const dispatch = useContext(MyDispatchContext)
+    const shopdispatch=useContext(MyShopDispatchContext)
 
     const setState = (value, field) => {
         setUser({...user, [field]: value});
@@ -66,6 +67,7 @@ const Login = () => {
                 let u= await authApis(res.data.access_token).get(endpoints['current_user'])
                 await AsyncStorage.setItem("userId", u.data.id.toString());
                 await AsyncStorage.setItem("userName", u.data.username);
+                let s=await authApis(res.data.access_token).get(endpoints['my-shop']);
                 console.info(u.data)
                 console.info(AsyncStorage.getItem('token'))
 
@@ -73,6 +75,12 @@ const Login = () => {
                     "type":"login",
                     "payload":u.data
                 })
+
+                if (u.is_shop_owner==true)
+                    shopdispatch({
+                        "type":"isshopowner",
+                        "payload":s.data
+                    })
 
                 // console.info(MyDispatchContext)
                 // nav.navigate("profile")

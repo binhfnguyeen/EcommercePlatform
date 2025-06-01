@@ -68,7 +68,7 @@ const Profile = () => {
                     >
                         Xem thống kê
                     </Button>):(<Text></Text>)}
-                    <Button
+                    {/* <Button
                         disabled={loading} 
                         loading={loading}
                         mode="outlined"
@@ -77,7 +77,7 @@ const Profile = () => {
                         labelStyle={{ color: "#e53935" }}
                     >
                         Xem thống kê
-                    </Button>
+                    </Button> */}
                     <Button
                         disabled={loading} 
                         loading={loading}
