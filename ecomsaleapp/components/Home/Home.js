@@ -27,7 +27,6 @@ const Home = () => {
     const loadProducts = async (pageToLoad = 1, nameFilter = "", reset = false) => {
         let url = `${endpoints['products']}?page=${pageToLoad}`;
         if (nameFilter) url += `&name=${nameFilter}`;
-        if (nameFilter) url += `&name=${nameFilter}`;
         if (minPrice) url += `&min_price=${minPrice}`;
         if (maxPrice) url += `&max_price=${maxPrice}`;
         if (shopName) url += `&shop_name=${shopName}`;
