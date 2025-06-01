@@ -20,6 +20,17 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar', 'phone','is_superuser']
 
+        extra_kwargs = {
+            'is_superuser': {
+                'read_only': True
+            },
+            'password': {
+                'write_only': True
+            }
+        }
+
+
+
     def create(self, validated_data):
         data = validated_data.copy()
         u = User(**data)
