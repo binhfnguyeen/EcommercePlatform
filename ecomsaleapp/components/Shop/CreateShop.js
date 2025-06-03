@@ -7,7 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import Style from "../Home/Style";
+import HomeStyles from "../Home/HomeStyles";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 
 
@@ -63,7 +63,7 @@ const CreateShop=()=>{
     return(
         <SafeAreaView>
       <View>
-        <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("myshop")}>
+        <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
             <Ionicons name="return-down-back" size={24} color="#2196F3" />
         </TouchableOpacity>
       </View>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Image, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import * as ImgPicker from 'expo-image-picker';
 import Apis, { endpoints } from "../../configs/Apis";
-import Style from "./Style";
 import StarRating from "../../utils/StarRating";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import ReplyCommentStyles from "./ReplyCommentStyles";
 
 const ReplyComment = ({ route }) => {
     const commentParentId = route.params?.commentParentId;
@@ -215,11 +215,11 @@ const ReplyComment = ({ route }) => {
                 onMomentumScrollEnd={loadMore}
             >
                 {commentParent && (
-                    <View style={Style.commentContainer}>
-                        <View style={Style.commentHeader}>
+                    <View style={ReplyCommentStyles.commentContainer}>
+                        <View style={ReplyCommentStyles.commentHeader}>
                             <Image
                                 source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentParent.user.avatar}` }}
-                                style={Style.avatar}
+                                style={ReplyCommentStyles.avatar}
                             />
                             <Text style={{ fontWeight: "bold" }}>
                                 {commentParent.user.first_name} {commentParent.user.last_name}
@@ -245,7 +245,7 @@ const ReplyComment = ({ route }) => {
                         )}
                         <TouchableOpacity
                             onPress={() => handleLikeComment(commentParent.id)}
-                            style={[Style.heartButton, {alignSelf: 'flex-start'}]}
+                            style={[ReplyCommentStyles.heartButton, {alignSelf: 'flex-start'}]}
                         >
                             <AntDesign name="heart" size={16} color="#FF3B30" />
                             <Text style={{ marginLeft: 6, color: "#FF3B30", fontWeight: "600" }}>Thích</Text>
@@ -254,9 +254,9 @@ const ReplyComment = ({ route }) => {
                 )}
 
                 {replies.map(reply => (
-                    <View key={`reply-${reply.id}`} style={Style.replyContainer}>
+                    <View key={`reply-${reply.id}`} style={ReplyCommentStyles.replyContainer}>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${reply.user.avatar}` }} style={Style.replyAvatar} />
+                            <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${reply.user.avatar}` }} style={ReplyCommentStyles.replyAvatar} />
                             <Text style={{ fontWeight: "bold" }}>{reply.user.first_name} {reply.user.last_name}</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
                                 <AntDesign name="heart" size={16} color="#FF3B30" />
@@ -272,7 +272,7 @@ const ReplyComment = ({ route }) => {
                         )}
                         <TouchableOpacity
                             onPress={() => handleLikeComment(reply.id)}
-                            style={Style.heartButton}
+                            style={ReplyCommentStyles.heartButton}
                         >
                             <AntDesign name="heart" size={16} color="#FF3B30" />
                             <Text style={{ marginLeft: 6, color: "#FF3B30", fontWeight: "600" }}>Thích</Text>

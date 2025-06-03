@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDatabase, ref, onValue } from "firebase/database";
 import Apis, { endpoints } from "../../configs/Apis";
 import formatTime from "../../utils/formatTime";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import HistoryChatStyles from "./HistoryChatStyles";
 
 const HistoryChat = ({ navigation }) => {
     const [userId, setUserId] = useState(null);
@@ -71,7 +72,7 @@ const HistoryChat = ({ navigation }) => {
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate("chat", { otherUserId: item.otherUserId })}
-                style={styles.chatContainer}
+                style={HistoryChatStyles.chatContainer}
             >
                 <Image
                     source={{
@@ -79,14 +80,14 @@ const HistoryChat = ({ navigation }) => {
                             ? `https://res.cloudinary.com/dwivkhh8t/${user.avatar}`
                             : "https://via.placeholder.com/60",
                     }}
-                    style={styles.avatar}
+                    style={HistoryChatStyles.avatar}
                 />
-                <View style={styles.chatInfo}>
-                    <Text style={styles.username}>{user?.username}</Text>
-                    <Text numberOfLines={1} style={styles.lastMessage}>
+                <View style={HistoryChatStyles.chatInfo}>
+                    <Text style={HistoryChatStyles.username}>{user?.username}</Text>
+                    <Text numberOfLines={1} style={HistoryChatStyles.lastMessage}>
                         {item.lastMessage}
                     </Text>
-                    <Text style={styles.timestamp}>{formatTime(item.timestamp)}</Text>
+                    <Text style={HistoryChatStyles.timestamp}>{formatTime(item.timestamp)}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -94,19 +95,19 @@ const HistoryChat = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View style={styles.loaderContainer}>
+            <View style={HistoryChatStyles.loaderContainer}>
                 <ActivityIndicator size="large" color="#000" />
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.barHeader}>
-                <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("profile_main")}>
+        <View style={HistoryChatStyles.container}>
+            <View style={HistoryChatStyles.barHeader}>
+                <TouchableOpacity style={HistoryChatStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
-                <Text style={styles.textMyCart}>
+                <Text style={HistoryChatStyles.textMyCart}>
                     Lịch sử tin nhắn
                 </Text>
             </View>
@@ -114,109 +115,11 @@ const HistoryChat = ({ navigation }) => {
                 data={chatList}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
-                ListEmptyComponent={<Text style={styles.emptyText}>Không có cuộc trò chuyện nào.</Text>}
+                ListEmptyComponent={<Text style={HistoryChatStyles.emptyText}>Không có cuộc trò chuyện nào.</Text>}
                 contentContainerStyle={{ paddingBottom: 20, paddingTop: 50 }}
             />
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#fff',
-    },
-
-    chatContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
-        backgroundColor: "#fff",
-    },
-
-    avatar: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginRight: 12,
-        backgroundColor: "#f0f0f0",
-    },
-
-    chatInfo: {
-        flex: 1,
-        justifyContent: "center",
-    },
-
-    username: {
-        fontSize: 16,
-        fontWeight: "600",
-        color: "#333",
-        marginBottom: 4,
-    },
-
-    lastMessage: {
-        fontSize: 14,
-        color: "#666",
-    },
-
-    loaderContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#fff",
-    },
-
-    emptyText: {
-        textAlign: "center",
-        padding: 20,
-        fontSize: 16,
-        color: "#888",
-    },
-
-    timestamp: {
-        fontSize: 10,
-        color: "#888",
-        marginTop: 4,
-        alignSelf: "flex-end",
-    },
-        barHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderColor: '#e0e0e0',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 999,
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-    },
-
-    returnButton: {
-        flex: 0.8,
-        alignItems: "flex-start",
-        justifyContent: "center",
-    },
-
-    textMyCart: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        textAlign: 'center',
-        fontSize: 18,
-        fontWeight: 'bold',
-        zIndex: -1
-    }
-});
 
 export default HistoryChat;

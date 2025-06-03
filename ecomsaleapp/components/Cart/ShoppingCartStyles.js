@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const Styles = StyleSheet.create({
+export default StyleSheet.create({
     barHeader: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -67,5 +67,3 @@ const Styles = StyleSheet.create({
         zIndex: -1
     }
 });
-
-export default Styles;

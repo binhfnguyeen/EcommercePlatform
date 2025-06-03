@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Apis, { endpoints } from "../../configs/Apis";
-import { ActivityIndicator, FlatList, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { List, Searchbar } from "react-native-paper";
-import Style from "./Style";
+import { ActivityIndicator, FlatList, Image, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomeStyles from "./HomeStyles";
 
 
 const Home = () => {
@@ -114,13 +114,13 @@ const Home = () => {
         const imageUrl = item.images[0]?.image;
 
         return (
-            <TouchableOpacity style={Style.card} onPress={() => navigation.navigate('productdetail', { 'productId': item.id })}>
-                <Image source={{ uri: imageUrl }} style={Style.image} resizeMode="cover" />
-                <View style={Style.cardContent}>
-                    <Text style={Style.productName}>{item.name}</Text>
-                    <Text style={Style.price}>{item.price.toLocaleString()} VNĐ</Text>
-                    <Text style={Style.subText}>Danh mục: {item.category}</Text>
-                    <Text style={Style.subText}>Cửa hàng: {item.shop.name}</Text>
+            <TouchableOpacity style={HomeStyles.card} onPress={() => navigation.navigate('productdetail', { 'productId': item.id })}>
+                <Image source={{ uri: imageUrl }} style={HomeStyles.image} resizeMode="cover" />
+                <View style={HomeStyles.cardContent}>
+                    <Text style={HomeStyles.productName}>{item.name}</Text>
+                    <Text style={HomeStyles.price}>{item.price.toLocaleString()} VNĐ</Text>
+                    <Text style={HomeStyles.subText}>Danh mục: {item.category}</Text>
+                    <Text style={HomeStyles.subText}>Cửa hàng: {item.shop.name}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -224,7 +224,7 @@ const Home = () => {
     );
 
     return (
-        <SafeAreaView style={Style.container}>
+        <SafeAreaView style={HomeStyles.container}>
             <TouchableWithoutFeedback
                 onPress={() => {
                     Keyboard.dismiss();
@@ -233,21 +233,21 @@ const Home = () => {
             >
                 <View style={{ flex: 1 }}>
                     <View>
-                        <View style={Style.barHeader}>
+                        <View style={HomeStyles.barHeader}>
                             <Searchbar
                                 placeholder="Tìm kiếm sản phẩm..."
                                 value={name}
                                 onChangeText={setName}
-                                style={Style.searchBarHome}
+                                style={HomeStyles.searchBarHome}
                                 onFocus={onFocusSearch}
                             />
                             <TouchableOpacity
-                                style={Style.viewCartHome}
+                                style={HomeStyles.viewCartHome}
                                 onPress={() => navigation.replace("shoppingcart")}
                             >
                                 <AntDesign name="shoppingcart" size={24} color="#2196F3" />
-                                <View style={Style.cartBadgeHome}>
-                                    <Text style={Style.badgeText}>{countProduct.toString()}</Text>
+                                <View style={HomeStyles.cartBadgeHome}>
+                                    <Text style={HomeStyles.badgeText}>{countProduct.toString()}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -261,8 +261,8 @@ const Home = () => {
                         onEndReached={loadMore}
                         ListHeaderComponent={renderHeader}
                         ListFooterComponent={loading && <ActivityIndicator />}
-                        contentContainerStyle={Style.flatListContent}
-                        columnWrapperStyle={Style.columnWrapper}
+                        contentContainerStyle={HomeStyles.flatListContent}
+                        columnWrapperStyle={HomeStyles.columnWrapper}
                     />
                 </View>
             </TouchableWithoutFeedback>

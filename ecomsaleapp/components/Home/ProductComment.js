@@ -2,13 +2,12 @@ import { View, Text, FlatList, ActivityIndicator, Image, TextInput, TouchableOpa
 import { useEffect, useState } from "react";
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Style from "./Style";
 import StarRating from "../../utils/StarRating";
 import StarRatingWidget from 'react-native-star-rating-widget';
 import * as ImgPicker from 'expo-image-picker';
-import axios, { Axios } from "axios";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import ProductCommentStyles from "./ProductCommentStyles";
 
 const ProductComment = ({ route }) => {
     const productId = route.params?.productId;
@@ -175,9 +174,9 @@ const ProductComment = ({ route }) => {
     }
 
     const renderCommentItem = ({ item: parent }) => (
-        <View style={Style.commentContainer}>
-            <View style={Style.commentHeader}>
-                <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${parent.user.avatar}` }} style={Style.avatar} />
+        <View style={ProductCommentStyles.commentContainer}>
+            <View style={ProductCommentStyles.commentHeader}>
+                <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${parent.user.avatar}` }} style={ProductCommentStyles.avatar} />
                 <Text style={{ fontWeight: "bold" }}>{parent.user.first_name} {parent.user.last_name}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
                     <AntDesign name="heart" size={16} color="#FF3B30" />
@@ -195,7 +194,7 @@ const ProductComment = ({ route }) => {
             <View style={{ flexDirection: "row", marginTop: 8, gap: 12 }}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate("replycomment", { commentParentId: parent.id, productId })}
-                    style={Style.messageButton}
+                    style={ProductCommentStyles.messageButton}
                 >
                     <AntDesign name="message1" size={16} color="#2196F3" />
                     <Text style={{ marginLeft: 6, color: "#2196F3", fontWeight: "600" }}>Trả lời</Text>
@@ -203,7 +202,7 @@ const ProductComment = ({ route }) => {
 
                 <TouchableOpacity
                     onPress={() => handleLikeComment(parent.id)}
-                    style={Style.heartButton}
+                    style={ProductCommentStyles.heartButton}
                 >
                     <AntDesign name="heart" size={16} color="#FF3B30" />
                     <Text style={{ marginLeft: 6, color: "#FF3B30", fontWeight: "600" }}>Thích</Text>
@@ -212,9 +211,9 @@ const ProductComment = ({ route }) => {
             {commentInProduct
                 .filter(reply => reply.comment_parent === parent.id)
                 .map(reply => (
-                    <View key={`reply-${reply.id}`} style={Style.replyContainer}>
+                    <View key={`reply-${reply.id}`} style={ProductCommentStyles.replyContainer}>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${reply.user.avatar}` }} style={Style.replyAvatar} />
+                            <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${reply.user.avatar}` }} style={ProductCommentStyles.replyAvatar} />
                             <Text style={{ fontWeight: "bold" }}>{reply.user.first_name} {reply.user.last_name}</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
                                 <AntDesign name="heart" size={16} color="#FF3B30" />

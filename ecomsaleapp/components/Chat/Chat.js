@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, View, TextInput, Button, FlatList, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from "react-native";
+import { Text, View, TextInput, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import { db } from "../../configs/firebaseConfig";
 import { ref, push, onValue, set } from "firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,6 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import formatTime from "../../utils/formatTime";
 import { useNavigation } from "@react-navigation/native";
+import ChatStyles from "./ChatStyles";
 
 const Chat = ({ route }) => {
     const { shop, otherUserId } = route.params;
@@ -145,12 +146,12 @@ const Chat = ({ route }) => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
-            <View style={styles.header}>
+        <KeyboardAvoidingView style={ChatStyles.container}>
+            <View style={ChatStyles.header}>
                 {otherUser?.avatar?
-                    <View style={styles.userInfo}>
-                        <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${otherUser.avatar}` }} style={styles.avatar} />
-                        <Text style={styles.username}>{otherUser.username}</Text>
+                    <View style={ChatStyles.userInfo}>
+                        <Image source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${otherUser.avatar}` }} style={ChatStyles.avatar} />
+                        <Text style={ChatStyles.username}>{otherUser.username}</Text>
                     </View>:<ActivityIndicator size="large" color="#0000ff" />
                 }
             </View>
@@ -164,37 +165,37 @@ const Chat = ({ route }) => {
                     <FlatList
                         data={messages}
                         keyExtractor={(item) => item.id}
-                        style={styles.messageList}
+                        style={ChatStyles.messageList}
                         renderItem={({ item }) => {
                             const isCurrentUser = item.senderId === userId;
                             return (
-                                <View style={[styles.messageContainer, isCurrentUser ? styles.currentUser : styles.otherUser]}>
-                                    <View style={[styles.messageBubble, { backgroundColor: isCurrentUser ? "#DCF8C6" : "#E5E5EA" }]}>
-                                        {item.text && <Text style={styles.messageText}>{item.text}</Text>}
+                                <View style={[ChatStyles.messageContainer, isCurrentUser ? ChatStyles.currentUser : ChatStyles.otherUser]}>
+                                    <View style={[ChatStyles.messageBubble, { backgroundColor: isCurrentUser ? "#DCF8C6" : "#E5E5EA" }]}>
+                                        {item.text && <Text style={ChatStyles.messageText}>{item.text}</Text>}
                                         {item.image && (
-                                            <Image source={{ uri: item.image }} style={styles.messageImage} />
+                                            <Image source={{ uri: item.image }} style={ChatStyles.messageImage} />
                                         )}
-                                        <Text style={styles.timestamp}>{formatTime(item.timestamp)}</Text>
+                                        <Text style={ChatStyles.timestamp}>{formatTime(item.timestamp)}</Text>
                                     </View>
                                 </View>
                             );
                         }}
                     />
 
-                    <View style={styles.inputContainer}>
-                        <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
-                            <Text style={styles.imagePickerText}>
+                    <View style={ChatStyles.inputContainer}>
+                        <TouchableOpacity onPress={pickImage} style={ChatStyles.imagePicker}>
+                            <Text style={ChatStyles.imagePickerText}>
                                 <FontAwesome name="image" size={24} color="#2196F3" />
                             </Text>
                         </TouchableOpacity>
                         <TextInput
-                            style={styles.textInput}
+                            style={ChatStyles.textInput}
                             value={message}
                             onChangeText={setMessage}
                             placeholder="Nhập tin nhắn..."
                         />
-                        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-                            <Text style={styles.sendText}>Gửi</Text>
+                        <TouchableOpacity style={ChatStyles.sendButton} onPress={handleSend}>
+                            <Text style={ChatStyles.sendText}>Gửi</Text>
                         </TouchableOpacity>
                     </View>
                 </>
@@ -204,115 +205,3 @@ const Chat = ({ route }) => {
 };
 
 export default Chat;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f4f6f8",
-    },
-    header: {
-        padding: 16,
-        backgroundColor: "#ffffff",
-        borderBottomWidth: 1,
-        borderColor: "#ddd",
-    },
-    shopText: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#444",
-    },
-    userInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 8,
-    },
-    avatar: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-        marginRight: 10,
-    },
-    username: {
-        fontSize: 15,
-        fontWeight: "600",
-        color: "#333",
-    },
-    messageList: {
-        flex: 1,
-        padding: 10,
-    },
-    messageContainer: {
-        marginVertical: 4,
-        flexDirection: "row",
-        paddingBottom: 30,
-    },
-    currentUser: {
-        justifyContent: "flex-end",
-    },
-    otherUser: {
-        justifyContent: "flex-start",
-    },
-    messageBubble: {
-        padding: 10,
-        borderRadius: 12,
-        maxWidth: "70%",
-    },
-    messageText: {
-        color: "#000",
-    },
-    messageImage: {
-        marginTop: 5,
-        width: 150,
-        height: 150,
-        borderRadius: 8,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 10,
-        borderTopWidth: 1,
-        backgroundColor: "#fff",
-        borderColor: "#ddd",
-    },
-    imagePicker: {
-        backgroundColor: "#d0e0fc",
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        marginRight: 5,
-    },
-    imagePickerText: {
-        color: "#0056b3",
-        fontWeight: "600",
-    },
-    textInput: {
-        flex: 1,
-        backgroundColor: "#f0f0f0",
-        borderRadius: 8,
-        padding: 10,
-        marginRight: 5,
-    },
-    sendButton: {
-        backgroundColor: "#007AFF",
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 8,
-    },
-    sendText: {
-        color: "#fff",
-        fontWeight: "bold",
-    },
-
-    timestamp: {
-        fontSize: 10,
-        color: "#888",
-        marginTop: 4,
-        alignSelf: "flex-end",
-    },
-
-    returnButton: {
-        flex: 0.5,
-        alignItems: "flex-start",
-        justifyContent: "center",
-    }, 
-});

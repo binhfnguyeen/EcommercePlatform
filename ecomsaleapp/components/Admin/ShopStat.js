@@ -6,7 +6,7 @@ import { LineChart } from "react-native-gifted-charts";
 import { Button, Menu } from "react-native-paper";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Style from "../Home/Style";
+import HomeStyles from "../Home/HomeStyles";
 import { useNavigation } from "@react-navigation/native";
 
 const ShopStats = ({ route }) => {
@@ -106,7 +106,7 @@ const ShopStats = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={{ padding: 16, backgroundColor: "#f4f6f8" }}>
       {/* Quay lại */}
-      <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("stats")}>
+      <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("stats")}>
         <Ionicons name="arrow-back" size={28} color="#2196F3" />
       </TouchableOpacity>
 

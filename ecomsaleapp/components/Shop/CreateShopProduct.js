@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { Menu, Divider } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import Style from "../Home/Style"
+import HomeStyles from "../Home/HomeStyles"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useNavigation } from "@react-navigation/native"
 
@@ -127,7 +127,7 @@ const CreateProduct = ({route}) => {
   return (
     <SafeAreaView>
       <View>
-        <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("myshop")}>
+        <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
             <Ionicons name="return-down-back" size={24} color="#2196F3" />
         </TouchableOpacity>
       </View>

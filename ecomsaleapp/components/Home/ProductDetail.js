@@ -1,9 +1,7 @@
 import { Image, Text, View, Modal, TouchableOpacity, ActivityIndicator, ScrollView, Alert, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SliderBox } from "react-native-image-slider-box";
-import Style from "./Style";
 import Apis, { endpoints } from "../../configs/Apis";
-import ProductComment from "./ProductComment";
 import StarRating from "../../utils/StarRating";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -11,6 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProductDetailStyles from "./ProductDetailStyles";
 
 const ProductDetail = ({ route }) => {
     const productId = route.params?.productId;
@@ -167,27 +166,27 @@ const ProductDetail = ({ route }) => {
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={Style.barHeader}>
-                <TouchableOpacity style={Style.returnButton} onPress={() => navigation.replace("home")}>
+            <View style={ProductDetailStyles.barHeader}>
+                <TouchableOpacity style={ProductDetailStyles.returnButton} onPress={() => navigation.replace("home")}>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.searchContainer}>
+                <TouchableOpacity style={ProductDetailStyles.searchContainer}>
 
                     <Searchbar
                         placeholder="Tìm kiếm sản phẩm..."
                         value={searchQuery}
                         onChangeText={handleSearch}
-                        inputStyle={Style.searchBarInput}
+                        inputStyle={ProductDetailStyles.searchBarInput}
                         style={{ backgroundColor: 'transparent', elevation: 0, width: "100%" }}
                     />
 
                 </TouchableOpacity>
 
-                <TouchableOpacity style={Style.viewCart} onPress={() => navigation.replace("shoppingcart", { productId: productId })}>
+                <TouchableOpacity style={ProductDetailStyles.viewCart} onPress={() => navigation.replace("shoppingcart", { productId: productId })}>
                     <AntDesign name="shoppingcart" size={24} color="#2196F3" />
-                    <View style={Style.cartBadge}>
-                        <Text style={Style.badgeText}>{countProduct.toString()}</Text>
+                    <View style={ProductDetailStyles.cartBadge}>
+                        <Text style={ProductDetailStyles.badgeText}>{countProduct.toString()}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -223,7 +222,7 @@ const ProductDetail = ({ route }) => {
                 />
             ) : (<>
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 55, paddingTop: 55 }}>
-                    <View style={Style.headerContainer}>
+                    <View style={ProductDetailStyles.headerContainer}>
                         <SliderBox
                             images={imgUrls}
                             sliderBoxHeight={300}
@@ -234,28 +233,28 @@ const ProductDetail = ({ route }) => {
                             circleLoop
                             resizeMethod={'resize'}
                             resizeMode={'cover'}
-                            paginationBoxStyle={Style.imgSliderPaginationBoxStyle}
-                            dotStyle={Style.imgSliderDotStyle}
-                            ImageComponentStyle={Style.imgComponentStyle}
+                            paginationBoxStyle={ProductDetailStyles.imgSliderPaginationBoxStyle}
+                            dotStyle={ProductDetailStyles.imgSliderDotStyle}
+                            ImageComponentStyle={ProductDetailStyles.imgComponentStyle}
                             imageLoadingColor="#2196F3"
                         />
 
                         <Modal visible={modalVisible} transparent onRequestClose={() => setModalVisible(false)}>
-                            <View style={Style.modalContainer}>
-                                <TouchableOpacity onPress={() => setModalVisible(false)} style={Style.closeButton}>
-                                    <Text style={Style.closeButtonText}><AntDesign name="close" size={24} color="#fff" /> Đóng</Text>
+                            <View style={ProductDetailStyles.modalContainer}>
+                                <TouchableOpacity onPress={() => setModalVisible(false)} style={ProductDetailStyles.closeButton}>
+                                    <Text style={ProductDetailStyles.closeButtonText}><AntDesign name="close" size={24} color="#fff" /> Đóng</Text>
                                 </TouchableOpacity>
-                                {selectedImage && <Image source={{ uri: selectedImage }} style={Style.modalImage} />}
+                                {selectedImage && <Image source={{ uri: selectedImage }} style={ProductDetailStyles.modalImage} />}
                             </View>
                         </Modal>
 
-                        <View style={Style.productInfoContainer}>
-                            <Text style={Style.productNameLarge}>{product.name}</Text>
-                            <Text style={Style.productPrice}>{product.price.toLocaleString()} VND</Text>
+                        <View style={ProductDetailStyles.productInfoContainer}>
+                            <Text style={ProductDetailStyles.productNameLarge}>{product.name}</Text>
+                            <Text style={ProductDetailStyles.productPrice}>{product.price.toLocaleString()} VND</Text>
                         </View>
                     </View>
 
-                    <View style={Style.evaluateInlineSeeAll}>
+                    <View style={ProductDetailStyles.evaluateInlineSeeAll}>
                         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Đánh giá sản phẩm</Text>
                         <TouchableOpacity onPress={() => navigation.navigate("productcomment", { 'productId': productId })}>
                             <Text style={{ color: "#2196F3", fontSize: 14 }}>Tất cả &gt;</Text>
@@ -263,11 +262,11 @@ const ProductDetail = ({ route }) => {
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate("productcomment", { 'productId': productId })}>
                         {commentInProduct.length > 0 && (
-                            <View style={Style.commentContainer}>
-                                <View style={Style.commentHeader}>
+                            <View style={ProductDetailStyles.commentContainer}>
+                                <View style={ProductDetailStyles.commentHeader}>
                                     <Image
                                         source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentInProduct[0].user.avatar}` }}
-                                        style={Style.avatar}
+                                        style={ProductDetailStyles.avatar}
                                     />
                                     <Text style={{ fontWeight: "bold" }}>
                                         {commentInProduct[0].user.first_name} {commentInProduct[0].user.last_name}
@@ -295,7 +294,7 @@ const ProductDetail = ({ route }) => {
                         )}
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <View style={[Style.shopContainer, { flexDirection: "row", alignItems: "center" }]}>
+                        <View style={[ProductDetailStyles.shopContainer, { flexDirection: "row", alignItems: "center" }]}>
                             <AntDesign name="isv" size={20} color="#333" style={{ marginRight: 5 }} />
                             <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop.name}</Text>
                         </View>
@@ -331,19 +330,19 @@ const ProductDetail = ({ route }) => {
                     </View>
                 </ScrollView>
 
-                <View style={Style.barFooter}>
-                    <TouchableOpacity style={Style.chat} onPress={() => {
+                <View style={ProductDetailStyles.barFooter}>
+                    <TouchableOpacity style={ProductDetailStyles.chat} onPress={() => {
                         navigation.navigate("chat", { 'shop': shop })
                         console.log("SHOP to send:", shop);
                     }}>
                         <AntDesign name="message1" size={24} color="#2196F3" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={Style.addCart} onPress={addToCart}>
+                    <TouchableOpacity style={ProductDetailStyles.addCart} onPress={addToCart}>
                         <FontAwesome name="cart-plus" size={24} color="#2196F3" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={Style.buyNowButton} onPress={() => navigation.navigate("order", { 'productId': productId })}>
+                    <TouchableOpacity style={ProductDetailStyles.buyNowButton} onPress={() => navigation.navigate("order", { 'productId': productId })}>
                         <Text style={{ color: '#fff', fontWeight: 'bold' }}>Mua ngay</Text>
                     </TouchableOpacity>
                 </View>

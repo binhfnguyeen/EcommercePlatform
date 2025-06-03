@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Apis, { endpoints } from "../../configs/Apis";
-import Styles from "./Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
+import ShoppingCartStyles from "./ShoppingCartStyles";
 
 const ShoppingCart = ({route}) => {
     const productId = route.params?.productId;
@@ -86,11 +86,11 @@ const ShoppingCart = ({route}) => {
     if (!isLoggedIn) {
         return (
             <View style={{ flex: 1 }}>
-                <View style={Styles.barHeader}>
-                    <TouchableOpacity style={Styles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
+                <View style={ShoppingCartStyles.barHeader}>
+                    <TouchableOpacity style={ShoppingCartStyles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
                         <Ionicons name="return-down-back" size={24} color="#2196F3" />
                     </TouchableOpacity>
-                    <Text style={Styles.textMyCart}>
+                    <Text style={ShoppingCartStyles.textMyCart}>
                         Giỏ hàng của bạn
                     </Text>
                 </View>
@@ -106,11 +106,11 @@ const ShoppingCart = ({route}) => {
     if (myCart === null) {
         return (
             <View style={{ flex: 1 }}>
-                <View style={Styles.barHeader}>
-                    <TouchableOpacity style={Styles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
+                <View style={ShoppingCartStyles.barHeader}>
+                    <TouchableOpacity style={ShoppingCartStyles.returnButton} onPress={() => { productId ? navigation.navigate("productdetail", { productId: productId }) : navigation.navigate("home") }}>
                         <Ionicons name="return-down-back" size={24} color="#2196F3" />
                     </TouchableOpacity>
-                    <Text style={Styles.textMyCart}>
+                    <Text style={ShoppingCartStyles.textMyCart}>
                         Giỏ hàng của bạn
                     </Text>
                 </View>
@@ -124,11 +124,11 @@ const ShoppingCart = ({route}) => {
 
     return (
         <View style={{flex: 1}}>
-            <View style={Styles.barHeader}>
-                <TouchableOpacity style={Styles.returnButton} onPress={() => {productId?navigation.navigate("productdetail", {productId: productId}):navigation.navigate("home")}}>
+            <View style={ShoppingCartStyles.barHeader}>
+                <TouchableOpacity style={ShoppingCartStyles.returnButton} onPress={() => {productId?navigation.navigate("productdetail", {productId: productId}):navigation.navigate("home")}}>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
-                <Text style={Styles.textMyCart}>
+                <Text style={ShoppingCartStyles.textMyCart}>
                     Giỏ hàng của bạn
                 </Text>
             </View>
@@ -185,11 +185,11 @@ const ShoppingCart = ({route}) => {
                     );
                 })}
             </ScrollView>
-            <View style={Styles.barFooter}>
+            <View style={ShoppingCartStyles.barFooter}>
                 {myCart ?
-                    <Text style={Styles.productPriceText}>{myCart.total.toLocaleString()} VND</Text>
-                    : <Text style={Styles.productPriceText}>0 VND</Text>}
-                <TouchableOpacity style={Styles.buyNowButton} onPress={()=>navigation.replace("order", {myCart: myCart})}>
+                    <Text style={ShoppingCartStyles.productPriceText}>{myCart.total.toLocaleString()} VND</Text>
+                    : <Text style={ShoppingCartStyles.productPriceText}>0 VND</Text>}
+                <TouchableOpacity style={ShoppingCartStyles.buyNowButton} onPress={()=>navigation.replace("order", {myCart: myCart})}>
                     <Text style={{ color: '#fff', fontWeight: 'bold' }}>Mua ngay</Text>
                 </TouchableOpacity>
             </View>
