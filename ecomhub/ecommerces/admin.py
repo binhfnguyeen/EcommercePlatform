@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db.models import Sum
+
 from .models import Product, ProductImage, Shop, Inventory, Cart, CartDetail, Order, OrderDetail, Payment, Category, Comment, CommentLike
 
 
@@ -72,6 +74,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 class CommentLikeAdmin(admin.ModelAdmin):
     list_display = ['user', 'comment']
+
 
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Product, ProductAdmin)

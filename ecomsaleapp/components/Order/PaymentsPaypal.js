@@ -2,7 +2,6 @@ import { Alert, Linking, Text, TouchableOpacity, View, ScrollView } from "react-
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import Styles from "./Styles";
 import { useEffect, useState } from "react";
 import PaymentStyles from "./PaymentsStyles";
 

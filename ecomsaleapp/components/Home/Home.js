@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Apis, { endpoints } from "../../configs/Apis";
-import { ActivityIndicator, FlatList, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { List, Searchbar } from "react-native-paper";
-import Style from "./Style";
+import { ActivityIndicator, FlatList, Image, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomeStyles from "./HomeStyles";
 
 
 const Home = () => {
@@ -27,7 +27,6 @@ const Home = () => {
     const loadProducts = async (pageToLoad = 1, nameFilter = "", reset = false) => {
         let url = `${endpoints['products']}?page=${pageToLoad}`;
         if (nameFilter) url += `&name=${nameFilter}`;
-        if (nameFilter) url += `&name=${nameFilter}`;
         if (minPrice) url += `&min_price=${minPrice}`;
         if (maxPrice) url += `&max_price=${maxPrice}`;
         if (shopName) url += `&shop_name=${shopName}`;
@@ -40,7 +39,6 @@ const Home = () => {
             const merged = reset ? newProducts : [...products, ...newProducts];
             const unique = Array.from(new Map(merged.map(p => [p.id, p])).values());
             setProducts(unique);
-            console.log(unique);
             setHasMore(res.data.next !== null);
         } catch {
             console.log("Không lấy được danh sách sản phẩm");
@@ -57,7 +55,6 @@ const Home = () => {
                 const res = await Apis.get(endpoints["my-cart"], { headers });
                 const cart = res.data;
                 setMyCart(cart);
-                console.log(cart);
 
                 const totalCount = cart.details.reduce((sum, item) => sum + item.quantity, 0);
                 setCountProduct(totalCount);
@@ -117,13 +114,13 @@ const Home = () => {
         const imageUrl = item.images[0]?.image;
 
         return (
-            <TouchableOpacity style={Style.card} onPress={() => navigation.navigate('productdetail', { 'productId': item.id })}>
-                <Image source={{ uri: imageUrl }} style={Style.image} resizeMode="cover" />
-                <View style={Style.cardContent}>
-                    <Text style={Style.productName}>{item.name}</Text>
-                    <Text style={Style.price}>{item.price.toLocaleString()} VNĐ</Text>
-                    <Text style={Style.subText}>Danh mục: {item.category}</Text>
-                    <Text style={Style.subText}>Cửa hàng: {item.shop}</Text>
+            <TouchableOpacity style={HomeStyles.card} onPress={() => navigation.navigate('productdetail', { 'productId': item.id })}>
+                <Image source={{ uri: imageUrl }} style={HomeStyles.image} resizeMode="cover" />
+                <View style={HomeStyles.cardContent}>
+                    <Text style={HomeStyles.productName}>{item.name}</Text>
+                    <Text style={HomeStyles.price}>{item.price.toLocaleString()} VNĐ</Text>
+                    <Text style={HomeStyles.subText}>Danh mục: {item.category}</Text>
+                    <Text style={HomeStyles.subText}>Cửa hàng: {item.shop.name}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -227,7 +224,7 @@ const Home = () => {
     );
 
     return (
-        <SafeAreaView style={Style.container}>
+        <SafeAreaView style={HomeStyles.container}>
             <TouchableWithoutFeedback
                 onPress={() => {
                     Keyboard.dismiss();
@@ -236,21 +233,21 @@ const Home = () => {
             >
                 <View style={{ flex: 1 }}>
                     <View>
-                        <View style={Style.barHeader}>
+                        <View style={HomeStyles.barHeader}>
                             <Searchbar
                                 placeholder="Tìm kiếm sản phẩm..."
                                 value={name}
                                 onChangeText={setName}
-                                style={Style.searchBarHome}
+                                style={HomeStyles.searchBarHome}
                                 onFocus={onFocusSearch}
                             />
                             <TouchableOpacity
-                                style={Style.viewCartHome}
+                                style={HomeStyles.viewCartHome}
                                 onPress={() => navigation.replace("shoppingcart")}
                             >
                                 <AntDesign name="shoppingcart" size={24} color="#2196F3" />
-                                <View style={Style.cartBadgeHome}>
-                                    <Text style={Style.badgeText}>{countProduct.toString()}</Text>
+                                <View style={HomeStyles.cartBadgeHome}>
+                                    <Text style={HomeStyles.badgeText}>{countProduct.toString()}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -263,9 +260,9 @@ const Home = () => {
                         numColumns={2}
                         onEndReached={loadMore}
                         ListHeaderComponent={renderHeader}
-                        ListFooterComponent={loading && <ActivityIndicator />}
-                        contentContainerStyle={Style.flatListContent}
-                        columnWrapperStyle={Style.columnWrapper}
+                        ListFooterComponent={loading && <ActivityIndicator size="large" />}
+                        contentContainerStyle={HomeStyles.flatListContent}
+                        columnWrapperStyle={HomeStyles.columnWrapper}
                     />
                 </View>
             </TouchableWithoutFeedback>

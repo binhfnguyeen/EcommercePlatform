@@ -9,11 +9,11 @@ import ProductDetail from './components/Home/ProductDetail';
 import ProductComment from './components/Home/ProductComment';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyUserReducer from './reducers/MyUserReducer';
-import { MyUserContext } from './configs/MyContext';
+import { MyShopContext, MyShopDispatchContext, MyUserContext } from './configs/MyContext';
 import { MyDispatchContext } from './configs/MyContext';
 import { NavigationContainer } from '@react-navigation/native';
 import Profile from './components/User/Profile';
-import { useReducer, useContext } from 'react';
+import { useReducer, useContext, useEffect } from 'react';
 import { Icon } from 'react-native-paper';
 import MyShop from './components/Shop/MyShop';
 import ShopDetail from './components/Shop/ShopDetail';
@@ -24,6 +24,14 @@ import Order from './components/Order/Order';
 import PaymentsPaypal from './components/Order/PaymentsPaypal';
 import ShoppingCart from './components/Cart/ShoppingCart';
 import ShopStats from './components/Shop/ShopStats';
+import CreateShop from './components/Shop/CreateShop';
+import Chat from './components/Chat/Chat';
+import HistoryChat from './components/Chat/HistoryChat';
+import HistoryOrders from './components/Order/HistoryOrders';
+import AdminShopStatsScreen from './components/Admin/AdminShopStats';
+import ShopStat from './components/Admin/ShopStat';
+import MyShopReducer from './reducers/MyShopReducer';
+import ApproveUsersScreen from './components/Admin/UnapprovedUser';
 
 
 const Stack = createNativeStackNavigator();
@@ -40,6 +48,7 @@ const StackNavigate = () => {
       <Stack.Screen name="ShopDetail" component={ShopDetail}/>
       <Stack.Screen name="paymentspaypal" component={PaymentsPaypal}/>
       <Stack.Screen name="shoppingcart" component={ShoppingCart}/>
+      <Stack.Screen name="chat" component={Chat}/>
     </Stack.Navigator>
   )
 }
@@ -52,6 +61,22 @@ const ShopNavigate =()=>{
         <Stack.Screen name="createproduct" component={CreateProduct}/>
         <Stack.Screen name="productdetail" component={ProductDetail}/>
         <Stack.Screen name="shopstats" component={ShopStats}/>
+        <Stack.Screen name="createshop" component={CreateShop}/>
+    </Stack.Navigator>
+  )
+}
+
+const ProfileNavigate = () => {
+  return (
+    <Stack.Navigator initialRouteName='profile_main' screenOptions={{headerShown: false}}>
+      <Stack.Screen name="profile_main" component={Profile} />
+      <Stack.Screen name="historychat" component={HistoryChat} />
+      <Stack.Screen name="historyorders" component={HistoryOrders}/>
+      <Stack.Screen name="chat" component={Chat}/>
+      <Stack.Screen name="stats" component={AdminShopStatsScreen}/>
+      <Stack.Screen name="statdetail" component={ShopStat}/>
+      <Stack.Screen name="unapprovedusers" component={ApproveUsersScreen}/>
+
     </Stack.Navigator>
   )
 }
@@ -65,12 +90,13 @@ const TabNavigator = () => {
     <Tab.Navigator screenOptions={{headerShown: true}}>
       <Tab.Screen name='index' component={StackNavigate} options={{title: "EcomSale", tabBarIcon: () => <Icon size={30} source="home" />}}/>
 
-      {user === null ? <>
+      {user === null || user._j==null ? <>
         <Tab.Screen name="login" component={Login} options={{ title: "Đăng nhập", tabBarIcon: () => <Icon source="account" size={20} /> }} />
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
-        <Tab.Screen name="profile" component={Profile} options={{ title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20} /> }} />
-        <Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />
+        <Tab.Screen name="profile" component={ProfileNavigate} options={{title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20}/>}}/>
+        {user._j.is_shop_owner==true ?(<Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />):(<></>)}
+        
       </>}
     </Tab.Navigator>
   )
@@ -79,16 +105,23 @@ const TabNavigator = () => {
 
 export default App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null)
+  const [shop,shopdispatch]=useReducer(MyShopReducer,null)
+  console.info(user)
+  console.info(shop)
 
   return (
     <PaperProvider>
       <MyUserContext.Provider value={user}>
         <MyDispatchContext.Provider value={dispatch}>
-          <NavigationContainer>
+          <MyShopContext.Provider value={shop}>
+            <MyShopDispatchContext.Provider value={shopdispatch}>
+              <NavigationContainer>
 
-            <TabNavigator />
+                <TabNavigator />
 
-          </NavigationContainer>
+              </NavigationContainer>
+            </MyShopDispatchContext.Provider>
+          </MyShopContext.Provider>
         </MyDispatchContext.Provider>
       </MyUserContext.Provider>
     </PaperProvider>

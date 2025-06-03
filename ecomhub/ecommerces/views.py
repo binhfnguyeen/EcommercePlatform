@@ -24,10 +24,11 @@ from rest_framework.decorators import action
 from .serializers import CategorySerializer, UserSerializer, ShopSerializer, ProductSerializer, CommentSerializer, \
     ProductImageSerializer, OrderSerializer, OrderDetailWithProductSerializer, \
     PaymentSerializer, CartSerializer, CartDetailSerializer
-from django.db.models import Sum, F, functions as db_func, Q
+from django.db.models import Sum, F, functions as db_func, Q,ExpressionWrapper, FloatField
 from rest_framework.views import APIView
 from django.conf import settings
 from datetime import datetime
+from django.db.models.functions import ExtractMonth
 
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -56,6 +57,26 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
             return Response(serializers.UserSerializer(u).data)
 
         return Response(serializers.UserSerializer(request.user).data)
+
+    @action(methods=['get'], url_path='unapproved-user', detail=False,permission_classes=[permissions.IsAdminUser])
+    def get_unapproved_user(self,request):
+        users=User.objects.filter(is_approved=False)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['patch'], url_path='approved-user', detail=False,permission_classes=[permissions.IsAdminUser])
+    def aprroved_user(self,request):
+        user_ids = request.data.get('user_ids', [])
+        if not user_ids:
+            return Response({"error": "Thiếu danh sách user_ids."}, status=400)
+
+        users = User.objects.filter(id__in=user_ids, is_approved=False)
+        updated_count = users.update(is_approved=True)
+
+        return Response(
+            {"message": f"Đã duyệt {updated_count} người dùng."},
+            status=status.HTTP_200_OK
+        )
 
 class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Shop.objects.filter(active=True)
@@ -623,3 +644,90 @@ class ShopRevenueStatsAPIView(APIView):
             'product_stats': product_stats,
             'category_stats': category_stats
         })
+
+class AdminShopStatsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_staff and not request.user.is_superuser:
+            return Response({'error': 'Bạn không có quyền truy cập'}, status=status.HTTP_403_FORBIDDEN)
+
+        shop_id = request.query_params.get('shop_id')
+        if not shop_id:
+            return Response({'error': 'Thiếu shop_id'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            shop = Shop.objects.get(id=shop_id)
+        except Shop.DoesNotExist:
+            return Response({'error': 'Không tìm thấy shop'}, status=status.HTTP_404_NOT_FOUND)
+
+        year = int(request.query_params.get('year', datetime.now().year))
+        month = request.query_params.get('month')
+        quarter = request.query_params.get('quarter')
+
+        try:
+
+            orderdetails = OrderDetail.objects.filter(
+                product__shop=shop,
+                order__status='PAID',
+                created_date__year=year
+            )
+
+            # if month:
+            #     orderdetails = orderdetails.filter(created_date__month=int(month))
+
+            if quarter:
+                quarter = int(quarter)
+                start_month = (quarter - 1) * 3 + 1
+                end_month = start_month + 2
+                orderdetails = orderdetails.filter(created_date__month__gte=start_month, created_date__month__lte=end_month)
+
+            # Thống kê theo sản phẩm
+            # product_stats = orderdetails.values(name=F('product__name')).annotate(
+            #     total_quantity=Sum('quantity'),
+            #     total_revenue=Sum(F('quantity') * F('product__price'))
+            # ).order_by('-total_revenue')
+            #
+            # # Thống kê theo danh mục
+            # category_stats = orderdetails.values(name=F('product__category__name')).annotate(
+            #     total_quantity=Sum('quantity'),
+            #     total_revenue=Sum(F('quantity') * F('product__price'))
+            # ).order_by('-total_revenue')
+
+            # Thống kê theo tháng (có thể lọc theo quý)
+            monthly_orderdetails = OrderDetail.objects.filter(
+                product__shop=shop,
+                order__status='PAID',
+                created_date__year=year
+            )
+
+            if quarter:
+                monthly_orderdetails = monthly_orderdetails.filter(
+                    created_date__month__gte=start_month,
+                    created_date__month__lte=end_month
+                )
+
+            monthly_stats_raw = monthly_orderdetails.annotate(month=ExtractMonth('created_date')).values('month').annotate(
+                total_quantity=Sum('quantity'),
+                total_revenue=Sum(F('quantity') * F('product__price'))
+            ).order_by('month')
+
+            # Chuẩn hóa dữ liệu cho 12 tháng
+            monthly_stats = []
+            stats_dict = {item['month']: item for item in monthly_stats_raw}
+            for m in range(1, 13):
+                if quarter and (m < start_month or m > end_month):
+                    continue  # Bỏ qua tháng không nằm trong quý được chọn
+                monthly_stats.append({
+                    'month': m,
+                    'total_quantity': stats_dict.get(m, {}).get('total_quantity', 0),
+                    'total_revenue': stats_dict.get(m, {}).get('total_revenue', 0)
+                })
+
+            return Response({
+                # 'product_stats': product_stats,
+                # 'category_stats': category_stats,
+                'monthly_stats': monthly_stats
+            })
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)

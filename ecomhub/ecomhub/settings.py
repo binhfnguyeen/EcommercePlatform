@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
+    'admin_tools_stats',  # this must be BEFORE 'admin_tools' and 'django.contrib.admin'
+    'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -90,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercedb',
         'USER': 'root',
-        'PASSWORD': 'nguyennguyen123',
+        'PASSWORD': 'Khanhnhat2902',
         'HOST': ''  # mặc định localhost
     }
 }
@@ -152,4 +154,3 @@ ClIENT_ID='sMAC7gVbaRDVjY7eh6zJjXpAzThKgJZI95rRx9wf'
 ClIENT_SECRET='Quojp96sFwoQ1VOjL044Z8SMaQ4pM92kGwiNKusX6zcOGFr2WRHypxs5P0095NQ3gkjUtspm9aRJgpMlaa1JZ41dev9kmOTo0p2RJji2ZOSdM0QhRXNkdXim1miRjLpa'
 PAYPAL_CLIENT_ID = "AemDUXuwdJQ9e4T71_RRzWyU5T6f30or_mSU_riuhG6fDVhGCOlbkjwasYBUtAMlFKMCk_cOSyLbX7fo"
 PAYPAL_SECRET = "EIw5O0zFLD3V82vvonNlOsTZFGk2WdIQwHhruVT4MMJOvqQRDTsmv9NA71AN7on73Z31smlxN8AO0dZw"
-

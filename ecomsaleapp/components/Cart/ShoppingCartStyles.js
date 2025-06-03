@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const Styles = StyleSheet.create({
+export default StyleSheet.create({
     barHeader: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -38,10 +38,18 @@ const Styles = StyleSheet.create({
 
     buyNowButton: {
         backgroundColor: '#F44336',
-        alignItems: "center",
-        height: "100%",
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
         flex: 2,
-        justifyContent: "flex-end",
+        marginLeft: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
     },
 
     productPriceText: {
@@ -56,6 +64,14 @@ const Styles = StyleSheet.create({
         alignItems: "flex-start",
         justifyContent: "center",
     },
-});
 
-export default Styles;
+    textMyCart: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        zIndex: -1
+    }
+});

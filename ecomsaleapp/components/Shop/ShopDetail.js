@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { ActivityIndicator, FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Style from "../Home/Style";
+import HomeStyles from "../Home/HomeStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
 import CreateProduct from "./CreateShopProduct";
+import Ionicons from "react-native-vector-icons/Ionicons"
+import MyShop from "./MyShop";
+import { MyShopContext } from "../../configs/MyContext";
 
 const winWith={ width: Dimensions.get('window').width };
 const ShopDetail = ({route})=>{
-    const shopId=route.params?.shopId;
     const [products,setProducts]=useState([])
     const[loading,setLoading]=useState(false)
     const [name, setName] = useState("");
@@ -19,6 +21,8 @@ const ShopDetail = ({route})=>{
     const [hasMore, setHasMore] = useState(true);
     const navigation=useNavigation();
     const [index, setIndex] = useState(0);
+    const shop=useContext(MyShopContext)
+    const shopId=shop._j.id
 
     const renderScene = SceneMap({
         first: ShopDetail,
@@ -101,20 +105,25 @@ useEffect(() => {
         const imageUrl = item.images[0]?.image;
 
         return (
-            <TouchableOpacity style={Style.card} onPress={() => navigation.navigate('productdetail', {'productId': item.id})}>
-                <Image source={{ uri: imageUrl }} style={Style.image} resizeMode="cover"/>
-                <View style={Style.cardContent}>
-                    <Text style={Style.productName}>{item.name}</Text>
-                    <Text style={Style.price}>{item.price.toLocaleString()} VNĐ</Text>
-                    <Text style={Style.subText}>Danh mục: {item.category}</Text>
-                    <Text style={Style.subText}>Cửa hàng: {item.shop}</Text>
+            <TouchableOpacity style={HomeStyles.card} onPress={() => navigation.navigate('productdetail', {'productId': item.id})}>
+                <Image source={{ uri: imageUrl }} style={HomeStyles.image} resizeMode="cover"/>
+                <View style={HomeStyles.cardContent}>
+                    <Text style={HomeStyles.productName}>{item.name}</Text>
+                    <Text style={HomeStyles.price}>{item.price.toLocaleString()} VNĐ</Text>
+                    <Text style={HomeStyles.subText}>Danh mục: {item.category}</Text>
+                    <Text style={HomeStyles.subText}>Cửa hàng: {item.shop.name}</Text>
                 </View>
             </TouchableOpacity>
         );
     };
 
     return (
-        <SafeAreaView style={Style.container}>
+        <SafeAreaView style={HomeStyles.container}>
+            {/* <View style={HomeStyles.barHeader}>
+                <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
+            </View> */}
             {/* <TabView
                 navigationState={{ index, routes }}
                 onIndexChange={setIndex}
@@ -123,7 +132,11 @@ useEffect(() => {
                 second: CreateProduct,
                 })}
             /> */}
-            <View style={Style.evaluateInlineSeeAll}>
+            <View style={HomeStyles.evaluateInlineSeeAll}>
+
+                <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
                 
                 <TouchableOpacity onPress={() => navigation.navigate("createproduct",{"shopId":shopId})}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
@@ -139,8 +152,8 @@ useEffect(() => {
                 numColumns={2}
                 onEndReached={loadMore}
                 ListFooterComponent={loading && <ActivityIndicator />}
-                contentContainerStyle={Style.flatListContent}
-                columnWrapperStyle={Style.columnWrapper}
+                contentContainerStyle={HomeStyles.flatListContent}
+                columnWrapperStyle={HomeStyles.columnWrapper}
             />
         </SafeAreaView>
     );
@@ -170,8 +183,8 @@ export default ShopDetail;
 //             numColumns={2}
 //             onEndReached={loadMore}
 //             ListFooterComponent={() => loading ? <ActivityIndicator /> : null}
-//             contentContainerStyle={Style.flatListContent}
-//             columnWrapperStyle={Style.columnWrapper}
+//             contentContainerStyle={HomeStyles.flatListContent}
+//             columnWrapperStyle={HomeStyles.columnWrapper}
 //         />
 //     );
 
@@ -190,7 +203,7 @@ export default ShopDetail;
 //     });
 
 //     return (
-//         <SafeAreaView style={Style.container}>
+//         <SafeAreaView style={HomeStyles.container}>
 //             <TabView
 //                 navigationState={{ index, routes }}
 //                 renderScene={renderScene}

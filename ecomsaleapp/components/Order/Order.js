@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, View, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import Styles from "./Styles";
+import OrderStyles from "./OrderStyles"
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -91,33 +91,33 @@ const Order = ({ route }) => {
     };
 
     return (
-        <ScrollView style={Styles.container}>
-            <Text style={Styles.label}>Địa chỉ giao hàng:</Text>
-            <TextInput style={Styles.input} value={shippingAddress} onChangeText={setShippingAddress} placeholder="Nhập địa chỉ..."/>
+        <ScrollView style={OrderStyles.container}>
+            <Text style={OrderStyles.label}>Địa chỉ giao hàng:</Text>
+            <TextInput style={OrderStyles.input} value={shippingAddress} onChangeText={setShippingAddress} placeholder="Nhập địa chỉ..."/>
 
-            <Text style={Styles.label}>Số điện thoại:</Text>
-            <TextInput style={Styles.input} value={phone} onChangeText={setPhone} placeholder="Nhập số điện thoại..."/>
+            <Text style={OrderStyles.label}>Số điện thoại:</Text>
+            <TextInput style={OrderStyles.input} value={phone} onChangeText={setPhone} placeholder="Nhập số điện thoại..."/>
 
-            {productId ? <Text style={Styles.label}>Số lượng:</Text> : null}
+            {productId ? <Text style={OrderStyles.label}>Số lượng:</Text> : null}
             {productId ?
-                <View style={Styles.quantityContainer}>
-                    <TouchableOpacity onPress={decQuantity} style={Styles.quantityButton}>
-                        <Text style={Styles.quantityButtonText}>-</Text>
+                <View style={OrderStyles.quantityContainer}>
+                    <TouchableOpacity onPress={decQuantity} style={OrderStyles.quantityButton}>
+                        <Text style={OrderStyles.quantityButtonText}>-</Text>
                     </TouchableOpacity>
                     <TextInput
-                        style={Styles.quantityInput}
+                        style={OrderStyles.quantityInput}
                         value={quantity.toString()}
                         onChangeText={text => setQuantity(parseInt(text) || 1)}
                         keyboardType="numeric"
                     />
-                    <TouchableOpacity onPress={incQuantity} style={Styles.quantityButton}>
-                        <Text style={Styles.quantityButtonText}>+</Text>
+                    <TouchableOpacity onPress={incQuantity} style={OrderStyles.quantityButton}>
+                        <Text style={OrderStyles.quantityButtonText}>+</Text>
                     </TouchableOpacity>
                 </View> : null
             }
 
-            <TouchableOpacity style={Styles.button} onPress={handleSubmit}>
-                <Text style={Styles.buttonText}>Xác nhận thanh toán</Text>
+            <TouchableOpacity style={OrderStyles.button} onPress={handleSubmit}>
+                <Text style={OrderStyles.buttonText}>Xác nhận thanh toán</Text>
             </TouchableOpacity>
         </ScrollView>
     );

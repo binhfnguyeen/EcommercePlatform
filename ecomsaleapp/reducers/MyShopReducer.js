@@ -1,9 +1,9 @@
 export default async (current,action)=>{
     switch(action.type){
-        case "login":
+        case "isshopowner":
             return action.payload;
-        case "logout":
-            return null;
+        case "notshopowner":
+            return null
     }
-    return current;
+    return current
 }
