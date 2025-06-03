@@ -4,16 +4,19 @@ export default StyleSheet.create({
     container: {
         flex: 1,
     },
+
     replyInputContainer: {
         padding: 10,
         backgroundColor: "#f9f9f9",
         borderTopWidth: 1,
         borderColor: "#ddd",
     },
+
     replyInputTitle: {
         fontWeight: "bold",
         marginBottom: 5,
     },
+
     replyTextInput: {
         backgroundColor: "white",
         padding: 10,
@@ -22,11 +25,13 @@ export default StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
     },
+
     replyButtonsRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 10,
     },
+
     pickImageButton: {
         flex: 1,
         backgroundColor: "#e0e0e0",
@@ -34,10 +39,12 @@ export default StyleSheet.create({
         alignItems: "center",
         borderRadius: 8,
     },
+
     pickImageButtonText: {
         color: "#333",
         fontWeight: "bold",
     },
+
     submitButton: {
         flex: 1,
         backgroundColor: "#2196F3",
@@ -45,6 +52,7 @@ export default StyleSheet.create({
         alignItems: "center",
         borderRadius: 8,
     },
+
     submitButtonText: {
         color: "white",
         fontWeight: "bold",
@@ -61,16 +69,19 @@ export default StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
     },
+
     commentHeader: {
         flexDirection: "row",
         alignItems: "center",
     },
+
     avatar: {
         width: 40,
         height: 40,
         borderRadius: 20,
         marginRight: 10,
     },
+
     heartButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -78,12 +89,15 @@ export default StyleSheet.create({
     },
 
     replyContainer: {
-        backgroundColor: "#f2f2f2",
+        marginTop: 10,
+        marginLeft: 20,
         padding: 10,
-        marginHorizontal: 15,
-        marginVertical: 5,
+        backgroundColor: "white",
         borderRadius: 8,
+        borderLeftWidth: 4,
+        borderLeftColor: "#2196F3",
     },
+    
     replyAvatar: {
         width: 30,
         height: 30,

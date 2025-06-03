@@ -260,7 +260,7 @@ const Home = () => {
                         numColumns={2}
                         onEndReached={loadMore}
                         ListHeaderComponent={renderHeader}
-                        ListFooterComponent={loading && <ActivityIndicator />}
+                        ListFooterComponent={loading && <ActivityIndicator size="large" />}
                         contentContainerStyle={HomeStyles.flatListContent}
                         columnWrapperStyle={HomeStyles.columnWrapper}
                     />

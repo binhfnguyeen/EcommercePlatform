@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, View, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import Styles from "./OrderStyles";
+import OrderStyles from "./OrderStyles"
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";

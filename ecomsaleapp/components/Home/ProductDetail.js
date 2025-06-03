@@ -27,6 +27,7 @@ const ProductDetail = ({ route }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(true);
     const loadProduct = async () => {
         try {
             const res = await Apis.get(endpoints['product'](productId));
@@ -39,9 +40,15 @@ const ProductDetail = ({ route }) => {
     };
 
     const loadFirstComment = async () => {
-        let res = await Apis.get(`${endpoints['product-comments'](productId)}?page=1`);
-        setCommentInProduct(res.data.results);
-        console.info(res.data.results);
+        try {
+            let res = await Apis.get(`${endpoints['product-comments'](productId)}?page=1`);
+            setCommentInProduct(res.data.results);
+            console.info(res.data.results);
+        } catch (err) {
+            console.error("Lỗi khi tải bình luận:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const loadMyCart = async () => {
@@ -176,7 +183,7 @@ const ProductDetail = ({ route }) => {
                     <Searchbar
                         placeholder="Tìm kiếm sản phẩm..."
                         value={searchQuery}
-                        onChangeText={handleSearch}
+                        onChangeText={(text) => setSearchQuery(text)}
                         inputStyle={ProductDetailStyles.searchBarInput}
                         style={{ backgroundColor: 'transparent', elevation: 0, width: "100%" }}
                     />
@@ -260,42 +267,50 @@ const ProductDetail = ({ route }) => {
                             <Text style={{ color: "#2196F3", fontSize: 14 }}>Tất cả &gt;</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate("productcomment", { 'productId': productId })}>
-                        {commentInProduct.length > 0 && (
-                            <View style={ProductDetailStyles.commentContainer}>
-                                <View style={ProductDetailStyles.commentHeader}>
-                                    <Image
-                                        source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentInProduct[0].user.avatar}` }}
-                                        style={ProductDetailStyles.avatar}
-                                    />
-                                    <Text style={{ fontWeight: "bold" }}>
-                                        {commentInProduct[0].user.first_name} {commentInProduct[0].user.last_name}
-                                    </Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
-                                        <AntDesign name="heart" size={16} color="#FF3B30" />
-                                        <Text style={{ marginLeft: 4 }}>{commentInProduct[0].like_count}</Text>
-                                    </View>
+                        <TouchableOpacity onPress={() => navigation.navigate("productcomment", { 'productId': productId })}>
+                            {loading ? (
+                                <View style={{ padding: 5, paddingTop: 5, alignItems: "center" }}>
+                                    <Text>Đang tải bình luận <ActivityIndicator size="small" color="#0000ff" /></Text>
                                 </View>
-                                <StarRating star={commentInProduct[0].star} />
-                                <Text style={{ marginTop: 5 }}>{commentInProduct[0].content}</Text>
-                                {commentInProduct[0].image && (
-                                    <Image
-                                        source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentInProduct[0].image}` }}
-                                        style={{
-                                            width: "50%",
-                                            height: 100,
-                                            resizeMode: "contain",
-                                            marginTop: 5,
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                )}
-                            </View>
-                        )}
+                            ) : commentInProduct.length > 0 ? (
+                                <View style={ProductDetailStyles.commentContainer}>
+                                    <View style={ProductDetailStyles.commentHeader}>
+                                        <Image
+                                            source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentInProduct[0].user.avatar}` }}
+                                            style={ProductDetailStyles.avatar}
+                                        />
+                                        <Text style={{ fontWeight: "bold" }}>
+                                            {commentInProduct[0].user.first_name} {commentInProduct[0].user.last_name}
+                                        </Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                                            <AntDesign name="heart" size={16} color="#FF3B30" />
+                                            <Text style={{ marginLeft: 4 }}>{commentInProduct[0].like_count}</Text>
+                                        </View>
+                                    </View>
+                                    <StarRating star={commentInProduct[0].star} />
+                                    <Text style={{ marginTop: 5 }}>{commentInProduct[0].content}</Text>
+                                    {commentInProduct[0].image && (
+                                        <Image
+                                            source={{ uri: `https://res.cloudinary.com/dwivkhh8t/${commentInProduct[0].image}` }}
+                                            style={{
+                                                width: "50%",
+                                                height: 100,
+                                                resizeMode: "contain",
+                                                marginTop: 5,
+                                                borderRadius: 10
+                                            }}
+                                        />
+                                    )}
+                                </View>
+                            ) : (
+                                <View style={{ padding: 16, paddingTop: 50, alignItems: "center" }}>
+                                    <Text>Không có bình luận</Text>
+                                </View>
+                            )}
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <View style={[ProductDetailStyles.shopContainer, { flexDirection: "row", alignItems: "center" }]}>
-                            <AntDesign name="isv" size={20} color="#333" style={{ marginRight: 5 }} />
+                        <View style={ProductDetailStyles.shopContainer}>
+                            <AntDesign name="isv" size={20} color="#333" style={{ marginRight: 10 }} />
                             <Text style={{ fontSize: 16, fontWeight: "bold" }}>{product.shop.name}</Text>
                         </View>
                     </TouchableOpacity>
@@ -343,7 +358,7 @@ const ProductDetail = ({ route }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={ProductDetailStyles.buyNowButton} onPress={() => navigation.navigate("order", { 'productId': productId })}>
-                        <Text style={{ color: '#fff', fontWeight: 'bold' }}>Mua ngay</Text>
+                        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Mua ngay</Text>
                     </TouchableOpacity>
                 </View>
             </>)}

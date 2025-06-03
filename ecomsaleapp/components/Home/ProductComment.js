@@ -45,7 +45,7 @@ const ProductComment = ({ route }) => {
             try {
                 setLoading(true);
                 let res = await Apis.get(`${endpoints['product-comments'](productId)}?page=${page}`);
-                setCommentInProduct(page === 1 ? res.data.results : prev => [...prev, ...res.data.results]);
+                setCommentInProduct(prev => page === 1 ? res.data.results : [...prev, ...res.data.results]);
                 if (res.data.next === null)
                     setPage(0);
             } catch {
@@ -60,25 +60,26 @@ const ProductComment = ({ route }) => {
         try {
             const token = await AsyncStorage.getItem("token");
             if (!token) {
-                Alert.alert("Không thể like!", "Bạn cần đăng nhập trước..", [
-                    {
-                        text: "OK"
-                    }
-                ]);
+                Alert.alert("Thông báo", "Bạn cần đăng nhập trước để có thể yêu thích!", {text: "OK"});
                 return;
             }
             const headers = { Authorization: `Bearer ${token}` };
             const res = await Apis.post(endpoints["comment-like"](commentId),  {}, {headers})
 
             console.info(res.data);
-            await loadCommentInProduct();
+            setCommentInProduct(prevComments =>
+                prevComments.map(comment =>
+                    comment.id === commentId
+                        ? { ...comment, like_count: comment.like_count + 1 }
+                        : comment
+                )
+            );
 
         } catch (err){
             if (err.response?.status === 400 || err.response?.status === 409) {
-                Alert.alert("Thông báo", "Bạn đã like rồi!", [{ text: "OK" }]);
+                Alert.alert("Thông báo", "Bạn đã thích rồi!", { text: "OK" });
             } else {
-                console.error("Lỗi khi like:", err);
-                Alert.alert("Lỗi", "Không thể thực hiện like. Vui lòng thử lại sau.");
+                Alert.alert("Thông báo", "Bạn cần đăng nhập trước để có thể yêu thích!");
             }
         }
     }
@@ -169,7 +170,7 @@ const ProductComment = ({ route }) => {
             setCommentInProduct([]);
             await loadCommentInProduct();
         } catch (err) {
-            console.error("Lỗi khi gửi bình luận: ", err);
+            Alert.alert("Thông báo", "Cần đăng nhập để gửi bình luận!", [{ text: "OK" }]);
         }
     }
 

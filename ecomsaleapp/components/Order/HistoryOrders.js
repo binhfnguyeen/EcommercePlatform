@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
 import Apis, { endpoints } from "../../configs/Apis";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -59,7 +59,7 @@ const HistoryOrders = () => {
     return (
         <View style={HistoryOrdersStyles.container}>
             <View style={HistoryOrdersStyles.barHeader}>
-                <TouchableOpacity style={HistoryOrdersStyles.returnButton} onPress={() =>  navigation.navigate("profile_main") }>
+                <TouchableOpacity style={HistoryOrdersStyles.returnButton} onPress={() => navigation.navigate("profile_main") }>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
                 <Text style={HistoryOrdersStyles.textMyCart}>

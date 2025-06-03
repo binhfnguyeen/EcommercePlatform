@@ -38,10 +38,18 @@ export default StyleSheet.create({
 
     buyNowButton: {
         backgroundColor: '#F44336',
-        alignItems: "center",
-        height: "100%",
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
         flex: 2,
-        justifyContent: "flex-end",
+        marginLeft: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
     },
 
     productPriceText: {

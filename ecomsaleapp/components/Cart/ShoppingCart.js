@@ -190,7 +190,7 @@ const ShoppingCart = ({route}) => {
                     <Text style={ShoppingCartStyles.productPriceText}>{myCart.total.toLocaleString()} VND</Text>
                     : <Text style={ShoppingCartStyles.productPriceText}>0 VND</Text>}
                 <TouchableOpacity style={ShoppingCartStyles.buyNowButton} onPress={()=>navigation.replace("order", {myCart: myCart})}>
-                    <Text style={{ color: '#fff', fontWeight: 'bold' }}>Mua ngay</Text>
+                    <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Mua ngay</Text>
                 </TouchableOpacity>
             </View>
         </View>

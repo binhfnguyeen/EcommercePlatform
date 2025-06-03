@@ -82,6 +82,7 @@ const Chat = ({ route }) => {
     }, [chatId, userId]);
 
     const handleSend = async () => {
+
         if (!userId || !chatId || (!message && !image)) return;
 
         try {

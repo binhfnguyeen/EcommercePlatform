@@ -93,14 +93,6 @@ const HistoryChat = ({ navigation }) => {
         );
     };
 
-    if (loading) {
-        return (
-            <View style={HistoryChatStyles.loaderContainer}>
-                <ActivityIndicator size="large" color="#000" />
-            </View>
-        );
-    }
-
     return (
         <View style={HistoryChatStyles.container}>
             <View style={HistoryChatStyles.barHeader}>
@@ -111,13 +103,21 @@ const HistoryChat = ({ navigation }) => {
                     Lịch sử tin nhắn
                 </Text>
             </View>
-            <FlatList
-                data={chatList}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                ListEmptyComponent={<Text style={HistoryChatStyles.emptyText}>Không có cuộc trò chuyện nào.</Text>}
-                contentContainerStyle={{ paddingBottom: 20, paddingTop: 50 }}
-            />
+            {loading ? (
+                <ActivityIndicator style={{ marginTop: 80 }} size="large" color="#0000ff" />
+            ) : (
+                <FlatList
+                    data={chatList}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                    ListEmptyComponent={
+                        <Text style={HistoryChatStyles.emptyText}>
+                            Không có cuộc trò chuyện nào.
+                        </Text>
+                    }
+                    contentContainerStyle={{ paddingBottom: 20, paddingTop: 50 }}
+                />
+            )}
         </View>
     );
 };
