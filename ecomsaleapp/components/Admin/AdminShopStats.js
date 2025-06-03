@@ -34,7 +34,14 @@ const AdminShopStatsScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>📊 Thống kê cửa hàng</Text>
+       <View style={AdminStyles.barHeader}>
+                      <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
+                        <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                      </TouchableOpacity>
+                      <Text style={styles.title}>
+                          📊 Thống kê cửa hàng
+                      </Text>
+                  </View>
 
       {loading ? (
         <ActivityIndicator size="large" color="#2196F3" style={{ marginTop: 20 }} />

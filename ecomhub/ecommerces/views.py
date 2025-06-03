@@ -64,7 +64,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-    @action(methods=['patch'], url_path='approved-user', detail=False,permission_classes=[permissions.IsAdminUser])
+    @action(methods=['patch'], url_path='approved-user', detail=False,permission_classes=[permissions.IsAdminUser],parser_classes=[parsers.JSONParser])
     def aprroved_user(self,request):
         user_ids = request.data.get('user_ids', [])
         if not user_ids:
