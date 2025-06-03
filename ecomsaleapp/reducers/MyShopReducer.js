@@ -1,6 +1,6 @@
 export default async (current,action)=>{
     switch(action.type){
-        case "isshopowner":
+        case "getshop":
             return action.payload;
         case "notshopowner":
             return null

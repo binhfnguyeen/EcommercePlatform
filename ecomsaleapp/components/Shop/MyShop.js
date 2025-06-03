@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { MyShopContext, MyUserContext } from "../../configs/MyContext";
+import { MyShopContext, MyShopDispatchContext, MyUserContext } from "../../configs/MyContext";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -16,6 +16,7 @@ const MyShop = () => {
     const [loading, setLoading] = useState(false);
     const navigation=useNavigation();
     const shop=useContext(MyShopContext)
+    // const shopdispatch=useContext(MyShopDispatchContext)
     
 
 
@@ -40,19 +41,21 @@ const MyShop = () => {
     //         }
 
     //         const res = await authApis(token).get(endpoints['my-shop']);
-    //         for(let d in res.data){
-    //             // setState(res.data[d],d);
-    //             setShop(res.data)
-    //             // console.info(res.data)
-    //             // console.info(shop)
-    //         }
+    //         shopdispatch({
+    //             "type":"getshop",
+    //             "payload":res.data
+    //         })
+            
     //         // setShop(res.data)
     //     } catch (ex) {
-    //         console.error(ex);
+    //         if (ex.response && ex.response.status === 404) {
+    //             Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
+    //         } else {
+    //             console.error(ex);
+    //         }
     //     } finally {
     //         setLoading(false);
     //         // console.info(res.data)
-    //         console.info(shop.user)
     //     }
     // };
 
@@ -60,7 +63,7 @@ const MyShop = () => {
     //     loadShop();
     // }, []);
 
-    // if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+    if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
 
     return (
         <View>
@@ -81,7 +84,7 @@ const MyShop = () => {
                     backgroundColor: '#2196F3',
                     borderRadius:20,
                     margin:8 
-                }}><Text>{shop.name}</Text></TouchableOpacity>)}
+                }}><Text>{shop._j.name}</Text></TouchableOpacity>)}
             
             {/* <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity> */}
            

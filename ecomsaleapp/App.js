@@ -53,18 +53,18 @@ const StackNavigate = () => {
   )
 }
 
-const ShopNavigate =()=>{
-  return(
-    <Stack.Navigator initialRouteName="myshop" screenOptions={{headerShown: false}}>
-        <Stack.Screen name="myshop" component={MyShop} />
-        <Stack.Screen name="shopdetail" component={ShopDetail} />
-        <Stack.Screen name="createproduct" component={CreateProduct}/>
-        <Stack.Screen name="productdetail" component={ProductDetail}/>
-        <Stack.Screen name="shopstats" component={ShopStats}/>
-        <Stack.Screen name="createshop" component={CreateShop}/>
-    </Stack.Navigator>
-  )
-}
+// const ShopNavigate =()=>{
+//   return(
+//     <Stack.Navigator initialRouteName="myshop" screenOptions={{headerShown: false}}>
+//         <Stack.Screen name="myshop" component={MyShop} />
+//         <Stack.Screen name="shopdetail" component={ShopDetail} />
+//         <Stack.Screen name="createproduct" component={CreateProduct}/>
+//         <Stack.Screen name="productdetail" component={ProductDetail}/>
+//         <Stack.Screen name="shopstats" component={ShopStats}/>
+//         <Stack.Screen name="createshop" component={CreateShop}/>
+//     </Stack.Navigator>
+//   )
+// }
 
 const ProfileNavigate = () => {
   return (
@@ -76,7 +76,12 @@ const ProfileNavigate = () => {
       <Stack.Screen name="stats" component={AdminShopStatsScreen}/>
       <Stack.Screen name="statdetail" component={ShopStat}/>
       <Stack.Screen name="unapprovedusers" component={ApproveUsersScreen}/>
-
+      <Stack.Screen name="myshop" component={MyShop} />
+      <Stack.Screen name="shopdetail" component={ShopDetail} />
+      <Stack.Screen name="createproduct" component={CreateProduct}/>
+      <Stack.Screen name="productdetail" component={ProductDetail}/>
+      <Stack.Screen name="shopstats" component={ShopStats}/>
+      <Stack.Screen name="createshop" component={CreateShop}/>
     </Stack.Navigator>
   )
 }
@@ -95,7 +100,7 @@ const TabNavigator = () => {
         <Tab.Screen name="register" component={Register} options={{ title: "Đăng ký", tabBarIcon: () => <Icon source="account-plus" size={20} /> }} />
       </> : <>
         <Tab.Screen name="profile" component={ProfileNavigate} options={{title: "Tài khoản", tabBarIcon: () => <Icon source="account" size={20}/>}}/>
-        {user._j.is_shop_owner==true ?(<Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />):(<></>)}
+        {/* {user._j.is_shop_owner==true ?(<Tab.Screen name="MyShop" component={ShopNavigate} options={{ title: "Cửa hàng", tabBarIcon: () => <Icon source="account" size={20} /> }} />):(<></>)} */}
         
       </>}
     </Tab.Navigator>

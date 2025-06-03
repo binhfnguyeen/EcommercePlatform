@@ -81,6 +81,15 @@ const Profile = () => {
                         Danh sách user chưa được xác nhận
                     </Button>
                     </>):(<></>)}
+                    {user._j.is_shop_owner==true ?(<><Button
+                        mode="outlined"
+                        onPress={()=>navigation.navigate("myshop")}
+                        style={[styles.button, { backgroundColor: "#03A9F4" }]}
+                        labelStyle={{ color: "#e53935" }}
+                    >
+                        Cửa hàng
+                    </Button>
+                    </>):(<></>)}
                     {/* <Button
                         disabled={loading} 
                         loading={loading}

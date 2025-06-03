@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
 import Apis, { endpoints } from "../../configs/Apis";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 
 const Register = () => {
@@ -75,6 +76,25 @@ const Register = () => {
         setState(newChecked, "is_shop_owner");
     };
 
+    const resizeImage = async (image) => {
+        try {
+            const result = await ImageManipulator.manipulateAsync(
+            image.uri,
+            [{ resize: { width: 800, height: 800 } }],
+            { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+            );
+
+            return {
+            uri: result.uri,
+            name: 'avatar.jpg',
+            type: 'image/jpeg'
+            };
+        } catch (err) {
+            console.error("Lỗi resize ảnh:", err);
+            return image;
+        }
+    };
+
     const register = async () => {
         if (validate() === true) {
             try {
@@ -83,11 +103,8 @@ const Register = () => {
                 for (let key in user) {
                     if (key !== 'confirm') {
                         if (key === 'avatar' && user?.avatar !== null) {
-                            form.append(key, {
-                                uri: user.avatar.uri,
-                                name: user.avatar.fileName,
-                                type: user.avatar.type
-                            });
+                            const resizedAvatar = await resizeImage(user.avatar)
+                            form.append(key, resizedAvatar);
                         } else {
                             if(key=='is_shop_owner')
                                 form.append(key,user[key].toString());
@@ -102,7 +119,8 @@ const Register = () => {
                 let res = await Apis.post(endpoints['users'], form, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
-                    }
+                    },
+                    timeout: 15000,
                 });
                 // console.error("Registration failed:", ex.response?.data || ex.message);
                 console.info("xog")
@@ -111,7 +129,14 @@ const Register = () => {
                     console.info("dang ky thanh cong")
                 }
             } catch (ex) {
-                console.error("Registration failed:", ex.response?.data || ex.message);
+                console.info("ERROR:", ex);
+            if (ex.response) {
+            console.log("Response:", ex.response.data);
+            } else if (ex.request) {
+            console.log("Request:", ex.request);
+            } else {
+            console.log("Error Message:", ex.message);
+            }
             } finally {
                 setLoading(false);
             }

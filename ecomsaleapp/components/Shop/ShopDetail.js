@@ -155,7 +155,11 @@ useEffect(() => {
                 contentContainerStyle={HomeStyles.flatListContent}
                 columnWrapperStyle={HomeStyles.columnWrapper}
             />
-        </SafeAreaView>
+            {/* ListFooterComponent={() =>
+            loading ? <ActivityIndicator /> :
+            !hasMore ? <Text style={{ textAlign: "center", padding: 10 }}>Đã tải hết sản phẩm</Text> : null
+            } */}
+                </SafeAreaView>
     );
 };
 

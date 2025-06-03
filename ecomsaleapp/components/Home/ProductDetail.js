@@ -1,5 +1,5 @@
 import { Image, Text, View, Modal, TouchableOpacity, ActivityIndicator, ScrollView, Alert, FlatList } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SliderBox } from "react-native-image-slider-box";
 import Apis, { endpoints } from "../../configs/Apis";
 import StarRating from "../../utils/StarRating";
@@ -10,7 +10,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductDetailStyles from "./ProductDetailStyles";
+<<<<<<< Updated upstream
 import * as Animatable from 'react-native-animatable';
+=======
+import { MyShopContext } from "../../configs/MyContext";
+
+>>>>>>> Stashed changes
 
 const ProductDetail = ({ route }) => {
     const productId = route.params?.productId;
@@ -22,13 +27,14 @@ const ProductDetail = ({ route }) => {
     const [myCart, setMyCart] = useState([]);
     const [countProduct, setCountProduct] = useState(0);
     const navigation = useNavigation();
-    const [shop, setShop] = useState({})
-    const [productsCompare, setProductsCompare] = useState([])
+    const [shop, setShop] = useState({});
+    const [productsCompare, setProductsCompare] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
+    const shopuser=useContext(MyShopContext)
     const loadProduct = async () => {
         try {
             const res = await Apis.get(endpoints['product'](productId));
@@ -61,7 +67,6 @@ const ProductDetail = ({ route }) => {
                 const cart = res.data;
                 setMyCart(cart);
                 console.log(cart);
-
                 const totalCount = cart.details.reduce((sum, item) => sum + item.quantity, 0);
                 setCountProduct(totalCount);
             } else {
@@ -76,7 +81,6 @@ const ProductDetail = ({ route }) => {
     const loadProductsCompare = async (productId) => {
         try {
             const res = await Apis.get(endpoints['product-compare'](productId));
-
             setProductsCompare(res.data)
             console.log("Danh sách sản phẩm so sánh: ", res.data)
         } catch (err) {
@@ -87,7 +91,7 @@ const ProductDetail = ({ route }) => {
     const addToCart = async () => {
         try {
             const token = await AsyncStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
+            const headers = { Authorization: `Bearer ${token}`};
             if (!token) {
                 Alert.alert("Thông báo", "Bạn cần đăng nhập trước để thêm sản phẩm vào giỏ!", [{text: "OK"}]);
                 return;
@@ -120,13 +124,11 @@ const ProductDetail = ({ route }) => {
         try {
             let url = `${endpoints['products']}?page=${pageToLoad}&name=${textFind}`;
             const res = await Apis.get(url);
-            
             if (pageToLoad === 1) {
                 setSearchResults(res.data.results);
             } else {
                 setSearchResults(prev => [...prev, ...res.data.results]);
             }
-
             console.log("Danh sách sản phẩm: ", res.data.results);
 
             setHasMore(res.data.next !== null);
@@ -349,12 +351,15 @@ const ProductDetail = ({ route }) => {
                 </ScrollView>
 
                 <View style={ProductDetailStyles.barFooter}>
+                    {shop && shopuser && shop.id !== shopuser._j?.id && (
                     <TouchableOpacity style={ProductDetailStyles.chat} onPress={() => {
-                        navigation.navigate("chat", { 'shop': shop })
+                        navigation.navigate("chat", { shop });
                         console.log("SHOP to send:", shop);
                     }}>
                         <AntDesign name="message1" size={24} color="#2196F3" />
                     </TouchableOpacity>
+                    )}
+                    
 
                     <TouchableOpacity style={ProductDetailStyles.addCart} onPress={addToCart}>
                         <FontAwesome name="cart-plus" size={24} color="#2196F3" />

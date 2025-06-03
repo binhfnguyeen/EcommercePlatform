@@ -69,15 +69,13 @@ const Login = () => {
                 await AsyncStorage.setItem("userName", u.data.username);
                 let s=await authApis(res.data.access_token).get(endpoints['my-shop']);
                 console.info(u.data)
-                console.info(s.data)
-
                 dispatch({
                     "type":"login",
                     "payload":u.data
                 })
                 if(u.data.is_shop_owner==true){
                     shopdispatch({
-                        "type":"isshopowner",
+                        "type":"getshop",
                         "payload":s.data
                     })
                 }
@@ -87,7 +85,12 @@ const Login = () => {
                 // nav.navigate("profile")
 
             } catch (ex) {
-                console.error(ex);
+
+                if (ex.response && ex.response.status === 404) {
+                                Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
+                } else {
+                    console.error(ex);
+                    }
             } finally {
                 setLoading(false);
             }
