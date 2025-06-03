@@ -18,7 +18,7 @@ class CategorySerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar', 'phone','is_superuser']
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'is_shop_owner', 'avatar', 'phone','is_superuser','is_approved']
 
         extra_kwargs = {
             'is_superuser': {
@@ -35,6 +35,10 @@ class UserSerializer(ModelSerializer):
         data = validated_data.copy()
         u = User(**data)
         u.set_password(u.password)
+        if u.is_shop_owner:
+            u.is_approved=False
+        else:
+            u.is_approved=True
         u.save()
 
         return u

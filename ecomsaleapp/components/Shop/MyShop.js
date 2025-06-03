@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { MyUserContext } from "../../configs/MyContext";
+import { MyShopContext, MyUserContext } from "../../configs/MyContext";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,9 +13,10 @@ import { ActivityIndicator } from "react-native-paper";
 const Stack=createNativeStackNavigator();
 const MyShop = () => {
     const user = useContext(MyUserContext);
-    const [shop, setShop] = useState();
     const [loading, setLoading] = useState(false);
     const navigation=useNavigation();
+    const shop=useContext(MyShopContext)
+    
 
 
     // const StackNavigate = () => {
@@ -29,37 +30,37 @@ const MyShop = () => {
     //     )
     //     }
 
-    const loadShop = async () => {
-        try {
-            setLoading(true);
-            const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                console.warn("No token found");
-                return;
-            }
+    // const loadShop = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const token = await AsyncStorage.getItem('token');
+    //         if (!token) {
+    //             console.warn("No token found");
+    //             return;
+    //         }
 
-            const res = await authApis(token).get(endpoints['my-shop']);
-            for(let d in res.data){
-                // setState(res.data[d],d);
-                setShop(res.data)
-                // console.info(res.data)
-                // console.info(shop)
-            }
-            // setShop(res.data)
-        } catch (ex) {
-            console.error(ex);
-        } finally {
-            setLoading(false);
-            // console.info(res.data)
-            console.info(shop.user)
-        }
-    };
+    //         const res = await authApis(token).get(endpoints['my-shop']);
+    //         for(let d in res.data){
+    //             // setState(res.data[d],d);
+    //             setShop(res.data)
+    //             // console.info(res.data)
+    //             // console.info(shop)
+    //         }
+    //         // setShop(res.data)
+    //     } catch (ex) {
+    //         console.error(ex);
+    //     } finally {
+    //         setLoading(false);
+    //         // console.info(res.data)
+    //         console.info(shop.user)
+    //     }
+    // };
 
-    useEffect(() => {
-        loadShop();
-    }, []);
+    // useEffect(() => {
+    //     loadShop();
+    // }, []);
 
-    if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+    // if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
 
     return (
         <View>

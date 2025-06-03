@@ -8,6 +8,7 @@ class User(AbstractUser):
     is_shop_owner = models.BooleanField(default=0)
     avatar = CloudinaryField(null=True)
     phone = models.CharField(max_length=10, null=True)
+    is_approved = models.BooleanField(default=True)
 
 
 class BaseModel(models.Model):

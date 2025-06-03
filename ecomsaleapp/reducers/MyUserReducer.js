@@ -1,7 +1,6 @@
 export default async (current,action)=>{
     switch(action.type){
         case "login":
-            console.info(action.payload)
             return action.payload;
         case "logout":
             return null;

@@ -31,6 +31,7 @@ import HistoryOrders from './components/Order/HistoryOrders';
 import AdminShopStatsScreen from './components/Admin/AdminShopStats';
 import ShopStat from './components/Admin/ShopStat';
 import MyShopReducer from './reducers/MyShopReducer';
+import ApproveUsersScreen from './components/Admin/UnapprovedUser';
 
 
 const Stack = createNativeStackNavigator();
@@ -74,6 +75,7 @@ const ProfileNavigate = () => {
       <Stack.Screen name="chat" component={Chat}/>
       <Stack.Screen name="stats" component={AdminShopStatsScreen}/>
       <Stack.Screen name="statdetail" component={ShopStat}/>
+      <Stack.Screen name="unapprovedusers" component={ApproveUsersScreen}/>
 
     </Stack.Navigator>
   )
@@ -104,6 +106,8 @@ const TabNavigator = () => {
 export default App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null)
   const [shop,shopdispatch]=useReducer(MyShopReducer,null)
+  console.info(user)
+  console.info(shop)
 
   return (
     <PaperProvider>

@@ -1,5 +1,5 @@
 import { use, useContext, useEffect, useState } from "react";
-import { MyDispatchContext, MyUserContext } from "../../configs/MyContext";
+import { MyDispatchContext, MyShopDispatchContext, MyUserContext } from "../../configs/MyContext";
 import { SafeAreaView, View, StyleSheet, Image } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Profile = () => {
     const user = useContext(MyUserContext);
     const dispatch = useContext(MyDispatchContext);
+    const shopdispatch=useContext(MyShopDispatchContext)
     const navigation = useNavigation();
     const[loading,setLoading]=useState(false)
 
@@ -23,6 +24,11 @@ const Profile = () => {
             dispatch({
                 "type":"logout",
             })
+
+            shopdispatch({
+                "type":"notshopowner",
+            })
+            
         }catch(ex){
             console.info(ex)
         }finally{
@@ -58,16 +64,23 @@ const Profile = () => {
                     >
                         Xem lịch sử chat
                     </Button>
-                    {user._j.is_superuser==true ?(<Button
-                        disabled={loading} 
-                        loading={loading}
+                    {user._j.is_superuser==true ?(<><Button
                         mode="outlined"
                         onPress={()=>navigation.navigate("stats")}
                         style={[styles.button, { backgroundColor: "#03A9F4" }]}
                         labelStyle={{ color: "#e53935" }}
                     >
                         Xem thống kê
-                    </Button>):(<Text></Text>)}
+                    </Button>
+                    <Button
+                        mode="outlined"
+                        onPress={()=>navigation.navigate("unapprovedusers")}
+                        style={[styles.button, { backgroundColor: "#03A9F4" }]}
+                        labelStyle={{ color: "#e53935" }}
+                    >
+                        Danh sách user chưa được xác nhận
+                    </Button>
+                    </>):(<></>)}
                     {/* <Button
                         disabled={loading} 
                         loading={loading}

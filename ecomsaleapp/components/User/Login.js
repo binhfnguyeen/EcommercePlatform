@@ -69,18 +69,19 @@ const Login = () => {
                 await AsyncStorage.setItem("userName", u.data.username);
                 let s=await authApis(res.data.access_token).get(endpoints['my-shop']);
                 console.info(u.data)
-                console.info(AsyncStorage.getItem('token'))
+                console.info(s.data)
 
                 dispatch({
                     "type":"login",
                     "payload":u.data
                 })
-
-                if (u.is_shop_owner==true)
+                if(u.data.is_shop_owner==true){
                     shopdispatch({
                         "type":"isshopowner",
                         "payload":s.data
                     })
+                }
+                
 
                 // console.info(MyDispatchContext)
                 // nav.navigate("profile")

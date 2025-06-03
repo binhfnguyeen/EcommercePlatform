@@ -58,6 +58,26 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
         return Response(serializers.UserSerializer(request.user).data)
 
+    @action(methods=['get'], url_path='unapproved-user', detail=False,permission_classes=[permissions.IsAdminUser])
+    def get_unapproved_user(self,request):
+        users=User.objects.filter(is_approved=False)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['patch'], url_path='approved-user', detail=False,permission_classes=[permissions.IsAdminUser])
+    def aprroved_user(self,request):
+        user_ids = request.data.get('user_ids', [])
+        if not user_ids:
+            return Response({"error": "Thiếu danh sách user_ids."}, status=400)
+
+        users = User.objects.filter(id__in=user_ids, is_approved=False)
+        updated_count = users.update(is_approved=True)
+
+        return Response(
+            {"message": f"Đã duyệt {updated_count} người dùng."},
+            status=status.HTTP_200_OK
+        )
+
 class ShopViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveAPIView):
     queryset = Shop.objects.filter(active=True)
     serializer_class = ShopSerializer

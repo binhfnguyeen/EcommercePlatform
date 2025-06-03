@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { ActivityIndicator, FlatList, Image, KeyboardAvoidingView, Platform, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -8,10 +8,11 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
 import CreateProduct from "./CreateShopProduct";
 import Ionicons from "react-native-vector-icons/Ionicons"
+import MyShop from "./MyShop";
+import { MyShopContext } from "../../configs/MyContext";
 
 const winWith={ width: Dimensions.get('window').width };
 const ShopDetail = ({route})=>{
-    const shopId=route.params?.shopId;
     const [products,setProducts]=useState([])
     const[loading,setLoading]=useState(false)
     const [name, setName] = useState("");
@@ -20,6 +21,8 @@ const ShopDetail = ({route})=>{
     const [hasMore, setHasMore] = useState(true);
     const navigation=useNavigation();
     const [index, setIndex] = useState(0);
+    const shop=useContext(MyShopContext)
+    const shopId=shop._j.id
 
     const renderScene = SceneMap({
         first: ShopDetail,
