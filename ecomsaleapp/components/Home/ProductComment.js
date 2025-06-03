@@ -60,7 +60,7 @@ const ProductComment = ({ route }) => {
         try {
             const token = await AsyncStorage.getItem("token");
             if (!token) {
-                Alert.alert("Thông báo", "Bạn cần đăng nhập trước để có thể yêu thích!", {text: "OK"});
+                Alert.alert("Thông báo", "Bạn cần đăng nhập trước để có thể yêu thích!", [{text: "OK"}]);
                 return;
             }
             const headers = { Authorization: `Bearer ${token}` };
@@ -77,7 +77,7 @@ const ProductComment = ({ route }) => {
 
         } catch (err){
             if (err.response?.status === 400 || err.response?.status === 409) {
-                Alert.alert("Thông báo", "Bạn đã thích rồi!", { text: "OK" });
+                Alert.alert("Thông báo", "Bạn đã thích rồi!", [{ text: "OK" }]);
             } else {
                 Alert.alert("Thông báo", "Bạn cần đăng nhập trước để có thể yêu thích!");
             }

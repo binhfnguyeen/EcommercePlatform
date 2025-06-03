@@ -10,6 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductDetailStyles from "./ProductDetailStyles";
+import * as Animatable from 'react-native-animatable';
 
 const ProductDetail = ({ route }) => {
     const productId = route.params?.productId;
@@ -88,7 +89,7 @@ const ProductDetail = ({ route }) => {
             const token = await AsyncStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };
             if (!token) {
-                Alert.alert("Lỗi", "Bạn cần đăng nhập trước.");
+                Alert.alert("Thông báo", "Bạn cần đăng nhập trước để thêm sản phẩm vào giỏ!", [{text: "OK"}]);
                 return;
             }
             const body = {
@@ -199,34 +200,36 @@ const ProductDetail = ({ route }) => {
             </View>
 
             {searchResults.length > 0 ? (
-                <FlatList
-                    data={searchResults}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={{ paddingBottom: 30, paddingTop: 60, paddingHorizontal: 10 }}
-                    ListHeaderComponent={() => (
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Kết quả tìm kiếm</Text>
-                    )}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => navigation.replace("productdetail", { productId: item.id })}>
-                            <View style={{ flexDirection: 'row', marginVertical: 8, alignItems: 'center' }}>
-                                <Image
-                                    source={{ uri: item.images[0].image }}
-                                    style={{ width: 40, height: 40, borderRadius: 10, marginRight: 10 }}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
-                                    <Text>{item.price.toLocaleString()} VND</Text>
+                <Animatable.View animation="slideInDown" duration={600}>
+                    <FlatList
+                        data={searchResults}
+                        keyExtractor={(item) => item.id.toString()}
+                        contentContainerStyle={{ paddingBottom: 30, paddingTop: 60, paddingHorizontal: 10 }}
+                        ListHeaderComponent={() => (
+                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Kết quả tìm kiếm</Text>
+                        )}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => navigation.replace("productdetail", { productId: item.id })}>
+                                <View style={{ flexDirection: 'row', marginVertical: 8, alignItems: 'center' }}>
+                                    <Image
+                                        source={{ uri: item.images[0].image }}
+                                        style={{ width: 40, height: 40, borderRadius: 10, marginRight: 10 }}
+                                    />
+                                    <View>
+                                        <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                                        <Text>{item.price.toLocaleString()} VND</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                    onEndReached={() => {
-                        if (hasMore) 
-                            handleSearch(searchQuery, currentPage + 1);
-                    }}
-                    onEndReachedThreshold={0.5}
-                    ListFooterComponent={() => hasMore ? <ActivityIndicator size="small" color="#2196F3" /> : null}
-                />
+                            </TouchableOpacity>
+                        )}
+                        onEndReached={() => {
+                            if (hasMore)
+                                handleSearch(searchQuery, currentPage + 1);
+                        }}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={() => hasMore ? <ActivityIndicator size="small" color="#2196F3" /> : null}
+                    />
+                </Animatable.View>
             ) : (<>
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 55, paddingTop: 55 }}>
                     <View style={ProductDetailStyles.headerContainer}>
