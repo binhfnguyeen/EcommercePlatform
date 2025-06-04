@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { useContext, useState } from "react";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
@@ -62,9 +62,14 @@ const Login = () => {
                     
                 });
                 console.info(res.data)
-                await AsyncStorage.setItem("token",res.data.access_token);
+                
                 
                 let u= await authApis(res.data.access_token).get(endpoints['current_user'])
+                if (u.data.is_approved==false){
+                    Alert.alert("Tài khoản của bạn chưa được duyệt")
+                    return;
+                }
+                await AsyncStorage.setItem("token",res.data.access_token);
                 await AsyncStorage.setItem("userId", u.data.id.toString());
                 await AsyncStorage.setItem("userName", u.data.username);
                 let s=await authApis(res.data.access_token).get(endpoints['my-shop']);

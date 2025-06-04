@@ -10,12 +10,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Searchbar } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProductDetailStyles from "./ProductDetailStyles";
-<<<<<<< Updated upstream
 import * as Animatable from 'react-native-animatable';
-=======
 import { MyShopContext } from "../../configs/MyContext";
 
->>>>>>> Stashed changes
 
 const ProductDetail = ({ route }) => {
     const productId = route.params?.productId;

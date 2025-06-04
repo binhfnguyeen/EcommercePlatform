@@ -5,6 +5,7 @@ import { authApis, endpoints } from '../../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AdminStyles from './AdminStyles';
 
 const AdminShopStatsScreen = () => {
   const [shops, setShops] = useState([]);
@@ -39,10 +40,11 @@ const AdminShopStatsScreen = () => {
                         <Ionicons name="return-down-back" size={24} color="#2196F3" />
                       </TouchableOpacity>
                       <Text style={styles.title}>
-                          📊 Thống kê cửa hàng
+                          Thống kê cửa hàng
                       </Text>
-                  </View>
+        </View>
 
+      <View style={{ marginTop: 60 }}>
       {loading ? (
         <ActivityIndicator size="large" color="#2196F3" style={{ marginTop: 20 }} />
       ) : shops.length === 0 ? (
@@ -61,6 +63,7 @@ const AdminShopStatsScreen = () => {
           </TouchableOpacity>
         ))
       )}
+      </View>
     </ScrollView>
   );
 };
@@ -73,10 +76,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 16,
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1e3a8a',
+    flex: 1,
     textAlign: 'center',
   },
   shopCard: {

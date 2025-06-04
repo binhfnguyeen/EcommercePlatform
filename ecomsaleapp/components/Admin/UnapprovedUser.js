@@ -86,27 +86,30 @@ const ApproveUsersScreen = () => {
   return (
     <View style={styles.container}>
       <View style={AdminStyles.barHeader}>
-                <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
-                  <Ionicons name="return-down-back" size={24} color="#2196F3" />
-                </TouchableOpacity>
-                <Text style={styles.title}>
-                    Người dùng chờ duyệt
-                </Text>
-            </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#6200ee" style={{ marginTop: 20 }} />
-      ) : (
-        <FlatList
-          data={users}
-          keyExtractor={item => item.id.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 80 }}
-        />
-      )}
+        <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
+          <Ionicons name="return-down-back" size={24} color="#2196F3" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Người dùng chờ duyệt</Text>
+      </View>
+
+      <View style={{ flex: 1, marginTop: 60 }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#6200ee" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={users}
+            keyExtractor={item => item.id.toString()}
+            renderItem={renderItem}
+            contentContainerStyle={{ paddingBottom: 80 }}
+          />
+        )}
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={approveSelectedUsers}>
         <Text style={styles.buttonText}>Duyệt người dùng đã chọn</Text>
       </TouchableOpacity>
     </View>
+
   );
 };
 
