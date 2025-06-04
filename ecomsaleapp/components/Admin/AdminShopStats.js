@@ -35,34 +35,34 @@ const AdminShopStatsScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-       <View style={AdminStyles.barHeader}>
-                      <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
-                        <Ionicons name="return-down-back" size={24} color="#2196F3" />
-                      </TouchableOpacity>
-                      <Text style={styles.title}>
-                          Thống kê cửa hàng
-                      </Text>
-        </View>
+      <View style={AdminStyles.barHeader}>
+        <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
+          <Ionicons name="return-down-back" size={24} color="#2196F3" />
+        </TouchableOpacity>
+        <Text style={AdminStyles.title}>
+          Thống kê cửa hàng
+        </Text>
+      </View>
 
       <View style={{ marginTop: 60 }}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#2196F3" style={{ marginTop: 20 }} />
-      ) : shops.length === 0 ? (
-        <Text style={styles.emptyText}>Không có cửa hàng nào.</Text>
-      ) : (
-        shops.map(shop => (
-          <TouchableOpacity
-            key={shop.id}
-            style={styles.shopCard}
-            onPress={() => navigation.navigate('statdetail', { shopId: shop.id })}
-          >
-            <View style={styles.shopCardContent}>
-              <Ionicons name="storefront-outline" size={24} color="#2196F3" style={{ marginRight: 10 }} />
-              <Text style={styles.shopName}>{shop.name}</Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      )}
+        {loading ? (
+          <ActivityIndicator size="large" color="#2196F3" style={{ marginTop: 20 }} />
+        ) : shops.length === 0 ? (
+          <Text style={styles.emptyText}>Không có cửa hàng nào.</Text>
+        ) : (
+          shops.map(shop => (
+            <TouchableOpacity
+              key={shop.id}
+              style={styles.shopCard}
+              onPress={() => navigation.navigate('statdetail', { shopId: shop.id })}
+            >
+              <View style={styles.shopCardContent}>
+                <Ionicons name="storefront-outline" size={24} color="#2196F3" style={{ marginRight: 10 }} />
+                <Text style={styles.shopName}>{shop.name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
     </ScrollView>
   );

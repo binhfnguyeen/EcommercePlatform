@@ -89,7 +89,7 @@ const ApproveUsersScreen = () => {
         <TouchableOpacity style={AdminStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
           <Ionicons name="return-down-back" size={24} color="#2196F3" />
         </TouchableOpacity>
-        <Text style={styles.title}>Người dùng chờ duyệt</Text>
+        <Text style={AdminStyles.title}>Người dùng chờ duyệt</Text>
       </View>
 
       <View style={{ flex: 1, marginTop: 60 }}>

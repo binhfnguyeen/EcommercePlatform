@@ -5,9 +5,9 @@ export default StyleSheet.create({
   barHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderBottomWidth: 1,
     borderColor: '#e0e0e0',
     position: 'absolute',
@@ -19,14 +19,22 @@ export default StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 3,
   },
+
   returnButton: {
-    padding: 6,
-    borderRadius: 8,
-    backgroundColor: '#e3f2fd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  }
+    flex: 0.8,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+
+  title: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    zIndex: -1
+  },
 });

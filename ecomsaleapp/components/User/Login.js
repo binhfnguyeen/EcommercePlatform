@@ -1,35 +1,23 @@
-import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { useContext, useState } from "react";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { MyDispatchContext, MyShopDispatchContext } from "../../configs/MyContext";
-
+import LoginStyles from "./LoginStyles";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Login = () => {
-    const info = [ {
-        label: 'Tên đăng nhập',
-        icon: "text",
-        secureTextEntry: false,
-        field: "username"
-    }, {
-        label: 'Mật khẩu',
-        icon: "eye",
-        secureTextEntry: true,
-        field: "password"
-    }];
     const [user, setUser] = useState({});
     const [msg, setMsg] = useState(null);
     const [loading, setLoading] = useState(false);
-    const nav=useNavigation();
-    const dispatch = useContext(MyDispatchContext)
-    const shopdispatch=useContext(MyShopDispatchContext)
+    const [showPassword, setShowPassword] = useState(false);
+    const nav = useNavigation();
+    const dispatch = useContext(MyDispatchContext);
+    const shopdispatch = useContext(MyShopDispatchContext);
 
-    const setState = (value, field) => {
-        setUser({...user, [field]: value});
-    }
+    const setState = (value, field) => setUser({ ...user, [field]: value });
 
     const validate = () => {
         if (!user?.username || !user?.password) {
@@ -37,84 +25,101 @@ const Login = () => {
             return false;
         }
         setMsg(null);
-        
         return true;
-    }
+    };
 
     const login = async () => {
-        if (validate() === true) {
-            try {
-                setLoading(true);
+        if (!validate()) return;
+        try {
+            setLoading(true);
+            let res = await Apis.post(endpoints['token'], {
+                ...user,
+                client_id: "9DgjVd5V4sLg5ZyppXVYuOnIGouBs4Bk96cnsPxe",
+                client_secret: "JNnblcFnsTWRRMe6zR53GV4kxrvWwmn4FwYGovyWGkm6L2n3TqJGPmDBbi34EV3JseJn7O4gt2Z8J7YKyBoo8gxUoUFAUHeSeVY7f5uwC6CmoiM0nOmUePk50DS5A13E",
+                grant_type: "password"
+            });
 
-                let form = new FormData();
-                for (let key in user) {
-                    if (key !== 'confirm') {
-                        form.append(key,user[key])
-                    }
-                }
-                // console.info(form)
-                // console.info(Apis.defaults)
-                let res = await Apis.post(endpoints['token'], {
-                    ...user,
-                    "client_id":"9DgjVd5V4sLg5ZyppXVYuOnIGouBs4Bk96cnsPxe",
-                    "client_secret":"JNnblcFnsTWRRMe6zR53GV4kxrvWwmn4FwYGovyWGkm6L2n3TqJGPmDBbi34EV3JseJn7O4gt2Z8J7YKyBoo8gxUoUFAUHeSeVY7f5uwC6CmoiM0nOmUePk50DS5A13E",
-                    "grant_type": "password"
-                    
-                });
-                console.info(res.data)
-                
-                
-                let u= await authApis(res.data.access_token).get(endpoints['current_user'])
-                if (u.data.is_approved==false){
-                    Alert.alert("Tài khoản của bạn chưa được duyệt")
-                    return;
-                }
-                await AsyncStorage.setItem("token",res.data.access_token);
-                await AsyncStorage.setItem("userId", u.data.id.toString());
-                await AsyncStorage.setItem("userName", u.data.username);
-                let s=await authApis(res.data.access_token).get(endpoints['my-shop']);
-                console.info(u.data)
-                dispatch({
-                    "type":"login",
-                    "payload":u.data
-                })
-                if(u.data.is_shop_owner==true){
-                    shopdispatch({
-                        "type":"getshop",
-                        "payload":s.data
-                    })
-                }
-                
-
-                // console.info(MyDispatchContext)
-                // nav.navigate("profile")
-
-            } catch (ex) {
-
-                if (ex.response && ex.response.status === 404) {
-                                Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
-                } else {
-                    console.error(ex);
-                    }
-            } finally {
-                setLoading(false);
+            let u = await authApis(res.data.access_token).get(endpoints['current_user']);
+            if (!u.data.is_approved) {
+                Alert.alert("Tài khoản chưa được duyệt");
+                return;
             }
+
+            await AsyncStorage.setItem("token", res.data.access_token);
+            await AsyncStorage.setItem("userId", u.data.id.toString());
+            await AsyncStorage.setItem("userName", u.data.username);
+
+            dispatch({ type: "login", payload: u.data });
+
+            if (u.data.is_shop_owner) {
+                let s = await authApis(res.data.access_token).get(endpoints['my-shop']);
+                shopdispatch({ type: "getshop", payload: s.data });
+            }
+
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404) {
+                Alert.alert("Bạn chưa có shop", "Hãy tạo shop của mình");
+            } else {
+                console.error(ex);
+            }
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     return (
-        <SafeAreaView>
-            <ScrollView>
+        <SafeAreaView style={LoginStyles.container}>
+            <ScrollView contentContainerStyle={LoginStyles.innerContainer}>
+
+                <Image
+                    source={{ uri: 'https://res.cloudinary.com/dvlwb6o7e/image/upload/v1746351973/logo_jnqxrj.png' }}
+                    style={LoginStyles.logo}
+                />
+
+                <Text style={LoginStyles.title}>Đăng nhập</Text>
+
                 <HelperText type="error" visible={msg}>
                     {msg}
                 </HelperText>
 
-                {info.map(i => <TextInput value={user[i.field]} onChangeText={t => setState(t, i.field)} style={EcomSaleStyles.m} key={i.field} label={i.label} secureTextEntry={i.secureTextEntry} right={<TextInput.Icon icon={i.icon} />} />)}
+                <TextInput
+                    label="Tên đăng nhập"
+                    value={user.username}
+                    onChangeText={t => setState(t, 'username')}
+                    mode="outlined"
+                    style={LoginStyles.input}
+                    left={<TextInput.Icon icon="account" />}
+                />
 
-                <Button disabled={loading} loading={loading} onPress={login} buttonColor="#DCDCDC" style={{margin:8}}>Đăng nhập</Button>
+                <TextInput
+                    label="Mật khẩu"
+                    value={user.password}
+                    onChangeText={t => setState(t, 'password')}
+                    secureTextEntry={!showPassword}
+                    mode="outlined"
+                    style={LoginStyles.input}
+                    left={<TextInput.Icon icon="lock" />}
+                    right={
+                        <TextInput.Icon
+                            icon={showPassword ? "eye-off" : "eye"}
+                            onPress={() => setShowPassword(!showPassword)}
+                        />
+                    }
+                />
+
+                <Button
+                    mode="contained"
+                    onPress={login}
+                    disabled={loading}
+                    loading={loading}
+                    style={LoginStyles.loginButton}
+                    labelStyle={LoginStyles.loginButtonText}
+                >
+                    Đăng nhập
+                </Button>
             </ScrollView>
         </SafeAreaView>
     );
-}
+};
 
 export default Login;
