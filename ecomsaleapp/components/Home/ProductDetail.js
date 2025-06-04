@@ -348,14 +348,13 @@ const ProductDetail = ({ route }) => {
                 </ScrollView>
 
                 <View style={ProductDetailStyles.barFooter}>
-                    {shop && shopuser && shop.id !== shopuser._j?.id && (
+            
                     <TouchableOpacity style={ProductDetailStyles.chat} onPress={() => {
                         navigation.navigate("chat", { shop });
                         console.log("SHOP to send:", shop);
                     }}>
                         <AntDesign name="message1" size={24} color="#2196F3" />
                     </TouchableOpacity>
-                    )}
                     
 
                     <TouchableOpacity style={ProductDetailStyles.addCart} onPress={addToCart}>

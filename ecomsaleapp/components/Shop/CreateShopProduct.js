@@ -125,17 +125,23 @@ const CreateProduct = ({route}) => {
   ];
 
   return (
-    <SafeAreaView>
-      <View>
-        <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
-            <Ionicons name="return-down-back" size={24} color="#2196F3" />
+   <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 12 }}>
+        
+        {/* Nút quay lại */}
+        <TouchableOpacity
+          style={[HomeStyles.returnButton, { alignSelf: "flex-start", marginBottom: 12 }]}
+          onPress={() => navigation.replace("myshop")}
+        >
+          <Ionicons name="return-down-back" size={24} color="#2196F3" />
         </TouchableOpacity>
-      </View>
-      <ScrollView style={{ padding: 12 }}>
+
+        {/* Thông báo lỗi */}
         <HelperText type="error" visible={!!msg}>
           {msg}
         </HelperText>
 
+        {/* Các ô nhập liệu */}
         {info.map((i) => (
           <TextInput
             key={i.field}
@@ -148,7 +154,8 @@ const CreateProduct = ({route}) => {
           />
         ))}
 
-        <View style={{ margin: 8 }}>
+        {/* Menu chọn danh mục */}
+        <View style={{ marginVertical: 8 }}>
           <Menu
             visible={menuVisible}
             onDismiss={() => setMenuVisible(false)}
@@ -156,12 +163,12 @@ const CreateProduct = ({route}) => {
               <Button
                 mode="outlined"
                 onPress={() => setMenuVisible(true)}
-                style={{ justifyContent: 'flex-start' }}
-                >
+                style={{ justifyContent: "flex-start" }}
+              >
                 {category ? category.name : "Chọn danh mục"}
               </Button>
             }
-            >
+          >
             {categories.map((cat) => (
               <Menu.Item
                 key={cat.id}
@@ -175,19 +182,42 @@ const CreateProduct = ({route}) => {
           </Menu>
         </View>
 
-        <TouchableOpacity style={{ margin: 8 }} onPress={picker}>
+        {/* Chọn ảnh */}
+        <TouchableOpacity style={{ marginVertical: 8 }} onPress={picker}>
           <Text>Chọn ảnh sản phẩm...</Text>
         </TouchableOpacity>
-        
+
+        {/* Hiển thị ảnh */}
         <View style={EcomSaleStyles.flex_view}>
           {images.map((img, index) => (
-            <Image key={index} style={{ width: 100, height: 100, alignSelf: "center", marginTop: 8, borderRadius: 8, }} source={{ uri: img.uri }}/>
+            <Image
+              key={index}
+              style={{
+                width: 100,
+                height: 100,
+                alignSelf: "center",
+                marginTop: 8,
+                borderRadius: 8,
+              }}
+              source={{ uri: img.uri }}
+            />
           ))}
         </View>
 
-        <Button disabled={loading} loading={loading} mode="contained" buttonColor="#4CAF50" style={{ margin: 8 }} onPress={submitProduct}>Tạo sản phẩm</Button>
+        {/* Nút tạo sản phẩm */}
+        <Button
+          disabled={loading}
+          loading={loading}
+          mode="contained"
+          buttonColor="#4CAF50"
+          style={{ marginTop: 16 }}
+          onPress={submitProduct}
+        >
+          Tạo sản phẩm
+        </Button>
       </ScrollView>
     </SafeAreaView>
+
   );
 };
 

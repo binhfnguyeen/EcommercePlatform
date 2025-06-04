@@ -13,6 +13,9 @@ const Profile = () => {
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false)
 
+    useEffect(()=>{
+    },[])
+
     if (user?._j !== null) {
         const u = user._j;
 
@@ -47,6 +50,15 @@ const Profile = () => {
                     )}
                     <Text style={ProfileStyles.name}>{u.first_name} {u.last_name}</Text>
                     <Text style={ProfileStyles.username}>@{u.username}</Text>
+
+                    <Button
+                        mode="contained"
+                        style={[ProfileStyles.button, { backgroundColor: "#03A9F4" }]}
+                        icon="account"
+                        onPress={() => navigation.navigate("updateprofile")}
+                    >
+                        Thông tin
+                    </Button>
 
                     <Button
                         mode="contained"

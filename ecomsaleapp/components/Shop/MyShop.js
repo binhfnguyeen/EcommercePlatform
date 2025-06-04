@@ -17,7 +17,7 @@ const MyShop = () => {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
     const shop = useContext(MyShopContext)
-    // const shopdispatch=useContext(MyShopDispatchContext)
+    const shopdispatch=useContext(MyShopDispatchContext)
 
 
 
@@ -32,37 +32,37 @@ const MyShop = () => {
     //     )
     //     }
 
-    // const loadShop = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const token = await AsyncStorage.getItem('token');
-    //         if (!token) {
-    //             console.warn("No token found");
-    //             return;
-    //         }
+    const loadShop = async () => {
+        try {
+            setLoading(true);
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                console.warn("No token found");
+                return;
+            }
 
-    //         const res = await authApis(token).get(endpoints['my-shop']);
-    //         shopdispatch({
-    //             "type":"getshop",
-    //             "payload":res.data
-    //         })
+            const res = await authApis(token).get(endpoints['my-shop']);
+            shopdispatch({
+                "type":"getshop",
+                "payload":res.data
+            })
 
-    //         // setShop(res.data)
-    //     } catch (ex) {
-    //         if (ex.response && ex.response.status === 404) {
-    //             Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
-    //         } else {
-    //             console.error(ex);
-    //         }
-    //     } finally {
-    //         setLoading(false);
-    //         // console.info(res.data)
-    //     }
-    // };
+            // setShop(res.data)
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404) {
+                Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
+            } else {
+                console.error(ex);
+            }
+        } finally {
+            setLoading(false);
+            // console.info(res.data)
+        }
+    };
 
-    // useEffect(() => {
-    //     loadShop();
-    // }, []);
+    useEffect(() => {
+        loadShop();
+    }, []);
 
     if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
 
@@ -77,7 +77,7 @@ const MyShop = () => {
                 </Text>
             </View>
             <View style={MyShopStyles.buttonContainer}>
-                {!shop ? (
+                {shop === null || shop._j==null ? (
                     <TouchableOpacity
                         disabled={loading}
                         onPress={() => navigation.navigate('createshop')}

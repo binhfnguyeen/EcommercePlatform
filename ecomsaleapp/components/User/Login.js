@@ -15,7 +15,6 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const nav = useNavigation();
     const dispatch = useContext(MyDispatchContext);
-    const shopdispatch = useContext(MyShopDispatchContext);
 
     const setState = (value, field) => setUser({ ...user, [field]: value });
 
@@ -51,17 +50,8 @@ const Login = () => {
 
             dispatch({ type: "login", payload: u.data });
 
-            if (u.data.is_shop_owner) {
-                let s = await authApis(res.data.access_token).get(endpoints['my-shop']);
-                shopdispatch({ type: "getshop", payload: s.data });
-            }
-
         } catch (ex) {
-            if (ex.response && ex.response.status === 404) {
-                Alert.alert("Bạn chưa có shop", "Hãy tạo shop của mình");
-            } else {
-                console.error(ex);
-            }
+            console.info(ex)
         } finally {
             setLoading(false);
         }

@@ -32,6 +32,7 @@ import AdminShopStatsScreen from './components/Admin/AdminShopStats';
 import ShopStat from './components/Admin/ShopStat';
 import MyShopReducer from './reducers/MyShopReducer';
 import ApproveUsersScreen from './components/Admin/UnapprovedUser';
+import UpdateProfile from './components/User/UpdateProfile';
 
 
 const Stack = createNativeStackNavigator();
@@ -82,6 +83,8 @@ const ProfileNavigate = () => {
       <Stack.Screen name="productdetail" component={ProductDetail}/>
       <Stack.Screen name="shopstats" component={ShopStats}/>
       <Stack.Screen name="createshop" component={CreateShop}/>
+      <Stack.Screen name="updateprofile" component={UpdateProfile}/>
+      
     </Stack.Navigator>
   )
 }
