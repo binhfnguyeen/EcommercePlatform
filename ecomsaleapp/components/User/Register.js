@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Button, Checkbox, HelperText, TextInput } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
@@ -6,6 +6,7 @@ import Apis, { endpoints } from "../../configs/Apis";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import * as ImageManipulator from 'expo-image-manipulator';
 import RegisterStyles from "./RegisterStyles";
+import { useNavigation } from "@react-navigation/native";
 
 
 const Register = () => {
@@ -44,6 +45,7 @@ const Register = () => {
     const [msg, setMsg] = useState(null);
     const [loading, setLoading] = useState(false);
     const [checked, setChecked] = useState(false);
+    const navigation=useNavigation()
 
 
     const picker = async () => {
@@ -118,18 +120,12 @@ const Register = () => {
                         }
                     }
                 }
-                console.info(user)
-                console.info(form)
-                console.info("xog")
                 let res = await Apis.post(endpoints['users'], form, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
                     timeout: 15000,
                 });
-                // console.error("Registration failed:", ex.response?.data || ex.message);
-                console.info("xog")
-                console.info(res.data)
                 if (res.status === 201) {
                     console.info("dang ky thanh cong")
                 }
@@ -144,6 +140,8 @@ const Register = () => {
                 }
             } finally {
                 setLoading(false);
+                Alert.alert("thành công", "đăng ký thành công")
+                navigation.navigate('login')
             }
         }
     }

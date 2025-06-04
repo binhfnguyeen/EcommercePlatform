@@ -105,18 +105,15 @@ const ShopStats = ({ route }) => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16, backgroundColor: "#f4f6f8" }}>
-      {/* Quay lại */}
       <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("stats")}>
         <Ionicons name="arrow-back" size={28} color="#2196F3" />
       </TouchableOpacity>
 
-      {/* Chọn quý */}
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 10, marginBottom: 5 }}>
         📊 Thống kê theo quý:
       </Text>
       <QuarterBar onQuarterPress={handleQuarterChange} />
 
-      {/* Chọn tháng */}
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 16 }}>
         🗓️ Thống kê theo tháng:
       </Text>
@@ -145,7 +142,6 @@ const ShopStats = ({ route }) => {
         </Menu>
       </View>
 
-      {/* Biểu đồ đường theo tháng */}
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 20, marginBottom: 8 }}>
         📈 Doanh thu theo tháng
       </Text>

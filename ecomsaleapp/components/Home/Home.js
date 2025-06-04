@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import Apis, { endpoints } from "../../configs/Apis";
+import { useContext, useEffect, useRef, useState } from "react";
+import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { ActivityIndicator, FlatList, Image, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeStyles from "./HomeStyles";
+import { MyShopDispatchContext, MyUserContext } from "../../configs/MyContext";
 
 
 const Home = () => {
@@ -23,6 +24,7 @@ const Home = () => {
     const [maxPrice, setMaxPrice] = useState("");
     const [shopName, setShopName] = useState("");
     const [ordering, setOrdering] = useState("");
+    const user=useContext(MyUserContext)
 
     const loadProducts = async (pageToLoad = 1, nameFilter = "", reset = false) => {
         let url = `${endpoints['products']}?page=${pageToLoad}`;

@@ -53,4 +53,10 @@ export default StyleSheet.create({
         borderColor: "#e53935",
         borderRadius: 10,
     },
+    returnButton: {
+    padding: 8,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#fff", // tạm thời để kiểm tra có hiển thị không
+    }
 });

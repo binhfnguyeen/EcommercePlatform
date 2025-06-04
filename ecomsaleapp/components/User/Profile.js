@@ -13,6 +13,9 @@ const Profile = () => {
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false)
 
+    useEffect(()=>{
+    },[])
+
     if (user?._j !== null) {
         const u = user._j;
 
@@ -47,6 +50,15 @@ const Profile = () => {
                     )}
                     <Text style={ProfileStyles.name}>{u.first_name} {u.last_name}</Text>
                     <Text style={ProfileStyles.username}>@{u.username}</Text>
+
+                    <Button
+                        mode="contained"
+                        style={[ProfileStyles.button, { backgroundColor: "#03A9F4" }]}
+                        icon="account"
+                        onPress={() => navigation.navigate("updateprofile")}
+                    >
+                        Thông tin
+                    </Button>
 
                     <Button
                         mode="contained"
@@ -91,16 +103,6 @@ const Profile = () => {
                         Cửa hàng
                     </Button>
                     </>) : (<></>)}
-                    {/* <Button
-                        disabled={loading} 
-                        loading={loading}
-                        mode="outlined"
-                        onPress={()=>navigation.navigate("stats")}
-                        style={[ProfileStyles.button, { backgroundColor: "#03A9F4" }]}
-                        labelStyle={{ color: "#e53935" }}
-                    >
-                        Xem thống kê
-                    </Button> */}
                     <Button
                         disabled={loading}
                         loading={loading}
