@@ -103,16 +103,6 @@ const Profile = () => {
                         Cửa hàng
                     </Button>
                     </>) : (<></>)}
-                    {/* <Button
-                        disabled={loading} 
-                        loading={loading}
-                        mode="outlined"
-                        onPress={()=>navigation.navigate("stats")}
-                        style={[ProfileStyles.button, { backgroundColor: "#03A9F4" }]}
-                        labelStyle={{ color: "#e53935" }}
-                    >
-                        Xem thống kê
-                    </Button> */}
                     <Button
                         disabled={loading}
                         loading={loading}

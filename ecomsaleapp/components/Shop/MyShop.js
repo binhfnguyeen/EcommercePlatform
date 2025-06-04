@@ -19,19 +19,6 @@ const MyShop = () => {
     const shop = useContext(MyShopContext)
     const shopdispatch=useContext(MyShopDispatchContext)
 
-
-
-    // const StackNavigate = () => {
-    //     return (
-    //         <NavigationContainer>
-    //             <Stack.Navigator initialRouteName="shopdetail" screenOptions={{headerShown: false}}>
-    //                 <Stack.Screen name="myshop" component={MyShop} />
-    //                 <Stack.Screen name="shopdetail" component={ShopDetail} />
-    //             </Stack.Navigator>
-    //         </NavigationContainer>
-    //     )
-    //     }
-
     const loadShop = async () => {
         try {
             setLoading(true);
@@ -47,7 +34,6 @@ const MyShop = () => {
                 "payload":res.data
             })
 
-            // setShop(res.data)
         } catch (ex) {
             if (ex.response && ex.response.status === 404) {
                 Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
@@ -56,7 +42,6 @@ const MyShop = () => {
             }
         } finally {
             setLoading(false);
-            // console.info(res.data)
         }
     };
 

@@ -73,18 +73,10 @@ const CreateProduct = ({route}) => {
       console.info(formData)
       setLoading(true)
       const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                console.warn("No token found");
-                return;
-            }
-      // for (let [key, value] of formData.entries()) {
-      //       console.log(`${key}:`, value);
-      //     }
-      // console.info(formData)
-      // console.info(token)
-      // console.info(authApis(token).defaults)
-      // console.info(endpoints['create-product'](shopId))
-      // console.info(authApis().defaults.baseURL+endpoints['create-product'](shopId))
+      if (!token) {
+        console.warn("No token found");
+        return;
+      }
       let url = `${endpoints['create-product'](shopId)}`;
       let res= await authApis(token).post(url,formData,{
         headers:{

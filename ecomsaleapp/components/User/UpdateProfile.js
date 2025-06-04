@@ -186,6 +186,7 @@ const UpdateProfile = () => {
                     )}
 
                     <Button
+                        mode="contained"
                         disabled={loading}
                         loading={loading}
                         onPress={updateProfile}

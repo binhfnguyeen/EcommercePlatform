@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// const BASE_URL = process.env.REACT_APP_DOMAIN;
-
 const BASE_URL="https://ecomsaletestapi.onrender.com/"
 
 export const endpoints = {

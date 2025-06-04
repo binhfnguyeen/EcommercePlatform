@@ -120,17 +120,12 @@ const Register = () => {
                         }
                     }
                 }
-                // console.info(user)
-                // console.info(form)
-                // console.info("xog")
                 let res = await Apis.post(endpoints['users'], form, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
                     timeout: 15000,
                 });
-                // console.info("xog")
-                // console.info(res.data)
                 if (res.status === 201) {
                     console.info("dang ky thanh cong")
                 }

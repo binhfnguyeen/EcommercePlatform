@@ -11,18 +11,18 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import MyShop from "./MyShop";
 import { MyShopContext } from "../../configs/MyContext";
 
-const winWith={ width: Dimensions.get('window').width };
-const ShopDetail = ({route})=>{
-    const [products,setProducts]=useState([])
-    const[loading,setLoading]=useState(false)
+const winWith = { width: Dimensions.get('window').width };
+const ShopDetail = ({ route }) => {
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(false)
     const [name, setName] = useState("");
     const typingTimeout = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const navigation=useNavigation();
+    const navigation = useNavigation();
     const [index, setIndex] = useState(0);
-    const shop=useContext(MyShopContext)
-    const shopId=shop._j.id
+    const shop = useContext(MyShopContext)
+    const shopId = shop._j.id
 
     const renderScene = SceneMap({
         first: ShopDetail,
@@ -34,53 +34,38 @@ const ShopDetail = ({route})=>{
         { key: 'second', title: 'Second' },
     ];
 
-    // const TabViewExample=()=> {
-    // const layout = useWindowDimensions();
-    // const [index, setIndex] = useState(0);
-
-    // return (
-    //     <TabView
-    //     navigationState={{ index, routes }}
-    //     renderScene={renderScene}
-    //     onIndexChange={setIndex}
-    //     initialLayout={{ width: layout.width }}
-    //     />
-    // );
-    // }
-
-
     const loadProducts = async (pageToLoad = 1, nameFilter = "", reset = false) => {
-            let url = `${endpoints['shop-detail'](shopId)}`;
-            if (nameFilter) url += `&name=${nameFilter}`;
-    
-            try {
+        let url = `${endpoints['shop-detail'](shopId)}`;
+        if (nameFilter) url += `&name=${nameFilter}`;
 
-                setLoading(true);
-                const token = await AsyncStorage.getItem('token');
-                if (!token) {
-                    console.warn("No token found");
-                    return;
-                }
-                console.info(url)
-                console.info(token)
-                console.info(authApis(token))
-                const api = authApis(token);
-                console.info("Request headers:", api.defaults.headers);
-                const res = await authApis(token).get(url);
-                const newProducts = res.data.results;
-                const merged = reset ? newProducts : [...products, ...newProducts];
-                const unique = Array.from(new Map(merged.map(p => [p.id, p])).values());
-                setProducts(unique);
-                setHasMore(res.data.next !== null);
-                
-            } catch (ex) {
-                console.error("Registration failed:", ex.response?.data || ex.message);
-            } finally {
-                setLoading(false);
+        try {
+
+            setLoading(true);
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                console.warn("No token found");
+                return;
             }
-        };
-    
-     useEffect(() => {
+            console.info(url)
+            console.info(token)
+            console.info(authApis(token))
+            const api = authApis(token);
+            console.info("Request headers:", api.defaults.headers);
+            const res = await authApis(token).get(url);
+            const newProducts = res.data.results;
+            const merged = reset ? newProducts : [...products, ...newProducts];
+            const unique = Array.from(new Map(merged.map(p => [p.id, p])).values());
+            setProducts(unique);
+            setHasMore(res.data.next !== null);
+
+        } catch (ex) {
+            console.error("Registration failed:", ex.response?.data || ex.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (typingTimeout.current) clearTimeout(typingTimeout.current);
 
         typingTimeout.current = setTimeout(() => {
@@ -92,7 +77,7 @@ const ShopDetail = ({route})=>{
 
         return () => clearTimeout(typingTimeout.current);
     }, [name]);
-useEffect(() => {
+    useEffect(() => {
         if (page === 1) return;
         if (!loading && hasMore) loadProducts(page, name);
     }, [page]);
@@ -105,8 +90,8 @@ useEffect(() => {
         const imageUrl = item.images[0]?.image;
 
         return (
-            <TouchableOpacity style={HomeStyles.card} onPress={() => navigation.navigate('productdetail', {'productId': item.id})}>
-                <Image source={{ uri: imageUrl }} style={HomeStyles.image} resizeMode="cover"/>
+            <TouchableOpacity style={HomeStyles.card} onPress={() => navigation.navigate('productdetail', { 'productId': item.id })}>
+                <Image source={{ uri: imageUrl }} style={HomeStyles.image} resizeMode="cover" />
                 <View style={HomeStyles.cardContent}>
                     <Text style={HomeStyles.productName}>{item.name}</Text>
                     <Text style={HomeStyles.price}>{item.price.toLocaleString()} VNĐ</Text>
@@ -137,8 +122,8 @@ useEffect(() => {
                 <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
                     <Ionicons name="return-down-back" size={24} color="#2196F3" />
                 </TouchableOpacity>
-                
-                <TouchableOpacity onPress={() => navigation.navigate("createproduct",{"shopId":shopId})}>
+
+                <TouchableOpacity onPress={() => navigation.navigate("createproduct", { "shopId": shopId })}>
                     <Text style={{ fontSize: 16, fontWeight: "bold" }}>Thêm sản phẩm</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate("shopstats")}>
@@ -155,66 +140,8 @@ useEffect(() => {
                 contentContainerStyle={HomeStyles.flatListContent}
                 columnWrapperStyle={HomeStyles.columnWrapper}
             />
-            {/* ListFooterComponent={() =>
-            loading ? <ActivityIndicator /> :
-            !hasMore ? <Text style={{ textAlign: "center", padding: 10 }}>Đã tải hết sản phẩm</Text> : null
-            } */}
-                </SafeAreaView>
+        </SafeAreaView>
     );
 };
 
 export default ShopDetail;
-
-
-// const initialLayout = { width: Dimensions.get('window').width };
-
-// const ShopDetail = ({ route }) => {
-//     const shopId = route.params?.shopId;
-//     const navigation = useNavigation();
-
-//     const [index, setIndex] = useState(0);
-//     const [routes] = useState([
-//         { key: 'all', title: 'Tất cả' },
-//         { key: 'top', title: 'Top Đánh giá' },
-//         { key: 'sale', title: 'Khuyến mãi' },
-//     ]);
-
-//     const AllProducts = () => (
-//         <FlatList
-//             data={products}
-//             keyExtractor={(item) => item.id.toString()}
-//             renderItem={renderItem}
-//             numColumns={2}
-//             onEndReached={loadMore}
-//             ListFooterComponent={() => loading ? <ActivityIndicator /> : null}
-//             contentContainerStyle={HomeStyles.flatListContent}
-//             columnWrapperStyle={HomeStyles.columnWrapper}
-//         />
-//     );
-
-//     const TopRated = () => (
-//         <Text style={{ textAlign: 'center', marginTop: 20 }}>Coming soon: Top Rated</Text>
-//     );
-
-//     const OnSale = () => (
-//         <Text style={{ textAlign: 'center', marginTop: 20 }}>Coming soon: On Sale</Text>
-//     );
-
-//     const renderScene = SceneMap({
-//         all: AllProducts,
-//         top: TopRated,
-//         sale: OnSale,
-//     });
-
-//     return (
-//         <SafeAreaView style={HomeStyles.container}>
-//             <TabView
-//                 navigationState={{ index, routes }}
-//                 renderScene={renderScene}
-//                 onIndexChange={setIndex}
-//                 initialLayout={initialLayout}
-//                 style={{ marginTop: 10 }}
-//             />
-//         </SafeAreaView>
-//     );
-// };

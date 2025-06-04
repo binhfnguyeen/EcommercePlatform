@@ -1,4 +1,3 @@
-// AdminShopStatsScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { authApis, endpoints } from '../../configs/Apis';
