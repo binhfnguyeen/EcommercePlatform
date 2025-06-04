@@ -1,22 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import { MyShopContext, MyUserContext } from "../../configs/MyContext";
+import { MyShopContext, MyShopDispatchContext, MyUserContext } from "../../configs/MyContext";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ActivityIndicator } from "react-native-paper";
+import MyShopStyles from "./MyShopStyles";
 
 
-const Stack=createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 const MyShop = () => {
     const user = useContext(MyUserContext);
     const [loading, setLoading] = useState(false);
-    const navigation=useNavigation();
-    const shop=useContext(MyShopContext)
-    
+    const navigation = useNavigation();
+    const shop = useContext(MyShopContext)
+    // const shopdispatch=useContext(MyShopDispatchContext)
+
 
 
     // const StackNavigate = () => {
@@ -40,19 +42,21 @@ const MyShop = () => {
     //         }
 
     //         const res = await authApis(token).get(endpoints['my-shop']);
-    //         for(let d in res.data){
-    //             // setState(res.data[d],d);
-    //             setShop(res.data)
-    //             // console.info(res.data)
-    //             // console.info(shop)
-    //         }
+    //         shopdispatch({
+    //             "type":"getshop",
+    //             "payload":res.data
+    //         })
+
     //         // setShop(res.data)
     //     } catch (ex) {
-    //         console.error(ex);
+    //         if (ex.response && ex.response.status === 404) {
+    //             Alert.alert("Bạn chưa có shop nào","Hãy tạo shop của mình");
+    //         } else {
+    //             console.error(ex);
+    //         }
     //     } finally {
     //         setLoading(false);
     //         // console.info(res.data)
-    //         console.info(shop.user)
     //     }
     // };
 
@@ -60,31 +64,37 @@ const MyShop = () => {
     //     loadShop();
     // }, []);
 
-    // if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+    if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
 
     return (
-        <View>
-            <Text style={EcomSaleStyles.header}>Của hàng của bạn</Text>
-            {!shop ? (
-            <TouchableOpacity disabled={loading} loading={loading} mode="contained" onPress={() => navigation.navigate('createshop')} style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: 50,          
-                    backgroundColor: '#2196F3',
-                    borderRadius:20,
-                    margin:8 
-                }}><Text>Tạo của hàng của bạn</Text></TouchableOpacity>
-            ):( <TouchableOpacity disabled={loading} loading={loading} mode="contained" onPress={() => navigation.navigate('shopdetail',{'shopId':shop.id})} style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: 50,          
-                    backgroundColor: '#2196F3',
-                    borderRadius:20,
-                    margin:8 
-                }}><Text>{shop.name}</Text></TouchableOpacity>)}
-            
-            {/* <TouchableOpacity onPress={() => navigation.navigate('index',{screen:'ShopDetail',params: { shopId: shop.id }})}><Text>{shop.name}</Text></TouchableOpacity> */}
-           
+        <View style={MyShopStyles.container}>
+            <View style={MyShopStyles.barHeader}>
+                <TouchableOpacity style={MyShopStyles.returnButton} onPress={() => navigation.navigate("profile_main")}>
+                    <Ionicons name="return-down-back" size={24} color="#2196F3" />
+                </TouchableOpacity>
+                <Text style={MyShopStyles.textMyShop}>
+                    Của hàng của bạn
+                </Text>
+            </View>
+            <View style={MyShopStyles.buttonContainer}>
+                {!shop ? (
+                    <TouchableOpacity
+                        disabled={loading}
+                        onPress={() => navigation.navigate('createshop')}
+                        style={MyShopStyles.shopButton}
+                    >
+                        <Text style={MyShopStyles.shopButtonText}>Tạo cửa hàng của bạn</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        disabled={loading}
+                        onPress={() => navigation.navigate('shopdetail', { shopId: shop.id })}
+                        style={MyShopStyles.shopButton}
+                    >
+                        <Text style={MyShopStyles.shopButtonText}>{shop._j.name}</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
         </View>
     );
 };

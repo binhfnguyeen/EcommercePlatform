@@ -127,7 +127,7 @@ const ReplyComment = ({ route }) => {
             setPage(1);
             loadCommentReplies();
         } catch (err) {
-            console.error("Lỗi khi gửi bình luận: ", err);
+            Alert.alert("Thông báo", "Cần đăng nhập để gửi bình luận!", [{ text: "OK" }]);
         }
     }
 
@@ -135,11 +135,7 @@ const ReplyComment = ({ route }) => {
         try {
             const token = await AsyncStorage.getItem("token");
             if (!token) {
-                Alert.alert("Không thể like!", "Bạn cần đăng nhập trước..", [
-                    {
-                        text: "OK"
-                    }
-                ]);
+                Alert.alert("Không thể like!", "Bạn cần đăng nhập trước..", [{ text: "OK"}]);
                 return;
             }
             const headers = { Authorization: `Bearer ${token}` };
