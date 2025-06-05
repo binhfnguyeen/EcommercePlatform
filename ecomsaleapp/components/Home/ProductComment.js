@@ -67,13 +67,15 @@ const ProductComment = ({ route }) => {
             const res = await Apis.post(endpoints["comment-like"](commentId),  {}, {headers})
 
             console.info(res.data);
-            setCommentInProduct(prevComments =>
-                prevComments.map(comment =>
-                    comment.id === commentId
-                        ? { ...comment, like_count: comment.like_count + 1 }
-                        : comment
-                )
-            );
+            if (res.status === 201) {
+                setCommentInProduct(prevComments =>
+                    prevComments.map(comment =>
+                        comment.id === commentId
+                            ? { ...comment, like_count: comment.like_count + 1, liked_by_user: true }
+                            : comment
+                    )
+                );
+            }
 
         } catch (err){
             if (err.response?.status === 400 || err.response?.status === 409) {
