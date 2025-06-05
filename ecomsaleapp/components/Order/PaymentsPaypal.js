@@ -4,13 +4,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import PaymentStyles from "./PaymentsStyles";
+import { ActivityIndicator } from "react-native-paper";
 
 const PaymentsPaypal = ({ route }) => {
     const { order, payment, productId, myCart } = route.params;
     const [user, setUser] = useState({})
     const navigation = useNavigation();
+    const [loading,setLoading]=useState(false)
     const handleCreatePaypalPayment = async () => {
         try {
+            setLoading(true)
             const token = await AsyncStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };
 
@@ -43,6 +46,8 @@ const PaymentsPaypal = ({ route }) => {
         } catch (err) {
             console.log("Tạo thanh toán paypal bị lỗi: ", err)
             Alert.alert("Lỗi", "Không thể tạo thanh toán");
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -123,7 +128,12 @@ const PaymentsPaypal = ({ route }) => {
             </TouchableOpacity>
 
             <TouchableOpacity style={PaymentStyles.buttonPrimary} onPress={handleCreatePaypalPayment}>
-                <Text style={PaymentStyles.buttonText}>Thanh toán bằng PayPal</Text>
+                {loading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={PaymentStyles.buttonText}>Thanh toán bằng PayPal</Text>
+                )}
+                
             </TouchableOpacity>
         </ScrollView>
     );

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
-import { ActivityIndicator, FlatList, Image, Keyboard, KeyboardAvoidingView, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -227,47 +227,47 @@ const Home = () => {
 
     return (
         <SafeAreaView style={HomeStyles.container}>
-                <TouchableWithoutFeedback
-                    onPress={() => {
-                        Keyboard.dismiss();
-                        setIsFilterVisible(false);
-                    }}
-                >
-                    <View style={{ flex: 1 }}>
-                        <View>
-                            <View style={HomeStyles.barHeader}>
-                                <Searchbar
-                                    placeholder="Tìm kiếm sản phẩm..."
-                                    value={name}
-                                    onChangeText={setName}
-                                    style={HomeStyles.searchBarHome}
-                                    onFocus={onFocusSearch}
-                                />
-                                <TouchableOpacity
-                                    style={HomeStyles.viewCartHome}
-                                    onPress={() => navigation.replace("shoppingcart")}
-                                >
-                                    <AntDesign name="shoppingcart" size={24} color="#2196F3" />
-                                    <View style={HomeStyles.cartBadgeHome}>
-                                        <Text style={HomeStyles.badgeText}>{countProduct.toString()}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    Keyboard.dismiss();
+                    setIsFilterVisible(false);
+                }}
+            >
+                <View style={{ flex: 1 }}>
+                    <View>
+                        <View style={HomeStyles.barHeader}>
+                            <Searchbar
+                                placeholder="Tìm kiếm sản phẩm..."
+                                value={name}
+                                onChangeText={setName}
+                                style={HomeStyles.searchBarHome}
+                                onFocus={onFocusSearch}
+                            />
+                            <TouchableOpacity
+                                style={HomeStyles.viewCartHome}
+                                onPress={() => navigation.replace("shoppingcart")}
+                            >
+                                <AntDesign name="shoppingcart" size={24} color="#2196F3" />
+                                <View style={HomeStyles.cartBadgeHome}>
+                                    <Text style={HomeStyles.badgeText}>{countProduct.toString()}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-
-                        <FlatList
-                            data={products}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={renderItem}
-                            numColumns={2}
-                            onEndReached={loadMore}
-                            ListHeaderComponent={renderHeader}
-                            ListFooterComponent={loading && <ActivityIndicator size="large" />}
-                            contentContainerStyle={HomeStyles.flatListContent}
-                            columnWrapperStyle={HomeStyles.columnWrapper}
-                        />
                     </View>
-                </TouchableWithoutFeedback>
+
+                    <FlatList
+                        data={products}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderItem}
+                        numColumns={2}
+                        onEndReached={loadMore}
+                        ListHeaderComponent={renderHeader}
+                        ListFooterComponent={loading && <ActivityIndicator size="large" />}
+                        contentContainerStyle={HomeStyles.flatListContent}
+                        columnWrapperStyle={HomeStyles.columnWrapper}
+                    />
+                </View>
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     );
 };
