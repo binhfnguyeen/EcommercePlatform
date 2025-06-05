@@ -632,7 +632,7 @@ class ShopRevenueStatsAPIView(APIView):
 
         product_stats = orderdetails.values(name=F('product__name')).annotate(
             total_quantity=Sum('quantity'),
-            total_revenue=Sum(F('quantity') * F('product__price'))
+            total_revenue=ExpressionWrapper(F('quantity') * F('product__price'), output_field=FloatField())
         ).order_by('-total_revenue')
 
         category_stats = orderdetails.values(name=F('product__category__name')).annotate(
