@@ -191,7 +191,7 @@ const UpdateProfile = () => {
                         loading={loading}
                         onPress={updateProfile}
                         buttonColor="#007AFF"
-                        textColor="#fff"
+                        textColor="#000000"
                         style={RegisterStyles.button}
                         labelStyle={RegisterStyles.registerButtonText}
                     >

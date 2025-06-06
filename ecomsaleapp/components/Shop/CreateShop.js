@@ -61,31 +61,31 @@ const CreateShop=()=>{
     }
 
     return(
-        <SafeAreaView>
-      <View>
-        <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
-            <Ionicons name="return-down-back" size={24} color="#2196F3" />
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={{ padding: 12 }}>
-        <HelperText type="error" visible={!!msg}>
-          {msg}
-        </HelperText>
+      <SafeAreaView>
+        <View>
+          <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("myshop")}>
+              <Ionicons name="return-down-back" size={24} color="#2196F3" />
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={{ padding: 12 }}>
+          <HelperText type="error" visible={!!msg}>
+            {msg}
+          </HelperText>
 
-        {info.map((i) => (
-          <TextInput
-            key={i.field}
-            label={i.label}
-            value={shop[i.field]}
-            onChangeText={(text) => handleInput(i.field, text)}
-            style={EcomSaleStyles.m}
-            right={<TextInput.Icon icon={i.icon} />}
-          />
-        ))}
+          {info.map((i) => (
+            <TextInput
+              key={i.field}
+              label={i.label}
+              value={shop[i.field]}
+              onChangeText={(text) => handleInput(i.field, text)}
+              style={EcomSaleStyles.m}
+              right={<TextInput.Icon icon={i.icon} />}
+            />
+          ))}
 
-        <Button disabled={loading} loading={loading} mode="contained" buttonColor="#4CAF50" style={{ margin: 8 }} onPress={createshop}>Tạo cửa hàng</Button>
-      </ScrollView>
-    </SafeAreaView>
+          <Button disabled={loading} loading={loading} mode="contained" buttonColor="#4CAF50" style={{ margin: 8 }} onPress={createshop}>Tạo cửa hàng</Button>
+        </ScrollView>
+      </SafeAreaView>
     )
 }
 

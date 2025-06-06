@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { BarChart } from "react-native-gifted-charts";
-import { Button, Menu } from "react-native-paper";
+import { ActivityIndicator, Button, Menu } from "react-native-paper";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeStyles from "../Home/HomeStyles";
@@ -22,7 +22,7 @@ const ShopStats = () => {
   const quarters = [1, 2, 3, 4];
 
   const QuarterBar = ({ onQuarterPress }) => {
-    const [selected, setSelected] = useState('All');
+    const [selected, setSelected] = useState(null);
 
     const handlePress = (quarter) => {
       setSelected(quarter);
@@ -71,7 +71,10 @@ const ShopStats = () => {
       let res = await authApis(token).get(url);
       setData(res.data);
     } catch (ex) {
-      console.info(ex);
+      console.info("ERROR:", ex);
+      console.log("Response:", ex.response.data);
+      console.log("Request:", ex.request);
+      console.log("Error Message:", ex.message);
     } finally {
       setLoading(false);
     }
@@ -102,12 +105,15 @@ const ShopStats = () => {
         <Ionicons name="arrow-back" size={28} color="#2196F3" />
       </TouchableOpacity>
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 10, marginBottom: 5 }}>
-        📊 Thống kê theo quý:
+        <Ionicons name="bar-chart-outline" size={20} color="#4CAF50" />  Thống kê theo quý
       </Text>
       <QuarterBar onQuarterPress={handleQuarterChange} />
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 16 }}>
-        🗓️ Thống kê theo tháng:
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+        <Ionicons name="calendar-outline" size={20} color="#2196F3" style={{ marginRight: 6 }} />
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          Thống kê theo tháng:
+        </Text>
+      </View>
       <View style={{ marginVertical: 8 }}>
         <Menu
           visible={menuVisible}
@@ -136,9 +142,12 @@ const ShopStats = () => {
           ))}
         </Menu>
       </View>
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 16, marginBottom: 8 }}>
-        🛍️ Doanh thu theo sản phẩm
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+        <Ionicons name="pricetags-outline" size={20} color="#4CAF50" style={{ marginRight: 6 }} />
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          Doanh thu theo sản phẩm
+        </Text>
+      </View>
       <BarChart
         data={DataOfProductStat}
         barWidth={windowWidth / 5}
@@ -147,9 +156,10 @@ const ShopStats = () => {
         yAxisTextStyle={{ color: '#333' }}
         xAxisLabelTextStyle={{ fontSize: 12, rotation: 45 }}
       />
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 24, marginBottom: 8 }}>
-        📂 Doanh thu theo danh mục
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24, marginBottom: 8 }}>
+        <Ionicons name="albums-outline" size={20} color="#FF9800" style={{ marginRight: 6 }} />
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Doanh thu theo danh mục</Text>
+      </View>
       <BarChart
         data={DataOfCategoryStat}
         barWidth={windowWidth / 5}
@@ -158,6 +168,19 @@ const ShopStats = () => {
         yAxisTextStyle={{ color: '#333' }}
         xAxisLabelTextStyle={{ fontSize: 12, rotation: 45 }}
       />
+
+      {loading && (
+        <View style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.3)'
+        }}>
+          <ActivityIndicator size="large" color="#2196F3" />
+          <Text style={{ marginTop: 8, color: "#fff", fontSize: 16 }}>Đang tải dữ liệu...</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

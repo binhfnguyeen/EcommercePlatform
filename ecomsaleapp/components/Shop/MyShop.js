@@ -3,15 +3,12 @@ import { MyShopContext, MyShopDispatchContext, MyUserContext } from "../../confi
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ActivityIndicator } from "react-native-paper";
 import MyShopStyles from "./MyShopStyles";
 
 
-const Stack = createNativeStackNavigator();
 const MyShop = () => {
     const user = useContext(MyUserContext);
     const [loading, setLoading] = useState(false);

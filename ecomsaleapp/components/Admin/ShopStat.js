@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import Apis, { authApis, endpoints } from "../../configs/Apis";
 import { LineChart } from "react-native-gifted-charts";
-import { Button, Menu } from "react-native-paper";
+import { ActivityIndicator, Button, Menu } from "react-native-paper";
 import EcomSaleStyles from "../../styles/EcomSaleStyles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeStyles from "../Home/HomeStyles";
@@ -16,10 +16,8 @@ const ShopStats = ({ route }) => {
   const windowWidth = Dimensions.get('window').width;
   const [month, setMonth] = useState(null);
   const [quarter, setQuarter] = useState(null);
-  const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
-  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const quarters = [1, 2, 3, 4];
 
   const QuarterBar = ({ onQuarterPress }) => {
@@ -61,9 +59,9 @@ const ShopStats = ({ route }) => {
     );
   };
 
-  const loadStat = async (selectedMonth = null, selectedQuarter = null) => {
+  const loadStat = async ( selectedQuarter = null) => {
     let url = `${endpoints['admin-stat']}?shop_id=${shopId}`;
-    if (selectedMonth) url += `&month=${selectedMonth}`;
+    
     if (selectedQuarter) url += `&quarter=${selectedQuarter}`;
 
     try {
@@ -82,18 +80,15 @@ const ShopStats = ({ route }) => {
   }, [data]);
 
   useEffect(() => {
-    loadStat(month, quarter);
-  }, [month, quarter]);
+    loadStat( quarter);
+  }, [quarter]);
 
   const handleQuarterChange = (q) => {
     setQuarter(q);
-    setMonth(null);
   };
 
-  const handleMonthChange = (m) => {
-    setMonth(m);
+  const handleMonthChange = () => {
     setQuarter(null);
-    setMenuVisible(false);
   };
 
 
@@ -108,42 +103,33 @@ const ShopStats = ({ route }) => {
       <TouchableOpacity style={HomeStyles.returnButton} onPress={() => navigation.replace("stats")}>
         <Ionicons name="arrow-back" size={28} color="#2196F3" />
       </TouchableOpacity>
-
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 10, marginBottom: 5 }}>
-        📊 Thống kê theo quý:
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+        <Ionicons name="bar-chart-outline" size={20} color="#2196F3" style={{ marginRight: 6 }} />
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                Thống kê theo quý
+        </Text>
+      </View>
       <QuarterBar onQuarterPress={handleQuarterChange} />
 
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 16 }}>
-        🗓️ Thống kê theo tháng:
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+        <Ionicons name="calendar-outline" size={20} color="#2196F3" style={{ marginRight: 6 }} />
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                Thống kê theo tháng:
+        </Text>
+      </View>
       <View style={{ marginVertical: 8 }}>
-        <Menu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          anchor={
             <Button
               mode="outlined"
-              onPress={() => setMenuVisible(true)}
+              onPress={() => handleMonthChange()}
               style={{ borderRadius: 20, borderColor: '#2196F3' }}
               textColor="#2196F3"
             >
-              {month ? `Tháng ${month}` : "Chọn tháng"}
+              Tháng
             </Button>
-          }
-        >
-          {months.map((m) => (
-            <Menu.Item
-              key={m}
-              onPress={() => handleMonthChange(m)}
-              title={`Tháng ${m}`}
-            />
-          ))}
-        </Menu>
       </View>
 
       <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 20, marginBottom: 8 }}>
-        📈 Doanh thu theo tháng
+         Doanh thu theo tháng
       </Text>
       {monthlyStats.length > 0 ? (
         <LineChart
@@ -170,7 +156,30 @@ const ShopStats = ({ route }) => {
           Không có dữ liệu để hiển thị
         </Text>
       )}
-
+      {loading && (
+        <View style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.3)'
+        }}>
+          <ActivityIndicator size="large" color="#2196F3" />
+          <Text style={{ marginTop: 8, color: "#fff", fontSize: 16 }}>Đang tải dữ liệu...</Text>
+        </View>
+      )}
+      {loading && (
+        <View style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.3)'
+        }}>
+          <ActivityIndicator size="large" color="#2196F3" />
+          <Text style={{ marginTop: 8, color: "#fff", fontSize: 16 }}>Đang tải dữ liệu...</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

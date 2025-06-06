@@ -140,19 +140,22 @@ const ReplyComment = ({ route }) => {
             }
             const headers = { Authorization: `Bearer ${token}` };
             const res = await Apis.post(endpoints["comment-like"](commentId),  {}, {headers})
+            if (res.status === 201) {
+                setCommentParent(prev => ({
+                    ...prev,
+                    like_count: prev.like_count + 1
+                }));
+            }
 
-            setCommentParent(prev => ({
-                ...prev,
-                like_count: prev.like_count + 1
-            }));
-
-            setReplies(prevReplies =>
-                prevReplies.map(reply =>
-                    reply.id === commentId
-                        ? { ...reply, like_count: reply.like_count + 1 }
-                        : reply
-                )
-            );
+            if (res.status === 201) {
+                setReplies(prevReplies =>
+                    prevReplies.map(reply =>
+                        reply.id === commentId
+                            ? { ...reply, like_count: reply.like_count + 1 }
+                            : reply
+                    )
+                );
+            }
 
             console.info(res.data);
 

@@ -4,6 +4,7 @@ import OrderStyles from "./OrderStyles"
 import Apis, { endpoints } from "../../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 const Order = ({ route }) => {
     const productId = route.params?.productId;
@@ -14,6 +15,7 @@ const Order = ({ route }) => {
     const [phone, setPhone] = useState("");
     const navigation = useNavigation();
     const [cartItems, setCartItems] = useState([]);
+    const [loading,setLoading]=useState(false)
 
     const getCurrentUser = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -43,6 +45,7 @@ const Order = ({ route }) => {
 
     const handleSubmit = async () => {
         try {
+            setLoading(true)
             const token = await AsyncStorage.getItem("token");
 
             if (!token) {
@@ -87,6 +90,8 @@ const Order = ({ route }) => {
         } catch (err) {
             console.error("Lỗi trong quá trình đặt hàng và thanh toán:", err);
             Alert.alert("Lỗi", "Có lỗi xảy ra khi xử lý thanh toán.");
+        }finally{
+            setLoading(false)
         }
     };
 
@@ -117,7 +122,11 @@ const Order = ({ route }) => {
             }
 
             <TouchableOpacity style={OrderStyles.button} onPress={handleSubmit}>
-                <Text style={OrderStyles.buttonText}>Xác nhận thanh toán</Text>
+                {loading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={OrderStyles.buttonText}>Xác nhận thanh toán</Text>
+                )}
             </TouchableOpacity>
         </ScrollView>
     );
